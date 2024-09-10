@@ -29,7 +29,7 @@ public class Qsplines {
             tcoeff[5][j]=Qdoubleprime(tf)[j];
         }
         TCoeff=new SimpleMatrix(tcoeff);
-        IF=new SimpleMatrix(new double[]{q0,v0,a0,qf,vf,af});
+        IF=new SimpleMatrix(new double[][]{{q0}, {v0}, {a0}, {qf}, {vf}, {af}});
     }
 
     /**
