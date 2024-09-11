@@ -1,14 +1,15 @@
-package org.firstinspires.ftc.teamcode.math;
+package org.firstinspires.ftc.teamcode.math.geometry;
 
-import static org.firstinspires.ftc.teamcode.util.math.Algebra.sign;
+import static org.firstinspires.ftc.teamcode.math.Algebra.sign;
 import static org.firstinspires.ftc.teamcode.util.paths.followers.PurePursuitController.chooseCloserSolution;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.firstinspires.ftc.teamcode.math.Coordinate;
 import org.jetbrains.annotations.Contract;
 
-public abstract class Geometry {
+public abstract class GeometryObject {
     /**
      * Returns whether a point is on a shape.
      * @param point The point.

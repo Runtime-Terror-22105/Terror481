@@ -1,12 +1,14 @@
-package org.firstinspires.ftc.teamcode.math;
+package org.firstinspires.ftc.teamcode.math.geometry;
 
-import static org.firstinspires.ftc.teamcode.util.math.Coordinate.ORIGIN;
+import static org.firstinspires.ftc.teamcode.math.Coordinate.ORIGIN;
 
 import androidx.annotation.NonNull;
 
+import org.firstinspires.ftc.teamcode.math.Algebra;
+import org.firstinspires.ftc.teamcode.math.Coordinate;
 import org.jetbrains.annotations.Contract;
 
-public class LineSegment extends Geometry {
+public class LineSegment extends GeometryObject {
     public Coordinate bound1;
     public Coordinate bound2;
 

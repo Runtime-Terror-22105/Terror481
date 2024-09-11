@@ -1,14 +1,16 @@
-package org.firstinspires.ftc.teamcode.math;
+package org.firstinspires.ftc.teamcode.math.geometry;
 
-import static org.firstinspires.ftc.teamcode.util.math.Coordinate.ORIGIN;
-import static org.firstinspires.ftc.teamcode.util.paths.followers.PurePursuitController.chooseCloserSolution;
+import static org.firstinspires.ftc.teamcode.math.Coordinate.ORIGIN;
+import static org.firstinspires.ftc.teamcode.paths.followers.PurePursuitController.chooseCloserSolution;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.firstinspires.ftc.teamcode.math.Algebra;
+import org.firstinspires.ftc.teamcode.math.Coordinate;
 import org.jetbrains.annotations.Contract;
 
-public class Ellipse extends Geometry {
+public class Ellipse extends GeometryObject {
     private final Coordinate center;
     public double major;// major axis
     public double minor; // minor axis
@@ -94,8 +96,8 @@ public class Ellipse extends Geometry {
             double slSqr = Math.pow(slope, 2); //slope squared
             double intSqr = Math.pow(yIntercept, 2); // intercept squared
             Algebra.QuadraticFormulaResult quadraticRoots = Algebra.solveQuadraticRoots(
-                    mjSqr + mnSqr * slSqr,
-                    -2 * mjSqr * slope * yIntercept,
+                    mnSqr + mjSqr * slSqr,
+                    2 * mjSqr * slope * yIntercept,
                     mjSqr * (intSqr - mnSqr)
             );
 
