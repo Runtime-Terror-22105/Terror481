@@ -236,6 +236,16 @@ public class Coordinate {
         this.y = tmp;
     }
 
+    public Coordinate closestPoint(Coordinate point1, Coordinate point2) {
+        if (point1 != null && point2 != null) {
+            return this.distToPoint(point1) < this.distToPoint(point2) ? point1 : point2;
+        } else if (point1 != null) {
+            return point1;
+        } else {
+            return point2;
+        }
+    }
+
     /**
      * Add two vectors.
      * @param other The vector to do dot product with

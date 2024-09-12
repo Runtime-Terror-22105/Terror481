@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.math.geometry;
 
 import static org.firstinspires.ftc.teamcode.math.Coordinate.ORIGIN;
-import static org.firstinspires.ftc.teamcode.paths.followers.PurePursuitController.chooseCloserSolution;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -130,7 +129,7 @@ public class Ellipse extends GeometryObject {
         rotation = oldRotation;
 
         // Return the valid solution, or if there are two, the one closer to point 2
-        return chooseCloserSolution(sol1, sol2, lineSegment.bound2);
+        return lineSegment.bound2.closestPoint(sol1, sol2);
     }
 
     @Override

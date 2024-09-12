@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.math;
 
-import static org.firstinspires.ftc.teamcode.util.math.Algebra.sign;
-
 public class Angle {
     /**
      * Do the angle optimization for swerve.

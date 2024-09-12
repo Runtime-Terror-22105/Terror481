@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.math.geometry;
 
 import static org.firstinspires.ftc.teamcode.math.Algebra.sign;
-import static org.firstinspires.ftc.teamcode.util.paths.followers.PurePursuitController.chooseCloserSolution;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -71,6 +70,6 @@ public abstract class GeometryObject {
         }
 
         // Return the valid solution, or if there are two, the one closer to point 2
-        return chooseCloserSolution(sol1, sol2, point2);
+        return point2.closestPoint(sol1, sol2);
     }
 }
