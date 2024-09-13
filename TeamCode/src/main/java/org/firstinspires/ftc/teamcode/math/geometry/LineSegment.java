@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.math.Algebra;
 import org.firstinspires.ftc.teamcode.math.Coordinate;
 import org.jetbrains.annotations.Contract;
 
-public class LineSegment extends GeometryObject {
+public class LineSegment implements GeometryObject {
     public Coordinate bound1;
     public Coordinate bound2;
 
