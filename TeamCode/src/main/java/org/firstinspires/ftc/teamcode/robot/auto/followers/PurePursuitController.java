@@ -4,7 +4,7 @@ import org.firstinspires.ftc.teamcode.math.geometry.Circle;
 import static org.firstinspires.ftc.teamcode.math.Coordinate.distToPoint;
 
 import androidx.annotation.NonNull;
-import org.firstinspires.ftc.teamcode.drive.Drivetrain;
+import org.firstinspires.ftc.teamcode.robot.drive.Drivetrain;
 import org.firstinspires.ftc.teamcode.math.Angle;
 import org.firstinspires.ftc.teamcode.math.geometry.Ellipse;
 import org.firstinspires.ftc.teamcode.math.geometry.LineSegment;
@@ -112,8 +112,8 @@ public class PurePursuitController extends PathFollower {
 
     private boolean CrashDetect(Pose2d currentPos, Coordinate goalPoint ){
         // first check if out of bounds
-        for(int i=0;i<obstacle_count;i++){ // cycling for crash with all of the obstacles
-            if(field[i].crash_detect(currentPos.x,currentPos.y,goalPoint.x,goalPoint.y, currentPos.heading)){
+        for(int i = 0; i < obstacle_count; i++){ // cycling for crash with all of the obstacles
+            if (field[i].crash_detect(currentPos.x,currentPos.y,goalPoint.x,goalPoint.y, currentPos.heading)) {
                 return true;
             }
         }
@@ -141,14 +141,13 @@ public class PurePursuitController extends PathFollower {
             robotEllipse.setRotation(currentPos.heading);
             goalPoint = robotEllipse.findNearestIntersection(path);
             if (CrashDetect(currentPos, goalPoint)) {
-                maxLookAheadDist=mid-interval;
+                maxLookAheadDist = mid-interval;
             }
-            else{
-                minLookAheadDist=mid+interval;
+            else {
+                minLookAheadDist = mid+interval;
             }
         }
         return goalPoint;
-
     }
 
     public static Coordinate chooseCloserSolution(Coordinate sol1, Coordinate sol2, Coordinate target) {

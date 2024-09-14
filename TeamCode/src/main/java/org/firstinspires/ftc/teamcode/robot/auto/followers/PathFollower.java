@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.robot.auto.followers;
 
 import androidx.annotation.NonNull;
 
-import org.firstinspires.ftc.teamcode.drive.Drivetrain;
+import org.firstinspires.ftc.teamcode.robot.drive.Drivetrain;
 import org.firstinspires.ftc.teamcode.math.Pose2d;
 import org.firstinspires.ftc.teamcode.math.Coordinate;
 import org.firstinspires.ftc.teamcode.robot.auto.pathgen.QSplinePath;

@@ -1,0 +1,16 @@
+@relation Swerverotationoptimize
+
+@attribute Reverse_Wheel {1, 0}
+@attribute Wheel_Speed NUMERIC
+@attribute Angle_Delta NUMERIC
+@attribute Coax_Effect NUMERIC
+@attribute Drift NUMERIC
+@attribute Robot_Speed NUMERIC
+
+@data
+1, 1, 100, 1, 111, 20
+0, 0.6, 50, 1, 900, 30
+0, 0.7, 20, 1, 20, 40
+1, 0.9, 70, 1, 30, 50
+0, 0.2, 60, 1, 50, 60
+1, 0.3, 10, 1, 60, 70
