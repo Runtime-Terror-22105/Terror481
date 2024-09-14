@@ -8,5 +8,7 @@ public interface Shape {
      * @param point The point.
      * @return Whether or not the point sits on the shape.
      */
-    abstract boolean isValidSolution(Coordinate point);
+    boolean isValidSolution(Coordinate point);
+
+
 }

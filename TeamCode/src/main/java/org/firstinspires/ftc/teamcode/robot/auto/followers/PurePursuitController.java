@@ -139,7 +139,7 @@ public class PurePursuitController extends PathFollower {
 
             Ellipse robotEllipse = new Ellipse(mid, currentPos.getVector());
             robotEllipse.setRotation(currentPos.heading);
-            goalPoint = robotEllipse.rotatedEllipseLineIntersection(path);
+            goalPoint = robotEllipse.findNearestIntersection(path);
             if (CrashDetect(currentPos, goalPoint)) {
                 maxLookAheadDist=mid-interval;
             }

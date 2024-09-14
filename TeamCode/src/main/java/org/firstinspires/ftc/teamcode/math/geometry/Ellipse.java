@@ -42,18 +42,18 @@ public class Ellipse implements Shape {
      * @return A point, can be null.
      */
     @Nullable
-    @Contract("_-> new")
-    public Coordinate rotatedEllipseLineIntersection(@NonNull LineSegment lineSegment) {
+    public Coordinate findNearestIntersection(@NonNull LineSegment lineSegment) {
         // Rather than rotating the ellipse, we can just shift the ellipse to the origin and rotate
         // the entire axis. This means that we end up not rotating the ellipse and we rotate the
         // line clockwise (negative rotation).
 
-        // Rotate the line
         lineSegment.translate(Coordinate.mirror(center)); // shift to origin
         lineSegment.rotate(-rotation); // rotate backwards
         lineSegment.translate(center); // shift back
 
-        return ellipseLineIntersection(lineSegment);
+        Coordinate intersection = unrotatedEllipseLineIntersection(lineSegment);
+        intersection.rotate(rotation);
+        return intersection;
     }
 
     /**
@@ -64,7 +64,7 @@ public class Ellipse implements Shape {
      */
     @Nullable
     @Contract("_-> new")
-    public Coordinate ellipseLineIntersection(@NonNull LineSegment lineSegment) {
+    public Coordinate unrotatedEllipseLineIntersection(@NonNull LineSegment lineSegment) {
         // Math comes from https://youtu.be/4W4BiRPTDKs?si=I7sFWELk39a1NFC9, except we
         // shift the center of the ellipse to the origin since our ellipse won't be centered at the
         // origin. We also add an extra check that the circle intersects with the line segment, not
