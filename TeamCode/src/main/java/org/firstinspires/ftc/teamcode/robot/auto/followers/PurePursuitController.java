@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.math.geometry.Ellipse;
 import org.firstinspires.ftc.teamcode.math.geometry.LineSegment;
 import org.firstinspires.ftc.teamcode.math.Pose2d;
 import org.firstinspires.ftc.teamcode.math.Coordinate;
-import org.firstinspires.ftc.teamcode.robot.auto.pathgen.QSplinePath;
+import org.firstinspires.ftc.teamcode.robot.auto.pathgen.QSplines;
 
 import java.util.function.Supplier;
 
@@ -42,7 +42,7 @@ public class PurePursuitController extends PathFollower {
 
 
     @Override
-    public void setPath(@NonNull QSplinePath path, int points) {
+    public void setPath(@NonNull QSplines path, int points) {
         super.setPath(path, points);
         this.pathArr = this.path.generateArr(points);
     }

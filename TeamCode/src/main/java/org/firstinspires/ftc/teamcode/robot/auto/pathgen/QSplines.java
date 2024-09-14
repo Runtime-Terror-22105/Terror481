@@ -2,13 +2,13 @@ package org.firstinspires.ftc.teamcode.robot.auto.pathgen;
 import org.ejml.simple.SimpleMatrix;
 import org.firstinspires.ftc.teamcode.math.Coordinate;
 
-public class Qsplines {
+public class QSplines {
     public static SimpleMatrix TCoeff; // The coeffecients for all of the polynomials
     public static SimpleMatrix IF;// Initial and Final
 
     public static SimpleMatrix coeff;
 
-    public Qsplines(double t0, double q0, double v0, double a0, double tf, double qf, double vf, double af){// initial time, initial poisiton, initial velocity, initial accel, final time, final position, final velcity, final accel
+    public QSplines(double t0, double q0, double v0, double a0, double tf, double qf, double vf, double af){// initial time, initial poisiton, initial velocity, initial accel, final time, final position, final velcity, final accel
         double[][]tcoeff= new double[6][6];
         for(int j = 0; j<6; j++){
             tcoeff[0][j]=Q(t0)[j];
