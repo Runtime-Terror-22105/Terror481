@@ -5,11 +5,11 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.config.Config;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.robot.drive.Drivetrain;
-import org.firstinspires.ftc.teamcode.hardwareDevices.TerrorAxonServo;
-import org.firstinspires.ftc.teamcode.hardwareDevices.TerrorMotor;
 import org.firstinspires.ftc.teamcode.math.Coordinate;
 import org.firstinspires.ftc.teamcode.math.NumCompare;
+import org.firstinspires.ftc.teamcode.robot.drive.Drivetrain;
+import org.firstinspires.ftc.teamcode.robot.hardware.motors.TerrorAxonServo;
+import org.firstinspires.ftc.teamcode.robot.hardware.motors.TerrorMotor;
 
 /**
  * The SwerveDriveTrain class provides simple methods to easily control a swerve drivetrain in FTC.
@@ -53,9 +53,9 @@ public class SwerveDrivetrain implements Drivetrain {
      * @param moduleFrontRightConfig Self explanatory
      */
     public SwerveDrivetrain(Telemetry telemetry, SwerveDrivetrainConfig swerveConfig,
-                            TerrorMotor motorRearLeft,   TerrorAxonServo servoRearLeft,   SwerveModuleConfig moduleRearLeftConfig,
-                            TerrorMotor motorFrontLeft,  TerrorAxonServo servoFrontLeft,  SwerveModuleConfig moduleFrontLeftConfig,
-                            TerrorMotor motorRearRight,  TerrorAxonServo servoRearRight,  SwerveModuleConfig moduleRearRightConfig,
+                            TerrorMotor motorRearLeft, TerrorAxonServo servoRearLeft, SwerveModuleConfig moduleRearLeftConfig,
+                            TerrorMotor motorFrontLeft, TerrorAxonServo servoFrontLeft, SwerveModuleConfig moduleFrontLeftConfig,
+                            TerrorMotor motorRearRight, TerrorAxonServo servoRearRight, SwerveModuleConfig moduleRearRightConfig,
                             TerrorMotor motorFrontRight, TerrorAxonServo servoFrontRight, SwerveModuleConfig moduleFrontRightConfig) {
         this.telemetry = telemetry;
         this.config = swerveConfig;

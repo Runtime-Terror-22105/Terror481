@@ -5,9 +5,9 @@ import androidx.annotation.NonNull;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.robot.drive.Drivetrain;
-import org.firstinspires.ftc.teamcode.hardwareDevices.TerrorMotor;
 import org.firstinspires.ftc.teamcode.math.Coordinate;
+import org.firstinspires.ftc.teamcode.robot.drive.Drivetrain;
+import org.firstinspires.ftc.teamcode.robot.hardware.motors.TerrorMotor;
 
 public class MecanumDrivetrain implements Drivetrain {
     private final Telemetry telemetry;

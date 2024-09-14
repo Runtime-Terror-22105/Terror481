@@ -3,10 +3,10 @@ package org.firstinspires.ftc.teamcode.robot.drive.swerve;
 import androidx.annotation.NonNull;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
-import org.firstinspires.ftc.teamcode.hardwareDevices.TerrorAxonServo;
-import org.firstinspires.ftc.teamcode.hardwareDevices.TerrorMotor;
 import org.firstinspires.ftc.teamcode.math.Angle;
 import org.firstinspires.ftc.teamcode.math.Coordinate;
+import org.firstinspires.ftc.teamcode.robot.hardware.motors.TerrorAxonServo;
+import org.firstinspires.ftc.teamcode.robot.hardware.motors.TerrorMotor;
 import org.firstinspires.ftc.teamcode.util.pid.PidfController;
 
 public class SwerveModule {
@@ -21,7 +21,6 @@ public class SwerveModule {
     private final PidfController.PidfCoefficients anglePidCoefficientsCW;
     public final PidfController anglePid;
 
-    private final double relativeEncoderOffset;
 //    private final PidfController.PidfCoefficients velPidCoefficients;
 //    private final PidfController velPid;
 
@@ -52,12 +51,6 @@ public class SwerveModule {
         this.rotationServo.setOffset(config.servoEncoderOffset);
 
         this.offset = config.moduleOffset;
-
-        if (rotationServo.hasRelativeServoEncoder()) {
-            this.relativeEncoderOffset = rotationServo.getAbsolutePosition() - rotationServo.getRelativePosition();
-        } else {
-            this.relativeEncoderOffset = 0;
-        }
 
         resetCache();
     }
@@ -150,17 +143,9 @@ public class SwerveModule {
 
     public void resetCache(){
         // updating velocity
-        this.driveVelocity=driveMotor.getVelocity();
+        this.driveVelocity = driveMotor.getVelocity();
 
         // updating angle
-        this.currAngle = readAngle();
-    }
-
-    private double readAngle() {
-        if (rotationServo.hasRelativeServoEncoder()) {
-            return Angle.angleWrap(this.rotationServo.getRelativePosition() - this.relativeEncoderOffset);
-        } else {
-            return Angle.angleWrap(this.rotationServo.getAbsolutePosition());
-        }
+        this.currAngle = Angle.angleWrap(this.rotationServo.getAbsolutePosition());
     }
 }
