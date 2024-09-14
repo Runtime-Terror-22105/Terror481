@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.math.geometry;
 
+import androidx.annotation.NonNull;
+
 import org.firstinspires.ftc.teamcode.math.Coordinate;
 
 public interface Shape {
@@ -10,5 +12,5 @@ public interface Shape {
      */
     boolean isValidSolution(Coordinate point);
 
-
+    Coordinate findNearestIntersection(@NonNull LineSegment lineSegment);
 }
