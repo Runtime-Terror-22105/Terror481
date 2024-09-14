@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.robot.Auto.pathgen;
+package org.firstinspires.ftc.teamcode.robot.auto.pathgen;
 import org.ejml.simple.SimpleMatrix;
 import org.firstinspires.ftc.teamcode.math.Coordinate;
 

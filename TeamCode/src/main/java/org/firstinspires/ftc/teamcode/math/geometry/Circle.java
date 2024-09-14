@@ -35,7 +35,7 @@ public class Circle implements GeometryObject {
      * @return A point, can be null.
      */
     @Nullable
-    public Coordinate circleLineIntersection(@NonNull LineSegment lineSegment) {
+    public Coordinate findNearestIntersection(@NonNull LineSegment lineSegment) {
         // Math comes from https://mathworld.wolfram.com/Circle-LineIntersection.html, except we
         // shift the center of the circle to the origin since our circle won't be centered at the
         // origin. We also add an extra check that the circle intersects with the line segmnet, not
