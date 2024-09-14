@@ -120,10 +120,10 @@ public class Ellipse implements GeometryObject {
         double oldRotation = rotation;
         rotation = 0; // set rotation to 0 temporarily when checking if valid sln
         // Set the solution to null if it is outside of the line segment or not on the ellipse
-        if (!lineSegment.isValidSolution(sol1) || this.isValidSolution(sol1)) {
+        if (!(lineSegment.isValidSolution(sol1) && this.isValidSolution(sol1))) {
             sol1 = null;
         }
-        else if (!lineSegment.isValidSolution(sol2) || this.isValidSolution(sol2)) {
+        else if (!(lineSegment.isValidSolution(sol2) && this.isValidSolution(sol2))) {
             sol2 = null;
         }
         rotation = oldRotation;
@@ -132,6 +132,11 @@ public class Ellipse implements GeometryObject {
         return lineSegment.bound2.closestPoint(sol1, sol2);
     }
 
+    /**
+     * Returns whether a point is on the ellipse.
+     * @param point The point.
+     * @return Whether or not the point sits on the shape.
+     */
     @Override
     public boolean isValidSolution(@NonNull Coordinate point) {
         // eqn of rotated ellipse is in eqn 6, page 9: http://quickcalcbasic.com/ellipse%20line%20intersection.pdf#page=4.09

@@ -5,15 +5,27 @@ import static org.firstinspires.ftc.teamcode.math.Algebra.sign;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.firstinspires.ftc.teamcode.math.Algebra;
 import org.firstinspires.ftc.teamcode.math.Coordinate;
 
-public class Circle {
+public class Circle implements GeometryObject {
     private final Coordinate center;
     private final double radius;
 
     public Circle(Coordinate center, double radius) {
         this.center = center;
         this.radius = radius;
+    }
+
+    /**
+     * Returns whether a point is on a shape.
+     * @param point The point.
+     * @return Whether or not the point sits on the shape.
+     */
+    @Override
+    public boolean isValidSolution(@NonNull Coordinate point) {
+        double eqnLeftSide = Math.pow((point.x-center.x), 2) + Math.pow((point.y-center.y), 2);
+        return Algebra.round(eqnLeftSide, 5) == radius*radius;
     }
 
     /**
@@ -52,10 +64,10 @@ public class Circle {
         Coordinate sol2 = new Coordinate(x2, y2).plus(this.center);
 
         // Set the solution to null if it is outside of the line segment
-        if (!lineSegment.isWithinBounds(sol1)) {
+        if (!(lineSegment.isValidSolution(sol1) && this.isValidSolution(sol1))) {
             sol1 = null;
         }
-        if (!lineSegment.isWithinBounds(sol2)) {
+        else if (!(lineSegment.isValidSolution(sol2) && this.isValidSolution(sol2))) {
             sol2 = null;
         }
 

@@ -131,6 +131,11 @@ public class LineSegment implements GeometryObject {
         return point.x >= minX && point.x <= maxX && point.y >= minY && point.y <= maxY;
     }
 
+    /**
+     * Returns whether a point is on the line segment.
+     * @param point The point.
+     * @return Whether or not the point sits on the shape.
+     */
     @Override
     public boolean isValidSolution(Coordinate point) {
         boolean onLine;
