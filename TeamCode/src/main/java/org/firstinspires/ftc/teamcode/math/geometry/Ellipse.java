@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.math.Algebra;
 import org.firstinspires.ftc.teamcode.math.Coordinate;
 import org.jetbrains.annotations.Contract;
 
-public class Ellipse implements GeometryObject {
+public class Ellipse implements Shape {
     private final Coordinate center;
     public double major;// major axis
     public double minor; // minor axis

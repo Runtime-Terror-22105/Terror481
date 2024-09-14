@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 import org.firstinspires.ftc.teamcode.math.Algebra;
 import org.firstinspires.ftc.teamcode.math.Coordinate;
 
-public class Circle implements GeometryObject {
+public class Circle implements Shape {
     private final Coordinate center;
     private final double radius;
 

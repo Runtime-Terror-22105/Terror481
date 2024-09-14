@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.math.Algebra;
 import org.firstinspires.ftc.teamcode.math.Coordinate;
 import org.jetbrains.annotations.Contract;
 
-public class LineSegment implements GeometryObject {
+public class LineSegment {
     public Coordinate bound1;
     public Coordinate bound2;
 
@@ -136,7 +136,6 @@ public class LineSegment implements GeometryObject {
      * @param point The point.
      * @return Whether or not the point sits on the shape.
      */
-    @Override
     public boolean isValidSolution(Coordinate point) {
         boolean onLine;
         if (isVertical()) {
