@@ -10,26 +10,26 @@ public class QSplines {
 
     public QSplines(double t0, double q0, double v0, double a0, double tf, double qf, double vf, double af){// initial time, initial poisiton, initial velocity, initial accel, final time, final position, final velcity, final accel
         double[][]tcoeff= new double[6][6];
-        for(int j = 0; j<6; j++){
+        for (int j = 0; j<6; j++) {
             tcoeff[0][j]=Q(t0)[j];
         }
-        for(int j = 0; j<6; j++){
+        for (int j = 0; j<6; j++) {
             tcoeff[1][j]=Qprime(t0)[j];
         }
-        for(int j = 0; j<6; j++){
+        for (int j = 0; j<6; j++) {
             tcoeff[2][j]=Qdoubleprime(t0)[j];
         }
-        for(int j = 0; j<6; j++){
+        for (int j = 0; j<6; j++) {
             tcoeff[3][j]=Q(tf)[j];
         }
-        for(int j = 0; j<6; j++){
+        for (int j = 0; j<6; j++) {
             tcoeff[4][j]=Qprime(tf)[j];
         }
-        for(int j = 0; j<6; j++){
+        for (int j = 0; j<6; j++) {
             tcoeff[5][j]=Qdoubleprime(tf)[j];
         }
-        TCoeff=new SimpleMatrix(tcoeff);
-        IF=new SimpleMatrix(new double[][]{{q0}, {v0}, {a0}, {qf}, {vf}, {af}});
+        TCoeff = new SimpleMatrix(tcoeff);
+        IF = new SimpleMatrix(new double[][]{{q0}, {v0}, {a0}, {qf}, {vf}, {af}});
     }
 
     /**
@@ -38,12 +38,11 @@ public class QSplines {
      * @return An x and y value.
      */
     public Coordinate getPoint(double t) {
-        double x = t;
         double y = coeff.get(0)+coeff.get(1)*Math.pow(t,1)+coeff.get(2)*Math.pow(t,2)+coeff.get(3)*Math.pow(t,3)+coeff.get(4)*Math.pow(t,4)+coeff.get(5)*Math.pow(t,5);
-        return new Coordinate(x, y);
+        return new Coordinate(t, y);
     }
 
-    public Coordinate getpointvel(double t){
+    public Coordinate getVelocity(double t) {
         return new Coordinate(t,coeff.get(1)+2*coeff.get(2)*Math.pow(t,1)+3*coeff.get(3)*Math.pow(t,2)+4*coeff.get(4)*Math.pow(t,3)+5*coeff.get(5)*Math.pow(t,4));
     }
 
@@ -64,14 +63,14 @@ public class QSplines {
     }
 
     public static double[] Q(double t){
-        return new double[]{1,t,t*t,t*t*t,t*t*t*t,t*t*t*t*t};// math.pow is for nerds
+        return new double[]{1, t, t*t, t*t*t, t*t*t*t, t*t*t*t*t};
     }
     public static double[] Qprime(double t){
-        return new double[]{0,1,2*t,3*t*t,4*t*t*t,5*t*t*t*t};
+        return new double[]{0, 1, 2*t, 3*t*t, 4*t*t*t, 5*t*t*t*t};
     }
 
     public static double[] Qdoubleprime(double t){
-        return new double[]{0,0,2,6*t,12*t*t,20*t*t*t};
+        return new double[]{0, 0, 2, 6*t, 12*t*t, 20*t*t*t};
     }
 
     public static SimpleMatrix makeSpline(){

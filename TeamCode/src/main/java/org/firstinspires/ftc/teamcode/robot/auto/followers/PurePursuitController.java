@@ -150,15 +150,4 @@ public class PurePursuitController extends PathFollower {
         return goalPoint;
     }
 
-    public static Coordinate chooseCloserSolution(Coordinate sol1, Coordinate sol2, Coordinate target) {
-        if (sol1 != null && sol2 != null) {
-            return Coordinate.distToPoint(sol1, target) < Coordinate.distToPoint(sol2, target) ? sol1 : sol2;
-        } else if (sol1 != null) {
-            return sol1;
-        } else {
-            return sol2;
-        }
-    }
-
-
 }
