@@ -20,9 +20,11 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
 
+/**
+ * A class containing all the robot hardware classes.
+ */
 @Config
 @Photon
-
 public class RobotHardware {
 
     // Drivetrain motors & servos

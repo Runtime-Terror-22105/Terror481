@@ -12,6 +12,9 @@ import org.firstinspires.ftc.teamcode.robot.drive.Drivetrain;
 import org.firstinspires.ftc.teamcode.robot.drive.mecanum.MecanumDrivetrain;
 import org.firstinspires.ftc.teamcode.robot.hardware.sensors.camera.TerrorCamera;
 
+/**
+ * A class containing all the robot's subsystems.
+ */
 @Config
 public class Robot {
     // Drivetrain
