@@ -21,7 +21,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
 
 /**
- * A class containing all the robot hardware classes.
+ * A class containing all the robot's hardware.
  */
 @Config
 @Photon
