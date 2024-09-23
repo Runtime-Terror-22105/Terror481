@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-import org.firstinspires.ftc.teamcode.util.Interval;
-import org.firstinspires.ftc.teamcode.util.math.RobotOrientation;
+import org.firstinspires.ftc.teamcode.math.RobotOrientation;
+import org.firstinspires.ftc.teamcode.math.Interval;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 

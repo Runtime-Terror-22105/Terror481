@@ -1,7 +1,8 @@
 package org.firstinspires.ftc.teamcode.robot.drive.swerve;
 
 import org.firstinspires.ftc.teamcode.math.Coordinate;
-import org.firstinspires.ftc.teamcode.util.pid.PidfController;
+import org.firstinspires.ftc.teamcode.math.controllers.PidfController;
+
 
 /**
  * A class which stores the configuration for a swerve module and can be easily edited through

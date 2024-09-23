@@ -5,9 +5,9 @@ import androidx.annotation.NonNull;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.math.Angle;
 import org.firstinspires.ftc.teamcode.math.Coordinate;
+import org.firstinspires.ftc.teamcode.math.controllers.PidfController;
 import org.firstinspires.ftc.teamcode.robot.hardware.motors.TerrorAxonServo;
 import org.firstinspires.ftc.teamcode.robot.hardware.motors.TerrorMotor;
-import org.firstinspires.ftc.teamcode.util.pid.PidfController;
 
 public class SwerveModule {
     // the motors
