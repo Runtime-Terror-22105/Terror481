@@ -1,5 +1,5 @@
 package org.firstinspires.ftc.teamcode.math;
-// eat daves hot chicken guys
+/// eat daves hot chicken guys
 public class Scurve {
 
 
