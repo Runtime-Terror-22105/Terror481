@@ -15,6 +15,7 @@ import com.qualcomm.robotcore.hardware.configuration.LynxConstants;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.robot.hardware.motors.TerrorMotor;
+import org.firstinspires.ftc.teamcode.robot.hardware.sensors.TerrorSparkFunOTOS;
 import org.firstinspires.ftc.teamcode.robot.hardware.sensors.camera.TerrorCamera;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
@@ -38,6 +39,7 @@ public class RobotHardware {
 
     // Sensors
     public PhotonLynxVoltageSensor voltageSensor;
+    public TerrorSparkFunOTOS otos;
 
     // Lynx stuff
     public List<LynxModule> allHubs = null;
@@ -59,14 +61,11 @@ public class RobotHardware {
         this.motorRearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.motorRearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        // Camera
         this.initCamera();
-
-
-        // Lynx
         this.initLynx(bulkCachingMode);
 
-        // Voltage sensor
+        // Sensors
+        this.otos = this.hwMap.get(TerrorSparkFunOTOS.class, "sensor_otos");
         this.voltageSensor = hwMap.getAll(PhotonLynxVoltageSensor.class).iterator().next();
     }
 

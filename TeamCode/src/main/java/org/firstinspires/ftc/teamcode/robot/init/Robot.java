@@ -5,10 +5,12 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robot.drive.Drivetrain;
+import org.firstinspires.ftc.teamcode.robot.drive.localizer.OTOSLocalizer;
 import org.firstinspires.ftc.teamcode.robot.drive.mecanum.MecanumDrivetrain;
 import org.firstinspires.ftc.teamcode.robot.hardware.sensors.camera.TerrorCamera;
 
@@ -19,6 +21,9 @@ import org.firstinspires.ftc.teamcode.robot.hardware.sensors.camera.TerrorCamera
 public class Robot {
     // Drivetrain
     public Drivetrain drivetrain = null;
+
+    // Localizer
+    public OTOSLocalizer localizer;
 
     // Camera stuff
     public TerrorCamera camera;
@@ -35,6 +40,15 @@ public class Robot {
         // Set up dashboard stuff
         this.dashboard = FtcDashboard.getInstance();
         this.telemetry = new MultipleTelemetry(tele, dashboard.getTelemetry());
+
+        // Initialize the localizer
+        this.localizer = new OTOSLocalizer(hardware.otos);
+        localizer.initializeOtos(new OTOSLocalizer.Parameters(
+                new SparkFunOTOS.Pose2D(0, 0, 0),
+                new SparkFunOTOS.Pose2D(0, 0, 0),
+                1.0,
+                1.0
+        ));
 
         // Initialize the drivetrain
         this.drivetrain = new MecanumDrivetrain(
