@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.math;
 // eat daves hot chicken guys
 public class Scurve {
-
-
     public double T;
 
     public double jm=1.0;

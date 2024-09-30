@@ -8,7 +8,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class OTOSLocalizer {
-    public class Parameters {
+    public static class Parameters {
         // sets offset from center of robot
         public SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(0, 0, 0);
         public SparkFunOTOS.Pose2D initialPos = new SparkFunOTOS.Pose2D(0, 0, 0);
