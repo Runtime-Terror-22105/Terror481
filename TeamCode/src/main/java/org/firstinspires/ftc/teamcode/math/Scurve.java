@@ -18,8 +18,10 @@ public class Scurve {
     public downcurve.convex downvex;
     public downcurve.concave downcave;
 
+    public linear line;
 
-    public Scurve(double v0,double jm, double as){
+
+    public Scurve(double v0,double jm, double as, double line_length){
         T=2*as/jm;
         this.jm=jm;
         this.as=as;
@@ -31,8 +33,10 @@ public class Scurve {
         this.upvex = up.new convex();
         downcurve down= new downcurve();
         this.vs=upvex.getVelocity(T);
+        this.line=new linear();
         this.downvex= down.new convex();
         this.downcave= down.new concave();
+        this.line_length=line_length;
     }
 
 
@@ -50,27 +54,35 @@ public class Scurve {
         else if(T/2<=t && t<=T){
             return upvex.getVelocity(t);
         }
-        else if(T<=t && t<=T*1.5){
+        // ADD the linear part
+        else if(T<=t && t<=T+line_length){
+            return line.getVelocity();
+        }
+        else if(T+line_length<=t && t<=T*1.5+line_length){
             return downvex.getVelocity(t);
         }
-        else if(T*1.5<=t && t<=2*T){
+        else if(T*1.5+line_length<=t && t<=2*T+line_length){
             return downcave.getVelocity(t);
         }
         return 0.0;
     }
 
     public double getPosition(double t){ // this is only relative
+        System.out.println(t+" "+T/2);
         if(0<=t && t<=T/2){
             return upcave.getPosition(t);
         }
         else if(T/2<=t && t<=T){
             return upcave.getPosition(T/2)+(upvex.getPosition(t)- upvex.getPosition(T/2));
         }
-        else if(T<=t && t<=T*1.5){
-            return upcave.getPosition(T/2)+(upvex.getPosition(T)- upvex.getPosition(T/2))+(downvex.getPosition(t)- downvex.getPosition(T));
+        else if(T<=t && t<=T+line_length){
+            return line.getPosition(t);
         }
-        else if(T*1.5<=t && t<=2*T){
-            return (upcave.getPosition(T/2))+(upvex.getPosition(T)- upvex.getPosition(T/2))+(downvex.getPosition(T*1.5)- downvex.getPosition(T))+(downvex.getPosition(t)- downvex.getPosition(T*1.5));
+        else if(T+line_length<=t && t<=T*1.5+line_length){
+            return upcave.getPosition(T/2)+(upvex.getPosition(T)- upvex.getPosition(T/2))+(line.getPosition(T+line_length))+(downvex.getPosition(t)- downvex.getPosition(T+line_length));
+        }
+        else if(T*1.5+line_length<=t && t<=2*T+line_length){
+            return upcave.getPosition(T/2)+(upvex.getPosition(T)- upvex.getPosition(T/2))+(line.getPosition(T+line_length))+(downvex.getPosition(T*1.5+line_length)- downvex.getPosition(T+line_length))+(downcave.getPosition(t)- downcave.getPosition(T*1.5+line_length));
         }
         return 0.0; //what weird times are you plugging in even lol
     }
@@ -91,6 +103,7 @@ public class Scurve {
                 return v0+((jm)*Math.pow(t,2))/2;
             }
             public double getPosition(double t){
+                System.out.println("here");
                 return v0*t+(1/3)*(((jm)*Math.pow(t,3))/2);
             }
         }
@@ -99,12 +112,12 @@ public class Scurve {
             public double getVelocity(double t){ // v(t)=vh+as*(t-T/2)-((jm*(t-T/2))/2)
                 double t_shift=t-T/2;
                 double vh=(v0+vs)/2;
-                return vh+as*(t_shift/2)-((jm*Math.pow(t_shift-T/2,2))/2);
+                return vh+as*(t_shift)-((jm*Math.pow(t_shift,2))/2);
             }
             public double getPosition(double t){ // CHECK THIS STUFF AND THIS CONVEX UP CURVE IDK ABOUT THE MATH.POW divided by 2
                 double t_shift=t-T/2;
                 double vh=(v0+vs)/2;
-                return vh*t+(1/2)*as*(Math.pow(t_shift,2)/2)-((1/3)*(jm*Math.pow(t_shift-T/2,3)));
+                return vh*t+(1/2)*as*(Math.pow(t_shift,2)/2)-((1/3)*(jm*Math.pow(t_shift,3)));
             }
         }
     }
