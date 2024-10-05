@@ -77,7 +77,7 @@ public class RobotCentricTeleOp extends LinearOpMode {
 
             robot.inOutTake.update();
             robot.pinkArm.update();
-            lastGamepad1 = gamepad1;
+            lastGamepad1.copy(gamepad1);
 
             telemetry.addData("Heading Angle",headingLockAngle);
             telemetry.addData("Rotation power", rotation);
