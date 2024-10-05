@@ -7,9 +7,11 @@ import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.math.Coordinate;
+import org.firstinspires.ftc.teamcode.robot.hardware.sensors.SampleColor;
 import org.firstinspires.ftc.teamcode.robot.init.Robot;
 import org.firstinspires.ftc.teamcode.robot.init.RobotHardware;
 
@@ -19,7 +21,7 @@ import org.firstinspires.ftc.teamcode.robot.init.RobotHardware;
 public class RobotCentricTeleOp extends LinearOpMode {
     public static final double DRIVESPEED = 1.0;
     private RobotHardware hardware = new RobotHardware();
-    private Robot robot = new Robot();
+    private final Robot robot = new Robot();
     private FtcDashboard dashboard;
 
 //    public static PidfController.PidfCoefficients heading_coeff = new PidfController.PidfCoefficients(0.63, 0, 0.0624, 0, 0.04);
@@ -40,47 +42,53 @@ public class RobotCentricTeleOp extends LinearOpMode {
 
         ElapsedTime loopTimer = new ElapsedTime();
         ElapsedTime drivingTimer = new ElapsedTime();
+        Gamepad lastGamepad1 = gamepad1;
         while (opModeIsActive()) {
             // Manually clear the bulk read cache. Deleting this would be catastrophic b/c stale
             // vals would be used.
             for (LynxModule hub : hardware.allHubs) {
                 hub.clearBulkCache();
             }
-//            robot.drivetrain.resetCache();//updating the angles and velocities
 
-            // all of the heading angle changes with accordance to joystick
             Coordinate direction = new Coordinate(slr(-gamepad1.left_stick_x), slr(gamepad1.left_stick_y));
-            double rotation = Math.pow(slr(-gamepad1.right_stick_x), 5);
-
-
-
-
-//            rotation = (rotation + Math.pow(rotation, 3))/2;
+            double rotation = slr(-gamepad1.right_stick_x);
             robot.drivetrain.move(
                     direction,
                     rotation,
                     DRIVESPEED
             );
 
+            if (gamepad1.a && !lastGamepad1.a) { // rising edge
+                robot.inOutTake.intake(new SampleColor[] {
+                        SampleColor.YELLOW,
+                        SampleColor.BLUE
+                });
+            } else if (gamepad1.x && !lastGamepad1.x) { // rising edge
+                robot.inOutTake.outtake();
+            }
+
+            if (gamepad1.y && !lastGamepad1.y) {
+                robot.pinkArm.setExtension(10);
+                robot.pinkArm.setPitch(Math.PI/2);
+            } else if (gamepad1.b && !lastGamepad1.b) {
+                robot.pinkArm.setExtension(100);
+                robot.pinkArm.setPitch(0);
+            }
+
+            robot.inOutTake.update();
+            robot.pinkArm.update();
+            lastGamepad1 = gamepad1;
+
             telemetry.addData("Heading Angle",headingLockAngle);
             telemetry.addData("Rotation power", rotation);
-
-//            telemetry.addData("MotorFrontLeft", "Velocity: " + hardware.motorFrontLeft.getVelocity()*60/28 + "rpm; Current Draw: " + hardware.motorFrontLeft.getCurrent(CurrentUnit.AMPS) + "amps; 100-((9.2-Current Draw)/9.2)" + (100-((9.2-hardware.motorFrontLeft.getCurrent(CurrentUnit.AMPS))/9.2)));
-//            telemetry.addData("MotorFrontRight", "Velocity: " + hardware.motorFrontRight.getVelocity()*60/28 + "rpm; Current Draw: " + hardware.motorFrontRight.getCurrent(CurrentUnit.AMPS) + "amps; 100-((9.2-Current Draw)/9.2)" + (100-((9.2-hardware.motorFrontRight.getCurrent(CurrentUnit.AMPS))/9.2)));
-//            telemetry.addData("MotorRearLeft", "Velocity: " + hardware.motorRearLeft.getVelocity()*60/28 + "rpm; Current Draw: " + hardware.motorRearLeft.getCurrent(CurrentUnit.AMPS) + "amps; 100-((9.2-Current Draw)/9.2)" + (100-((9.2-hardware.motorRearLeft.getCurrent(CurrentUnit.AMPS))/9.2)));
-//            telemetry.addData("MotorRearRight", "Velocity: " + hardware.motorRearRight.getVelocity()*60/28 + "rpm; Current Draw: " + hardware.motorRearRight.getCurrent(CurrentUnit.AMPS) + "amps; 100-((9.2-Current Draw)/9.2)" + (100-((9.2-hardware.motorRearRight.getCurrent(CurrentUnit.AMPS))/9.2)));
-//            telemetry.addData("y-stick",gamepad1.left_stick_y);
-//            telemetry.addData("x-stick",gamepad1.left_stick_x);
-//            telemetry.addData("rightstick",gamepad1.right_stick_x);
             telemetry.addData("Loop time (ms)", loopTimer.milliseconds());
             telemetry.addData("Loop time (hz)", 1000/loopTimer.milliseconds());
             telemetry.update();
             loopTimer.reset();
-
         }
     }
 
     public double slr(double joystick_value){
-        return (Math.pow(joystick_value,3)+joystick_value)/2;
+        return Math.pow((Math.pow(joystick_value,3)+joystick_value)/2, 5);
     }
 }

@@ -82,18 +82,21 @@ public class InOutTake {
     public void update() {
         switch (this.currentState) {
             case INTAKING:
-                this.setPower(1.0);
                 if (this.colorSensor.matchesColor(this.targetColors)) {
                     this.currentState = State.STOPPED;
+                    break;
                 }
+                this.setPower(1.0);
                 break;
             case OUTTAKING:
-                this.setPower(-1.0);
                 if (this.colorSensor.getColor().equals(SampleColor.NONE)) {
                     this.currentState = State.STOPPED;
+                    break;
                 }
+                this.setPower(-1.0);
                 break;
             case STOPPED:
+                this.setPower(0.0);
                 break;
         }
 
