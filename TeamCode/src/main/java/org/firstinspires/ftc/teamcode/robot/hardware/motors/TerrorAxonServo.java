@@ -11,15 +11,17 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
  * 1) Provide caching to avoid unnecessary setPower() lynxcommands.
  * 2) Allow for easy usage of the Axon servos.
  */
+@Deprecated
 public class TerrorAxonServo {
     private double offset = 0;
     private double lastPower;
     private AnalogInput absoluteServoEncoder = null;
     private final PhotonCRServo crservo;
 
-    private final double powerThreshold = 0.05;
+    private final double powerThreshold;
 
-    public TerrorAxonServo(@NonNull PhotonCRServo crservo) {
+    public TerrorAxonServo(@NonNull PhotonCRServo crservo, double powerThreshold) {
+        this.powerThreshold = powerThreshold;
         this.crservo = crservo;
         this.lastPower = crservo.getPower();
     }

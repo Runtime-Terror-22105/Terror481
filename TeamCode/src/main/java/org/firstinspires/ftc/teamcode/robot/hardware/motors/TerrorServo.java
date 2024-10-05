@@ -12,15 +12,13 @@ public class TerrorServo {
     private final PhotonServo servo;
     private double lastPosition;
 
-    private final double positionThreshold = 0.0000;
-
     public TerrorServo(@NonNull PhotonServo servo) {
         this.servo = servo;
         this.lastPosition = servo.getPosition();
     }
 
     synchronized public void setPosition(double position) {
-        if (Math.abs(this.lastPosition - position) < this.positionThreshold) {
+        if (this.lastPosition != position) {
             this.lastPosition = position;
             this.servo.setPosition(position);
         }

@@ -15,9 +15,10 @@ public class TerrorMotor {
     private double lastPower;
     private final PhotonDcMotor motor;
 
-    private final double powerThreshold = 0.05;
+    private final double powerThreshold;
 
-    public TerrorMotor(@NonNull PhotonDcMotor motor) {
+    public TerrorMotor(@NonNull PhotonDcMotor motor, double powerThreshold) {
+        this.powerThreshold = powerThreshold;
         this.motor = motor;
         setMotorEnable();
         this.lastPower = motor.getPower();

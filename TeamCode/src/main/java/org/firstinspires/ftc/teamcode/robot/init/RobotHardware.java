@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.hardware.configuration.LynxConstants;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.robot.hardware.motors.TerrorMotor;
+import org.firstinspires.ftc.teamcode.robot.hardware.motors.TerrorServo;
 import org.firstinspires.ftc.teamcode.robot.hardware.sensors.TerrorAnalogEncoder;
 import org.firstinspires.ftc.teamcode.robot.hardware.sensors.TerrorEncoder;
 import org.firstinspires.ftc.teamcode.robot.hardware.sensors.TerrorSparkFunOTOS;
@@ -37,13 +38,16 @@ public class RobotHardware {
     public TerrorMotor motorFrontRight = null;
     public TerrorMotor motorRearLeft = null;
 
-    // Pink arm motors
+    // Pink arm stuff
     public TerrorMotor armPitchMotor1 = null;
     public TerrorMotor armPitchMotor2 = null;
     public TerrorAnalogEncoder armPitchEncoder = null;
     public TerrorMotor armExtensionMotor1 = null;
     public TerrorMotor armExtensionMotor2 = null;
     public TerrorEncoder armExtensionEncoder = null;
+
+    // In/Out take stuff
+    public TerrorServo
 
     // Camera
     private TerrorCamera camera;
@@ -63,22 +67,22 @@ public class RobotHardware {
         this.hwMap = hwMap;
 
         // Initialize the drivetrain motors
-        this.motorFrontLeft  = new TerrorMotor(((PhotonDcMotor)hwMap.get(DcMotor.class, "motorFrontLeft")));
-        this.motorFrontRight = new TerrorMotor(((PhotonDcMotor)hwMap.get(DcMotor.class, "motorFrontRight")));
-        this.motorRearRight  = new TerrorMotor(((PhotonDcMotor)hwMap.get(DcMotor.class, "motorRearRight")));
-        this.motorRearLeft   = new TerrorMotor(((PhotonDcMotor)hwMap.get(DcMotor.class, "motorRearLeft")));
+        this.motorFrontLeft  = new TerrorMotor(((PhotonDcMotor)hwMap.get(DcMotor.class, "motorFrontLeft")), 0.05);
+        this.motorFrontRight = new TerrorMotor(((PhotonDcMotor)hwMap.get(DcMotor.class, "motorFrontRight")), 0.05);
+        this.motorRearRight  = new TerrorMotor(((PhotonDcMotor)hwMap.get(DcMotor.class, "motorRearRight")), 0.05);
+        this.motorRearLeft   = new TerrorMotor(((PhotonDcMotor)hwMap.get(DcMotor.class, "motorRearLeft")), 0.05);
         this.motorFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.motorFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.motorRearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.motorRearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Initialize the pink arm motors and sensors
-        this.armPitchMotor1 = new TerrorMotor(((PhotonDcMotor)hwMap.get(DcMotor.class, "armPitchMotor1")));
-        this.armPitchMotor2 = new TerrorMotor(((PhotonDcMotor)hwMap.get(DcMotor.class, "armPitchMotor2")));
+        this.armPitchMotor1 = new TerrorMotor(((PhotonDcMotor)hwMap.get(DcMotor.class, "armPitchMotor1")), 0.02);
+        this.armPitchMotor2 = new TerrorMotor(((PhotonDcMotor)hwMap.get(DcMotor.class, "armPitchMotor2")), 0.02);
         this.armPitchEncoder = new TerrorAnalogEncoder(hwMap.get(AnalogInput.class, "armPitchEncoder"));
         this.armPitchEncoder.setOffset(0);
-        this.armExtensionMotor1 = new TerrorMotor(((PhotonDcMotor)hwMap.get(DcMotor.class, "armExtensionMotor1")));
-        this.armExtensionMotor2 = new TerrorMotor(((PhotonDcMotor)hwMap.get(DcMotor.class, "armExtensionMotor2")));
+        this.armExtensionMotor1 = new TerrorMotor(((PhotonDcMotor)hwMap.get(DcMotor.class, "armExtensionMotor1")), 0.02);
+        this.armExtensionMotor2 = new TerrorMotor(((PhotonDcMotor)hwMap.get(DcMotor.class, "armExtensionMotor2")), 0.02);
         this.armExtensionEncoder = new TerrorEncoder(armExtensionMotor1); // might need to change to motor 2
 
         this.initCamera();

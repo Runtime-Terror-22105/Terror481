@@ -12,9 +12,10 @@ public class TerrorCRServo {
     private double lastPower;
     private final PhotonCRServo crservo;
 
-    private final double powerThreshold = 0.05;
+    private final double powerThreshold;
 
-    public TerrorCRServo(@NonNull PhotonCRServo crservo) {
+    public TerrorCRServo(@NonNull PhotonCRServo crservo, double powerThreshold) {
+        this.powerThreshold = powerThreshold;
         this.crservo = crservo;
         this.lastPower = crservo.getPower();
     }
