@@ -22,10 +22,10 @@ public class PinkArm {
     private final TerrorEncoder armExtensionEncoder;
 
     // PIDs
-    private PidfController.PidfCoefficients pitchPidCoefficients =
+    public static PidfController.PidfCoefficients pitchPidCoefficients =
             new PidfController.PidfCoefficients(0, 0, 0, 0, 0);
     private final PidfController pitchPid = new PidfController(pitchPidCoefficients);
-    private PidController.PidCoefficients extensionPidCoefficients =
+    public static PidController.PidCoefficients extensionPidCoefficients =
             new PidController.PidCoefficients(0, 0, 0);
     private final PidController extensionPid = new PidController(extensionPidCoefficients);
 
