@@ -13,14 +13,18 @@ import org.firstinspires.ftc.teamcode.robot.drive.Drivetrain;
 import org.firstinspires.ftc.teamcode.robot.drive.localizer.OTOSLocalizer;
 import org.firstinspires.ftc.teamcode.robot.drive.mecanum.MecanumDrivetrain;
 import org.firstinspires.ftc.teamcode.robot.hardware.sensors.camera.TerrorCamera;
+import org.firstinspires.ftc.teamcode.robot.subsystems.InOutTake;
+import org.firstinspires.ftc.teamcode.robot.subsystems.PinkArm;
 
 /**
  * A class containing all the robot's subsystems.
  */
 @Config
 public class Robot {
-    // Drivetrain
+    // Subsystems
     public Drivetrain drivetrain = null;
+    public PinkArm pinkArm = null;
+    public InOutTake inOutTake = null;
 
     // Localizer
     public OTOSLocalizer localizer;
@@ -40,6 +44,10 @@ public class Robot {
         // Set up dashboard stuff
         this.dashboard = FtcDashboard.getInstance();
         this.telemetry = new MultipleTelemetry(tele, dashboard.getTelemetry());
+
+        // Set up subsytems
+        this.pinkArm = new PinkArm(hardware);
+        this.inOutTake = new InOutTake(hardware);
 
         // Initialize the localizer
         this.localizer = new OTOSLocalizer(hardware.otos);
