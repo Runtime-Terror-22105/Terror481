@@ -73,7 +73,11 @@ public class TerrorMotor {
         this.motor.setDirection(direction);
     }
 
-    public double getCurrentPosition() {
+    public DcMotorSimple.Direction getDirection() {
+        return this.motor.getDirection();
+    }
+
+    public int getCurrentPosition() {
         return motor.getCurrentPosition();
     }
 

@@ -1,13 +1,18 @@
 package org.firstinspires.ftc.teamcode.math.controllers;
 
+import androidx.annotation.NonNull;
+
 import com.qualcomm.robotcore.util.Range;
 
-public class PidfController {
-    private static final double MAX_INTEGRAL = 1e15; // random constant to prevent integral windup, will adjust later
+import org.firstinspires.ftc.teamcode.math.Angle;
 
-    // pid constants
-    private final PidfCoefficients pidfCoefficients;
-    //region pid temp vars
+
+public class SwervePidfController {
+    private static final double MAX_INTEGRAL = 100000;
+    // pidf constants
+    private SwervePidfCoefficients pidfCoefficients;
+
+    //region pidf temp vars
     private double integralSum;
     private double lastError;
     private double error;
@@ -15,49 +20,73 @@ public class PidfController {
     //endregion
 
     //region public variables
+    public double power = 0;
     private double targetPosition = 0;
-    public boolean reached = false;
-    private double tolerance = 10;
 
+    public double tolerance;
     //endregion
-    public PidfController(PidfCoefficients pidfCoefficients) {
+
+    public SwervePidfController(@NonNull SwervePidfCoefficients pidfCoefficients) {
         this.pidfCoefficients = pidfCoefficients;
         _resetTempVars();
-    }
-
-    public void setTolerance(double tolerance) {
-        this.tolerance = tolerance;
     }
 
     /**
      * NOTE: You must run this function each loop iteration. It will do the PID stuff to calculate
      * the power to be used.
      */
-    public double calculatePower(double encoderPosition, double feedforwardReference) {
-        this.error = this.targetPosition - encoderPosition;
-
+    private void calculate(double error, double feedforwardReference) {
         double timestamp = (double) System.nanoTime() / 1E9;
         if (lastTimeStamp == 0) lastTimeStamp = timestamp;
         double period = Math.max(timestamp - lastTimeStamp, 1E-5);
         lastTimeStamp = timestamp;
 
         double derivative = (error - lastError) / period;
-        this.integralSum = Math.max(Math.min(integralSum + (error * period), MAX_INTEGRAL), -MAX_INTEGRAL);
 
-        double power = (pidfCoefficients.Kp * error)
+        integralSum = Math.max(Math.min(integralSum + (error * period), MAX_INTEGRAL), -MAX_INTEGRAL);
+
+        double outUnclamped = (pidfCoefficients.Kp * error)
                 + (pidfCoefficients.Kd * derivative)
                 + (pidfCoefficients.Ki * integralSum)
                 + (pidfCoefficients.Kv * feedforwardReference);
-        this.lastError = error;
+        power = Math.max(Math.min(outUnclamped, 1.0), -1.0); // out has to be between -1 and 1
+        lastError = error;
+    }
+
+    public boolean atTargetPosition() {
+        return Math.abs(error) < this.tolerance;
+    }
+
+    public void resetPid() {
+        _resetTempVars();
+        power = 0;
+    }
+
+    public void setCoefficients(@NonNull SwervePidfCoefficients coefficients) {
+        this.pidfCoefficients = coefficients;
+    }
+
+    public void calculatePower(double encoderPosition, double feedforwardReference, double tolerance){
+        this.tolerance = tolerance;
+
+        this.error = Angle.angleWrap(this.targetPosition - encoderPosition);
+        this.calculate(error, feedforwardReference);
+
+        this.power = Range.clip(power, -1, 1);
+        if (Double.isNaN(power)) this.power = 0;
 
         if (Math.abs(error) > tolerance) {
-            power += power >= 0 ? pidfCoefficients.Kstatic : -pidfCoefficients.Kstatic;
+            if (power >= 0) {
+                this.power += pidfCoefficients.Kstatic;
+            } else {
+                this.power -= pidfCoefficients.Kstatic;
+            }
         }
+        this.power = Range.clip(power, -1, 1);
+    }
 
-        power = Range.clip(power, -1, 1);
-        if (Double.isNaN(power)) power = 0;
-
-        return power;
+    public double getPower() {
+        return this.power;
     }
 
     // region moving
@@ -80,6 +109,7 @@ public class PidfController {
         this.targetPosition = targetPosition;
     }
     // endregion
+
     /**
      * Gets the current target position of the PID.
      * @return targetPosition - The target position.
@@ -95,23 +125,19 @@ public class PidfController {
         this.lastTimeStamp = 0;
     }
 
-    public static class PidfCoefficients {
+    public static class SwervePidfCoefficients {
         public double Kp;
         public double Ki;
         public double Kd;
         public double Kv;
         public double Kstatic;
 
-        public PidfCoefficients(double Kp, double Ki, double Kd, double Kv, double Kstatic) {
+        public SwervePidfCoefficients(double Kp, double Ki, double Kd, double Kv, double Kstatic) {
             this.Kp = Kp;
             this.Ki = Ki;
             this.Kd = Kd;
             this.Kv = Kv;
             this.Kstatic = Kstatic;
-        }
-
-        public PidfCoefficients(double Kp, double Ki, double Kd, double Kv) {
-            this(Kp, Ki, Kd, Kv, 0);
         }
     }
 }

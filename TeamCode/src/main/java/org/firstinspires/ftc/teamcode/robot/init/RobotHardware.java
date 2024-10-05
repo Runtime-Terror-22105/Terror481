@@ -9,12 +9,15 @@ import com.outoftheboxrobotics.photoncore.Photon;
 import com.outoftheboxrobotics.photoncore.hardware.PhotonLynxVoltageSensor;
 import com.outoftheboxrobotics.photoncore.hardware.motor.PhotonDcMotor;
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.configuration.LynxConstants;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.robot.hardware.motors.TerrorMotor;
+import org.firstinspires.ftc.teamcode.robot.hardware.sensors.TerrorAnalogEncoder;
+import org.firstinspires.ftc.teamcode.robot.hardware.sensors.TerrorEncoder;
 import org.firstinspires.ftc.teamcode.robot.hardware.sensors.TerrorSparkFunOTOS;
 import org.firstinspires.ftc.teamcode.robot.hardware.sensors.camera.TerrorCamera;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -33,6 +36,14 @@ public class RobotHardware {
     public TerrorMotor motorRearRight = null;
     public TerrorMotor motorFrontRight = null;
     public TerrorMotor motorRearLeft = null;
+
+    // Pink arm motors
+    public TerrorMotor armPitchMotor1 = null;
+    public TerrorMotor armPitchMotor2 = null;
+    public TerrorAnalogEncoder armPitchEncoder = null;
+    public TerrorMotor armExtensionMotor1 = null;
+    public TerrorMotor armExtensionMotor2 = null;
+    public TerrorEncoder armExtensionEncoder = null;
 
     // Camera
     private TerrorCamera camera;
@@ -61,10 +72,19 @@ public class RobotHardware {
         this.motorRearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.motorRearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        // Initialize the pink arm motors and sensors
+        this.armPitchMotor1 = new TerrorMotor(((PhotonDcMotor)hwMap.get(DcMotor.class, "armPitchMotor1")));
+        this.armPitchMotor2 = new TerrorMotor(((PhotonDcMotor)hwMap.get(DcMotor.class, "armPitchMotor2")));
+        this.armPitchEncoder = new TerrorAnalogEncoder(hwMap.get(AnalogInput.class, "armPitchEncoder"));
+        this.armPitchEncoder.setOffset(0);
+        this.armExtensionMotor1 = new TerrorMotor(((PhotonDcMotor)hwMap.get(DcMotor.class, "armExtensionMotor1")));
+        this.armExtensionMotor2 = new TerrorMotor(((PhotonDcMotor)hwMap.get(DcMotor.class, "armExtensionMotor2")));
+        this.armExtensionEncoder = new TerrorEncoder(armExtensionMotor1); // might need to change to motor 2
+
         this.initCamera();
         this.initLynx(bulkCachingMode);
 
-        // Sensors
+        // Misc Sensors
         this.otos = this.hwMap.get(TerrorSparkFunOTOS.class, "sensor_otos");
         this.voltageSensor = hwMap.getAll(PhotonLynxVoltageSensor.class).iterator().next();
     }

@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot.drive.swerve;
 
 import org.firstinspires.ftc.teamcode.math.Coordinate;
-import org.firstinspires.ftc.teamcode.math.controllers.PidfController;
+import org.firstinspires.ftc.teamcode.math.controllers.SwervePidfController;
 
 
 /**
@@ -9,8 +9,8 @@ import org.firstinspires.ftc.teamcode.math.controllers.PidfController;
  * dashboard.
  */
 public class SwerveModuleConfig {
-    public final PidfController.PidfCoefficients anglePidfCoefficientsCCW;
-    public final PidfController.PidfCoefficients anglePidfCoefficientsCW;
+    public final SwervePidfController.SwervePidfCoefficients anglePidfCoefficientsCCW;
+    public final SwervePidfController.SwervePidfCoefficients anglePidfCoefficientsCW;
     public final Coordinate moduleOffset; // the offset from the center
     public final boolean servoEncoderReversed;
     public final double servoEncoderOffset;
@@ -24,8 +24,8 @@ public class SwerveModuleConfig {
      * @param servoEncoderOffset   How much to offset the encoder for the turning servo to make it
      *                             be 0.
      */
-    public SwerveModuleConfig(PidfController.PidfCoefficients anglePidfCoefficientsCCW,
-                              PidfController.PidfCoefficients anglePidfCoefficientsCW,
+    public SwerveModuleConfig(SwervePidfController.SwervePidfCoefficients anglePidfCoefficientsCCW,
+                              SwervePidfController.SwervePidfCoefficients anglePidfCoefficientsCW,
                               boolean servoEncoderReversed, Coordinate moduleOffset,
                               double servoEncoderOffset) {
         this.anglePidfCoefficientsCCW = anglePidfCoefficientsCCW;

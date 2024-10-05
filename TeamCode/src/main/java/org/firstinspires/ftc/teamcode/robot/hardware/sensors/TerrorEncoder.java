@@ -1,9 +1,10 @@
 package org.firstinspires.ftc.teamcode.robot.hardware.sensors;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.robot.hardware.motors.TerrorMotor;
 
 /**
  * Wraps a motor instance to provide corrected velocity counts and allow reversing independently of the corresponding
@@ -21,7 +22,7 @@ public class TerrorEncoder {
         // because the velocity is always a multiple of 20 cps due to Expansion Hub's 50ms measurement window
         real += ((real % 20) / 4) * CPS_STEP;
         // estimate-based correction: it finds the nearest multiple of 5 to correct the upper bits by
-        real += Math.round((estimate - real) / (5 * CPS_STEP)) * 5 * CPS_STEP;
+        real += (int) (Math.round((estimate - real) / (5 * CPS_STEP)) * 5 * CPS_STEP);
         return real;
     }
 
@@ -40,7 +41,7 @@ public class TerrorEncoder {
         }
     }
 
-    private DcMotorEx motor;
+    private TerrorMotor motor;
     private ElapsedTime clock;
 
     private Direction direction;
@@ -50,7 +51,7 @@ public class TerrorEncoder {
     private double[] velocityEstimates;
     private double lastUpdateTime;
 
-    public TerrorEncoder(DcMotorEx motor) {
+    public TerrorEncoder(TerrorMotor motor) {
         this.motor = motor;
         this.clock = new ElapsedTime();
 

@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.math.Angle;
 import org.firstinspires.ftc.teamcode.math.Coordinate;
-import org.firstinspires.ftc.teamcode.math.controllers.PidfController;
+import org.firstinspires.ftc.teamcode.math.controllers.SwervePidfController;
 import org.firstinspires.ftc.teamcode.robot.hardware.motors.TerrorAxonServo;
 import org.firstinspires.ftc.teamcode.robot.hardware.motors.TerrorMotor;
 
@@ -17,9 +17,9 @@ public class SwerveModule {
     public double currAngle;
 
     // the numbers for calculations
-    private final PidfController.PidfCoefficients anglePidCoefficientsCCW;
-    private final PidfController.PidfCoefficients anglePidCoefficientsCW;
-    public final PidfController anglePid;
+    private final SwervePidfController.SwervePidfCoefficients anglePidCoefficientsCCW;
+    private final SwervePidfController.SwervePidfCoefficients anglePidCoefficientsCW;
+    public final SwervePidfController anglePid;
 
 //    private final PidfController.PidfCoefficients velPidCoefficients;
 //    private final PidfController velPid;
@@ -46,7 +46,7 @@ public class SwerveModule {
         this.anglePidCoefficientsCCW = config.anglePidfCoefficientsCCW;
         this.anglePidCoefficientsCW = config.anglePidfCoefficientsCW;
 
-        this.anglePid = new PidfController(anglePidCoefficientsCCW);
+        this.anglePid = new SwervePidfController(anglePidCoefficientsCCW);
 //        this.rotationServo.setDirection(config.servoEncoderReversed ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD);
         this.rotationServo.setOffset(config.servoEncoderOffset);
 
@@ -96,7 +96,7 @@ public class SwerveModule {
 //        this.driveMotor.setPower(0.0);
     }
 
-    public PidfController.PidfCoefficients getAnglePidCoefficients(double error) {
+    public SwervePidfController.SwervePidfCoefficients getAnglePidCoefficients(double error) {
         if (error > 0) {
             return anglePidCoefficientsCCW;
         } else {
