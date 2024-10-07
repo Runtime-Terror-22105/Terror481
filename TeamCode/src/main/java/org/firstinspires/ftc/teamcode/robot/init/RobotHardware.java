@@ -19,6 +19,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.configuration.LynxConstants;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.robot.hardware.TerrorPublisher;
 import org.firstinspires.ftc.teamcode.robot.hardware.motors.TerrorCRServo;
 import org.firstinspires.ftc.teamcode.robot.hardware.motors.TerrorMotor;
 import org.firstinspires.ftc.teamcode.robot.hardware.motors.TerrorServo;
@@ -72,6 +73,7 @@ public class RobotHardware {
 
     // Other
     public HardwareMap hwMap;
+    private TerrorPublisher publisher = new TerrorPublisher();
 
     public void init(@NonNull HardwareMap hwMap, @NonNull LynxModule.BulkCachingMode bulkCachingMode) {
         this.hwMap = hwMap;
@@ -97,6 +99,8 @@ public class RobotHardware {
         this.motorFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.motorRearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.motorRearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.publisher.subscribe(motorFrontLeft, motorFrontRight, motorRearLeft, motorRearRight);
+
 
         // Initialize the pink arm motors and sensors
         this.armPitchMotor1 = new TerrorMotor(
@@ -118,6 +122,7 @@ public class RobotHardware {
                 0.02
         );
         this.armExtensionEncoder = new TerrorEncoder(armExtensionMotor1); // might need to change to motor 2
+        this.publisher.subscribe(armPitchMotor1, armPitchMotor2, armExtensionMotor1, armExtensionMotor2);
 
         // Initialize the inouttake servos and sensors
         this.wheelPitchServo1 = new TerrorServo((PhotonServo) hwMap.get(Servo.class, "wheelPitchServo1"));
@@ -130,6 +135,7 @@ public class RobotHardware {
             hwMap.digitalChannel.get("digital0"),
             hwMap.digitalChannel.get("digital1")
         ); // assume that the color sensor is already configured
+        this.publisher.subscribe(wheelPitchServo1, wheelPitchServo2, wheelRotationServoLeft, wheelRotationServoRight);
 
         this.initCamera();
         this.initLynx(bulkCachingMode);
@@ -139,7 +145,11 @@ public class RobotHardware {
         this.voltageSensor = hwMap.getAll(PhotonLynxVoltageSensor.class).iterator().next();
     }
 
-    public void initLynx(LynxModule.BulkCachingMode bulkCachingMode) {
+    public void write() {
+        this.publisher.write();
+    }
+
+    private void initLynx(LynxModule.BulkCachingMode bulkCachingMode) {
         // Initialize Lynx stuff
         this.allHubs = this.hwMap.getAll(LynxModule.class);
         for (LynxModule hub : this.allHubs) {

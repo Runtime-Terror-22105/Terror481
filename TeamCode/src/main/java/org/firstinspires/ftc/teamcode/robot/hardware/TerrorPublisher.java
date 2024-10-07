@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot.hardware;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class TerrorPublisher {
@@ -12,8 +13,8 @@ public class TerrorPublisher {
 //        this.sensors = new ArrayList<>();
     }
 
-    public void subscribe(TerrorWritingDevice device) {
-        writingDevices.add(device);
+    public void subscribe(TerrorWritingDevice... devices) {
+        writingDevices.addAll(Arrays.asList(devices));
     }
 
     public void write() {
