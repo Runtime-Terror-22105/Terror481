@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
-import org.firstinspires.ftc.teamcode.robot.hardware.TerrorHardwareDevice;
+import org.firstinspires.ftc.teamcode.robot.hardware.TerrorWritingDevice;
 import java.util.Arrays;
 
 /**
@@ -14,7 +14,7 @@ import java.util.Arrays;
  * power threshold handling, and motor enabling/disabling.
  * This class implements the TerrorHardwareDevice interface.
  */
-public class TerrorMotor implements TerrorHardwareDevice {
+public class TerrorMotor implements TerrorWritingDevice {
     private boolean motorEnabled;
     private final PhotonDcMotor motor;
     private final double powerThreshold;

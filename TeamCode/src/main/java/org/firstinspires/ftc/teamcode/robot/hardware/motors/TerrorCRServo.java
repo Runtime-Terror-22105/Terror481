@@ -5,14 +5,14 @@ import androidx.annotation.NonNull;
 import com.outoftheboxrobotics.photoncore.hardware.servo.PhotonCRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.teamcode.robot.hardware.TerrorHardwareDevice;
+import org.firstinspires.ftc.teamcode.robot.hardware.TerrorWritingDevice;
 
 /**
  * A wrapper servo class that provides caching to avoid unnecessary setPower() calls.
  * This class manages a continuous rotation servo by minimizing calls to the underlying hardware
  * when the requested power is within a specified threshold.
  */
-public class TerrorCRServo implements TerrorHardwareDevice {
+public class TerrorCRServo implements TerrorWritingDevice {
     private final PhotonCRServo crservo;
     private final double powerThreshold;
 

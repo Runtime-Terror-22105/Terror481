@@ -5,14 +5,14 @@ import androidx.annotation.NonNull;
 import com.outoftheboxrobotics.photoncore.hardware.servo.PhotonServo;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.robot.hardware.TerrorHardwareDevice;
+import org.firstinspires.ftc.teamcode.robot.hardware.TerrorWritingDevice;
 
 /**
  * A wrapper class for the {@link PhotonServo}, providing position caching to avoid redundant
  * {@link PhotonServo#setPosition(double)} calls. The class ensures the position is only updated
  * when the difference from the last set position exceeds a defined tolerance.
  */
-public class TerrorServo implements TerrorHardwareDevice {
+public class TerrorServo implements TerrorWritingDevice {
     private final PhotonServo servo;  // The underlying PhotonServo instance
     private double servoPosition;     // Current position of the servo
     private double lastPosition;      // Last set position to prevent unnecessary updates

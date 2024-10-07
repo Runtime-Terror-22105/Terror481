@@ -6,7 +6,14 @@ import com.outoftheboxrobotics.photoncore.hardware.servo.PhotonCRServo;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.teamcode.robot.hardware.sensors.TerrorAnalogEncoder;
+
 /**
+ * <h1>DO NOT USE THIS</h1>
+ * IT DOES NOT WORK WITH THE SUBSCRIBER CLASS AND IS POORLY
+ * WRITTEN. THIS ONLY EXISTS SO THE SWERVE CODE DOESN'T BREAK.
+ * Please use {@link TerrorCRServo} and {@link TerrorAnalogEncoder} instead.
+ * <p></p>
  * A wrapper CRServo class for axon servos that has two goals.
  * 1) Provide caching to avoid unnecessary setPower() lynxcommands.
  * 2) Allow for easy usage of the Axon servos.
