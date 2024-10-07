@@ -6,11 +6,9 @@ import java.util.List;
 
 public class TerrorPublisher {
     private final List<TerrorWritingDevice> writingDevices;
-//    private final List<TerrorSensor> sensors; // Hypothetical class for sensors
 
     public TerrorPublisher() {
         this.writingDevices = new ArrayList<>();
-//        this.sensors = new ArrayList<>();
     }
 
     public void subscribe(TerrorWritingDevice... devices) {
@@ -22,10 +20,4 @@ public class TerrorPublisher {
             device.write();
         }
     }
-
-//    public void readSensors() {
-//        for (TerrorSensor sensor : sensors) {
-//            sensor.read(); // Hypothetical method to read sensor data
-//        }
-//    }
 }

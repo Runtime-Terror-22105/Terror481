@@ -89,6 +89,7 @@ public class FieldCentricTeleOp extends LinearOpMode {
 
 
             // endregion driving
+            hardware.write();
 
             telemetry.addData("Loop time (ms)", loopTimer.milliseconds());
             telemetry.addData("Loop time (hz)", 1000/loopTimer.milliseconds());
