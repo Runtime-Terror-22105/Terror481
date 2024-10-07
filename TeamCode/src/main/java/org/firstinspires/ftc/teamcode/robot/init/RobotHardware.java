@@ -99,7 +99,7 @@ public class RobotHardware {
         this.motorFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.motorRearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.motorRearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        this.publisher.subscribe(motorFrontLeft, motorFrontRight, motorRearLeft, motorRearRight);
+        this.publisher.subscribe(4, motorFrontLeft, motorFrontRight, motorRearLeft, motorRearRight);
 
 
         // Initialize the pink arm motors and sensors
@@ -122,7 +122,8 @@ public class RobotHardware {
                 0.02
         );
         this.armExtensionEncoder = new TerrorEncoder(armExtensionMotor1); // might need to change to motor 2
-        this.publisher.subscribe(armPitchMotor1, armPitchMotor2, armExtensionMotor1, armExtensionMotor2);
+        this.publisher.subscribe(5, armPitchMotor1, armPitchMotor2);
+        this.publisher.subscribe(3, armExtensionMotor1, armExtensionMotor2);
 
         // Initialize the inouttake servos and sensors
         this.wheelPitchServo1 = new TerrorServo((PhotonServo) hwMap.get(Servo.class, "wheelPitchServo1"));
@@ -135,7 +136,8 @@ public class RobotHardware {
             hwMap.digitalChannel.get("digital0"),
             hwMap.digitalChannel.get("digital1")
         ); // assume that the color sensor is already configured
-        this.publisher.subscribe(wheelPitchServo1, wheelPitchServo2, wheelRotationServoLeft, wheelRotationServoRight);
+        this.publisher.subscribe(1, wheelPitchServo1, wheelPitchServo2);
+        this.publisher.subscribe(2, wheelRotationServoLeft, wheelRotationServoRight);
 
         this.initCamera();
         this.initLynx(bulkCachingMode);
@@ -178,7 +180,9 @@ public class RobotHardware {
                 .detectAprilTags()
                 .init();
 
-        assert this.camera.tagProcessor != null;
+        if (this.camera.tagProcessor == null) {
+            throw new IllegalStateException("AprilTag processor not initialized!");
+        }
 //        this.camera.tagProcessor.setDecimation(???); // TODO: tune decimation value
         this.camera.tagProcessor.setPoseSolver(AprilTagProcessor.PoseSolver.APRILTAG_BUILTIN);
     }
