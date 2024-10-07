@@ -48,7 +48,8 @@ public class TerrorMotor implements TerrorHardwareDevice {
         this.powerThreshold = powerThreshold;
         this.motor = motor;
         setMotorEnable();
-        this.motorPower = motor.getPower();
+        this.lastPower = motor.getPower();
+        this.motorPower = 0;
         this.motorVel = motor.getVelocity();
         this.motorEnabled = true;
         this.resetCommands();
