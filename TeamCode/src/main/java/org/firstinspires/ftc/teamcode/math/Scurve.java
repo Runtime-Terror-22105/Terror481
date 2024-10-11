@@ -42,6 +42,7 @@ public class Scurve {
 
 
     public Scurve(double v0){
+
         T=2*as/jm;
     }
 
@@ -86,6 +87,16 @@ public class Scurve {
             return upcave.getPosition(T/2)+(upvex.getPosition(T)- upvex.getPosition(T/2))+(line.getPosition(T+line_length))+(downvex.getPosition(T*1.5+line_length)- downvex.getPosition(T+line_length))+(downcave.getPosition(t)- downcave.getPosition(T*1.5+line_length));
         }
         return 0.0; //what weird times are you plugging in even lol
+    }
+
+    public double solveAccel(double Position){
+        double a=(1/Math.pow(jm,2));
+        double b=1/(2*jm);
+        double c=2*v0/(jm);
+        double d=-Position/2;
+        cubicformula cform= new cubicformula();
+        this.as=cform.solveCubic(a,b,c,d);
+        return as;
     }
 
 
