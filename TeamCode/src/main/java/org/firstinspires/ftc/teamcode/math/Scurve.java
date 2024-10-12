@@ -21,13 +21,18 @@ public class Scurve {
     public linear line;
 
 
-    public Scurve(double v0,double jm, double as, double line_length){
-        T=2*as/jm;
+    public Scurve(double v0,double jm, double move_length){
+        // solving the max acceleration to set the system too
+        this.as=solveAccel(move_length);
+
+        // this is the time
+        this.T=2*as/jm;
         this.jm=jm;
-        this.as=as;
         this.v0=v0;
 
-
+        // calculate the parameters for accel and line length
+        CalculateParameters(this.v0,move_length); // updates the velocity set speed and possibly the accel set speed
+        // these are the curve creations based on the variables
         upcurve up=new upcurve();
         this.upcave = up.new concave();
         this.upvex = up.new convex();
@@ -39,13 +44,27 @@ public class Scurve {
         this.line_length=line_length;
     }
 
+    public void CalculateParameters(double v0, double deltaPosition){
+        double max_withoutline_area=2; // remember to update this according to system changes
+        if(deltaPosition-(max_withoutline_area)<0){ // has the line segment
+            double T=2*this.as/this.jm;
+            upcurve up=new upcurve();
+            upcurve.concave upc = up.new concave();
+            upcurve.convex upv = up.new convex();
+            this.vs=upv.getVelocity(T);
+            this.line_length=(deltaPosition-(max_withoutline_area))/vs;
+        }
+        else{ // no line segment
+            solveAccel(deltaPosition);
+            double T=2*this.as/this.jm;
+            upcurve up=new upcurve();
+            upcurve.concave upc = up.new concave();
+            upcurve.convex upv = up.new convex();
+            this.vs=upv.getVelocity(T);
+            this.line_length=0;
+        }
 
-
-    public Scurve(double v0){
-
-        T=2*as/jm;
     }
-
 
 
     public double getVelocity(double t){
