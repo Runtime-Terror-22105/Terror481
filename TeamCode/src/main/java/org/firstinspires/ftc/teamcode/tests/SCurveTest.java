@@ -4,9 +4,9 @@ import org.firstinspires.ftc.teamcode.math.Scurve;
 
 public class SCurveTest {
     public static void main(String[] args) {
-        Scurve curve = new Scurve(
-                0, 1, 1,1
-        );
+//        Scurve curve = new Scurve(
+//                0, 1, 1,1
+//        );
 
 
 
