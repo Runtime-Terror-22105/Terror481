@@ -105,6 +105,10 @@ public class Robot {
         this.pinkArm.adjustPitch(pitch);
         this.pinkArm.adjustExtension(extension);
     }
+    
+    public void rotateArmRaw(double power) {
+        this.pinkArm.setPitchPower(power);
+    }
 
     /**
      * Hang the robot, toggling between various stages of hang

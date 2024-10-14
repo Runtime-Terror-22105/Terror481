@@ -74,6 +74,11 @@ public class PinkArm {
         this.state = state;
     }
 
+    public void setPitchPower(double power) {
+        this.armPitchMotor1.setPower(power);
+        this.armPitchMotor2.setPower(power);
+    }
+
     public boolean stateIs(State other) {
         return this.state.equals(other);
     }
