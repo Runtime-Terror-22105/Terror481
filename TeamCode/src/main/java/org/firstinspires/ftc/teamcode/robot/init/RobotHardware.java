@@ -60,6 +60,9 @@ public class RobotHardware {
     public TerrorCRServo wheelRotationServoRight = null;
     public TerrorColorRangeFinder wheelColorSensor = null;
 
+    // Drivetrain PTO for hang
+    public TerrorServo dtPto;
+
     // Camera
     private TerrorCamera camera;
 
@@ -139,6 +142,10 @@ public class RobotHardware {
         this.publisher.subscribe(1, wheelPitchServo1, wheelPitchServo2);
         this.publisher.subscribe(2, wheelRotationServoLeft, wheelRotationServoRight);
 
+        // Other servos
+        this.dtPto = new TerrorServo((PhotonServo) hwMap.get(Servo.class, "dt_pto"));
+
+        // Other things
         this.initCamera();
         this.initLynx(bulkCachingMode);
 
