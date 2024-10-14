@@ -115,7 +115,7 @@ public class Robot {
             this.pinkArm.setState(PinkArm.State.HANG_1);
         } else if (this.pinkArm.atTargetPosition() &&
                 this.pinkArm.stateIs(PinkArm.State.HANG_1)) {
-            this.hardware.dtPto.setPosition(/* idk smth */);
+            this.hardware.dtPto.setPosition(1 /* idk smth this is placeholder */);
 
             // set a 1 second timer before going to hang 2
             if (this.hangTimer == 0) {
