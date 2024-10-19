@@ -46,19 +46,19 @@ public class RobotHardware {
     public TerrorMotor motorRearLeft = null;
 
     // Pink arm stuff
-    public TerrorMotor armPitchMotor1 = null;
-    public TerrorMotor armPitchMotor2 = null;
-    public TerrorAnalogEncoder armPitchEncoder = null;
-    public TerrorMotor armExtensionMotor1 = null;
-    public TerrorMotor armExtensionMotor2 = null;
-    public TerrorEncoder armExtensionEncoder = null;
+//    public TerrorMotor armPitchMotor1 = null;
+//    public TerrorMotor armPitchMotor2 = null;
+//    public TerrorAnalogEncoder armPitchEncoder = null;
+//    public TerrorMotor armExtensionMotor1 = null;
+//    public TerrorMotor armExtensionMotor2 = null;
+//    public TerrorEncoder armExtensionEncoder = null;
 
     // In/Out take stuff
-    public TerrorServo wheelPitchServo1 = null;
-    public TerrorServo wheelPitchServo2 = null;
-    public TerrorCRServo wheelRotationServoLeft = null;
-    public TerrorCRServo wheelRotationServoRight = null;
-    public TerrorColorRangeFinder wheelColorSensor = null;
+//    public TerrorServo wheelPitchServo1 = null;
+//    public TerrorServo wheelPitchServo2 = null;
+//    public TerrorCRServo wheelRotationServoLeft = null;
+//    public TerrorCRServo wheelRotationServoRight = null;
+//    public TerrorColorRangeFinder wheelColorSensor = null;
 
     // Camera
     private TerrorCamera camera;
@@ -103,41 +103,41 @@ public class RobotHardware {
 
 
         // Initialize the pink arm motors and sensors
-        this.armPitchMotor1 = new TerrorMotor(
-                ((PhotonDcMotor)hwMap.get(DcMotor.class, "armPitchMotor1")),
-                0.02
-        );
-        this.armPitchMotor2 = new TerrorMotor(
-                ((PhotonDcMotor)hwMap.get(DcMotor.class, "armPitchMotor2")),
-                0.02
-        );
-        this.armPitchEncoder = new TerrorAnalogEncoder(hwMap.get(AnalogInput.class, "armPitchEncoder"));
-        this.armPitchEncoder.setOffset(0);
-        this.armExtensionMotor1 = new TerrorMotor(
-                ((PhotonDcMotor) hwMap.get(DcMotor.class, "armExtensionMotor1")),
-                0.02
-        );
-        this.armExtensionMotor2 = new TerrorMotor(
-                ((PhotonDcMotor) hwMap.get(DcMotor.class, "armExtensionMotor2")),
-                0.02
-        );
-        this.armExtensionEncoder = new TerrorEncoder(armExtensionMotor1); // might need to change to motor 2
-        this.publisher.subscribe(5, armPitchMotor1, armPitchMotor2);
-        this.publisher.subscribe(3, armExtensionMotor1, armExtensionMotor2);
-
-        // Initialize the inouttake servos and sensors
-        this.wheelPitchServo1 = new TerrorServo((PhotonServo) hwMap.get(Servo.class, "wheelPitchServo1"));
-        this.wheelPitchServo2 = new TerrorServo((PhotonServo) hwMap.get(Servo.class, "wheelPitchServo2"));
-        this.wheelRotationServoLeft = new TerrorCRServo((PhotonCRServo)
-                hwMap.get(CRServo.class, "wheelRotationServoLeft"), 0.02);
-        this.wheelRotationServoRight = new TerrorCRServo((PhotonCRServo)
-                hwMap.get(CRServo.class, "wheelRotationServoRight"), 0.02);
-        this.wheelColorSensor = new TerrorColorRangeFinder(
-            hwMap.digitalChannel.get("digital0"),
-            hwMap.digitalChannel.get("digital1")
-        ); // assume that the color sensor is already configured
-        this.publisher.subscribe(1, wheelPitchServo1, wheelPitchServo2);
-        this.publisher.subscribe(2, wheelRotationServoLeft, wheelRotationServoRight);
+//        this.armPitchMotor1 = new TerrorMotor(
+//                ((PhotonDcMotor)hwMap.get(DcMotor.class, "armPitchMotor1")),
+//                0.02
+//        );
+//        this.armPitchMotor2 = new TerrorMotor(
+//                ((PhotonDcMotor)hwMap.get(DcMotor.class, "armPitchMotor2")),
+//                0.02
+//        );
+//        this.armPitchEncoder = new TerrorAnalogEncoder(hwMap.get(AnalogInput.class, "armPitchEncoder"));
+//        this.armPitchEncoder.setOffset(0);
+//        this.armExtensionMotor1 = new TerrorMotor(
+//                ((PhotonDcMotor) hwMap.get(DcMotor.class, "armExtensionMotor1")),
+//                0.02
+//        );
+//        this.armExtensionMotor2 = new TerrorMotor(
+//                ((PhotonDcMotor) hwMap.get(DcMotor.class, "armExtensionMotor2")),
+//                0.02
+//        );
+//        this.armExtensionEncoder = new TerrorEncoder(armExtensionMotor1); // might need to change to motor 2
+//        this.publisher.subscribe(5, armPitchMotor1, armPitchMotor2);
+//        this.publisher.subscribe(3, armExtensionMotor1, armExtensionMotor2);
+//
+//        // Initialize the inouttake servos and sensors
+//        this.wheelPitchServo1 = new TerrorServo((PhotonServo) hwMap.get(Servo.class, "wheelPitchServo1"));
+//        this.wheelPitchServo2 = new TerrorServo((PhotonServo) hwMap.get(Servo.class, "wheelPitchServo2"));
+//        this.wheelRotationServoLeft = new TerrorCRServo((PhotonCRServo)
+//                hwMap.get(CRServo.class, "wheelRotationServoLeft"), 0.02);
+//        this.wheelRotationServoRight = new TerrorCRServo((PhotonCRServo)
+//                hwMap.get(CRServo.class, "wheelRotationServoRight"), 0.02);
+//        this.wheelColorSensor = new TerrorColorRangeFinder(
+//            hwMap.digitalChannel.get("digital0"),
+//            hwMap.digitalChannel.get("digital1")
+//        ); // assume that the color sensor is already configured
+//        this.publisher.subscribe(1, wheelPitchServo1, wheelPitchServo2);
+//        this.publisher.subscribe(2, wheelRotationServoLeft, wheelRotationServoRight);
 
         this.initCamera();
         this.initLynx(bulkCachingMode);

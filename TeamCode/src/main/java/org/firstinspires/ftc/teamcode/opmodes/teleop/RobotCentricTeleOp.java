@@ -58,25 +58,25 @@ public class RobotCentricTeleOp extends LinearOpMode {
                     DRIVESPEED
             );
 
-            if (gamepad1.a && !lastGamepad1.a) { // rising edge
-                robot.inOutTake.intake(new SampleColor[] {
-                        SampleColor.YELLOW,
-                        SampleColor.BLUE
-                });
-            } else if (gamepad1.x && !lastGamepad1.x) { // rising edge
-                robot.inOutTake.outtake();
-            }
+//            if (gamepad1.a && !lastGamepad1.a) { // rising edge
+//                robot.inOutTake.intake(new SampleColor[] {
+//                        SampleColor.YELLOW,
+//                        SampleColor.BLUE
+//                });
+//            } else if (gamepad1.x && !lastGamepad1.x) { // rising edge
+//                robot.inOutTake.outtake();
+//            }
+//
+//            if (gamepad1.y && !lastGamepad1.y) {
+//                robot.pinkArm.setExtension(10);
+//                robot.pinkArm.setPitch(Math.PI/2);
+//            } else if (gamepad1.b && !lastGamepad1.b) {
+//                robot.pinkArm.setExtension(100);
+//                robot.pinkArm.setPitch(0);
+//            }
 
-            if (gamepad1.y && !lastGamepad1.y) {
-                robot.pinkArm.setExtension(10);
-                robot.pinkArm.setPitch(Math.PI/2);
-            } else if (gamepad1.b && !lastGamepad1.b) {
-                robot.pinkArm.setExtension(100);
-                robot.pinkArm.setPitch(0);
-            }
-
-            robot.inOutTake.update();
-            robot.pinkArm.update();
+//            robot.inOutTake.update();
+//            robot.pinkArm.update();
             lastGamepad1.copy(gamepad1);
 
             hardware.write();

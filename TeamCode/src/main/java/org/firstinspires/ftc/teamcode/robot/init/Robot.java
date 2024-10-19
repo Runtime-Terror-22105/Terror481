@@ -23,11 +23,11 @@ import org.firstinspires.ftc.teamcode.robot.subsystems.PinkArm;
 public class Robot {
     // Subsystems
     public Drivetrain drivetrain = null;
-    public PinkArm pinkArm = null;
-    public InOutTake inOutTake = null;
+//    public PinkArm pinkArm = null;
+//    public InOutTake inOutTake = null;
 
     // Localizer
-    public OTOSLocalizer localizer;
+//    public OTOSLocalizer localizer;
 
     // Camera stuff
     public TerrorCamera camera;
@@ -46,17 +46,17 @@ public class Robot {
         this.telemetry = new MultipleTelemetry(tele, dashboard.getTelemetry());
 
         // Set up subsytems
-        this.pinkArm = new PinkArm(hardware);
-        this.inOutTake = new InOutTake(hardware);
-
-        // Initialize the localizer
-        this.localizer = new OTOSLocalizer(hardware.otos);
-        localizer.initializeOtos(new OTOSLocalizer.Parameters(
-                new SparkFunOTOS.Pose2D(0, 0, 0),
-                new SparkFunOTOS.Pose2D(0, 0, 0),
-                1.0,
-                1.0
-        ));
+//        this.pinkArm = new PinkArm(hardware);
+//        this.inOutTake = new InOutTake(hardware);
+//
+//        // Initialize the localizer
+//        this.localizer = new OTOSLocalizer(hardware.otos);
+//        localizer.initializeOtos(new OTOSLocalizer.Parameters(
+//                new SparkFunOTOS.Pose2D(0, 0, 0),
+//                new SparkFunOTOS.Pose2D(0, 0, 0),
+//                1.0,
+//                1.0
+//        ));
 
         // Initialize the drivetrain
         this.drivetrain = new MecanumDrivetrain(

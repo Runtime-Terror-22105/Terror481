@@ -114,18 +114,28 @@ public class Scurve {
 
         }
         else if(T*1.5+line_length<=t && t<=2*T+line_length){
+            System.out.println("here");
+            System.out.println(upcave.getPosition(T/2));
+            System.out.println((upvex.getPosition(T)- upvex.getPosition(T/2)));
+            System.out.println((line.getPosition(T+line_length)));
+            System.out.println((downvex.getPosition(T*1.5+line_length)- downvex.getPosition(T+line_length)));
+            System.out.println((downcave.getPosition(t)- downcave.getPosition(T*1.5+line_length)));
+            System.out.println("done");
             return upcave.getPosition(T/2)+(upvex.getPosition(T)- upvex.getPosition(T/2))+(line.getPosition(T+line_length))+(downvex.getPosition(T*1.5+line_length)- downvex.getPosition(T+line_length))+(downcave.getPosition(t)- downcave.getPosition(T*1.5+line_length));
         }
         return 0.0; //what weird times are you plugging in even lol
     }
 
     public double solveAccel(double Position){
-        double a=(1/Math.pow(jm,2));
+
+        double a=(1/(Math.pow(jm,2)));
         double b=1/(2*jm);
         double c=2*v0/(jm);
         double d=-Position/2;
+        System.out.println(a+" "+b+" "+c+" "+d);
         cubicformula cform= new cubicformula();
         this.as=cform.solveCubic(a,b,c,d);
+        System.out.println(as+" as");
         return as;
     }
 
