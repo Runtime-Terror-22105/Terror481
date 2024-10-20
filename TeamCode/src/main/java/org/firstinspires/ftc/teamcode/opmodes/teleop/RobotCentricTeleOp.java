@@ -11,7 +11,6 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.math.Coordinate;
-import org.firstinspires.ftc.teamcode.robot.hardware.sensors.SampleColor;
 import org.firstinspires.ftc.teamcode.robot.init.Robot;
 import org.firstinspires.ftc.teamcode.robot.init.RobotHardware;
 
@@ -51,6 +50,8 @@ public class RobotCentricTeleOp extends LinearOpMode {
             }
 
             Coordinate direction = new Coordinate(slr(-gamepad1.left_stick_x), slr(gamepad1.left_stick_y));
+            robot.telemetry.addData("x", direction.x);
+            robot.telemetry.addData("y", direction.y);
             double rotation = slr(-gamepad1.right_stick_x);
             robot.drivetrain.move(
                     direction,
@@ -58,25 +59,25 @@ public class RobotCentricTeleOp extends LinearOpMode {
                     DRIVESPEED
             );
 
-            if (gamepad1.a && !lastGamepad1.a) { // rising edge
-                robot.inOutTake.intake(new SampleColor[] {
-                        SampleColor.YELLOW,
-                        SampleColor.BLUE
-                });
-            } else if (gamepad1.x && !lastGamepad1.x) { // rising edge
-                robot.inOutTake.outtake();
-            }
+//            if (gamepad1.a && !lastGamepad1.a) { // rising edge
+//                robot.inOutTake.intake(new SampleColor[] {
+//                        SampleColor.YELLOW,
+//                        SampleColor.BLUE
+//                });
+//            } else if (gamepad1.x && !lastGamepad1.x) { // rising edge
+//                robot.inOutTake.outtake();
+//            }
+//
+//            if (gamepad1.y && !lastGamepad1.y) {
+//                robot.pinkArm.setExtension(10);
+//                robot.pinkArm.setPitch(Math.PI/2);
+//            } else if (gamepad1.b && !lastGamepad1.b) {
+//                robot.pinkArm.setExtension(100);
+//                robot.pinkArm.setPitch(0);
+//            }
 
-            if (gamepad1.y && !lastGamepad1.y) {
-                robot.pinkArm.setExtension(10);
-                robot.pinkArm.setPitch(Math.PI/2);
-            } else if (gamepad1.b && !lastGamepad1.b) {
-                robot.pinkArm.setExtension(100);
-                robot.pinkArm.setPitch(0);
-            }
-
-            robot.inOutTake.update();
-            robot.pinkArm.update();
+//            robot.inOutTake.update();
+//            robot.pinkArm.update();
             lastGamepad1.copy(gamepad1);
 
             hardware.write();

@@ -8,14 +8,10 @@ import com.acmerobotics.dashboard.config.Config;
 import com.outoftheboxrobotics.photoncore.Photon;
 import com.outoftheboxrobotics.photoncore.hardware.PhotonLynxVoltageSensor;
 import com.outoftheboxrobotics.photoncore.hardware.motor.PhotonDcMotor;
-import com.outoftheboxrobotics.photoncore.hardware.servo.PhotonCRServo;
-import com.outoftheboxrobotics.photoncore.hardware.servo.PhotonServo;
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.robotcore.hardware.AnalogInput;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.configuration.LynxConstants;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -102,55 +98,58 @@ public class RobotHardware {
         this.motorFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.motorRearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.motorRearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        this.motorRearRight.setDirection(DcMotorSimple.Direction.REVERSE);
         this.publisher.subscribe(4, motorFrontLeft, motorFrontRight, motorRearLeft, motorRearRight);
 
 
         // Initialize the pink arm motors and sensors
-        this.armPitchMotor1 = new TerrorMotor(
-                ((PhotonDcMotor)hwMap.get(DcMotor.class, "armPitchMotor1")),
-                0.02
-        );
-        this.armPitchMotor2 = new TerrorMotor(
-                ((PhotonDcMotor)hwMap.get(DcMotor.class, "armPitchMotor2")),
-                0.02
-        );
-        this.armPitchEncoder = new TerrorAnalogEncoder(hwMap.get(AnalogInput.class, "armPitchEncoder"));
-        this.armPitchEncoder.setOffset(0);
-        this.armExtensionMotor1 = new TerrorMotor(
-                ((PhotonDcMotor) hwMap.get(DcMotor.class, "armExtensionMotor1")),
-                0.02
-        );
-        this.armExtensionMotor2 = new TerrorMotor(
-                ((PhotonDcMotor) hwMap.get(DcMotor.class, "armExtensionMotor2")),
-                0.02
-        );
-        this.armExtensionEncoder = new TerrorEncoder(armExtensionMotor1); // might need to change to motor 2
-        this.publisher.subscribe(5, armPitchMotor1, armPitchMotor2);
-        this.publisher.subscribe(3, armExtensionMotor1, armExtensionMotor2);
+//         this.armPitchMotor1 = new TerrorMotor(
+//                 ((PhotonDcMotor)hwMap.get(DcMotor.class, "armPitchMotor1")),
+//                 0.02
+//         );
+//         this.armPitchMotor2 = new TerrorMotor(
+//                 ((PhotonDcMotor)hwMap.get(DcMotor.class, "armPitchMotor2")),
+//                 0.02
+//         );
+//         this.armPitchEncoder = new TerrorAnalogEncoder(hwMap.get(AnalogInput.class, "armPitchEncoder"));
+//         this.armPitchEncoder.setOffset(0);
+//         this.armExtensionMotor1 = new TerrorMotor(
+//                 ((PhotonDcMotor) hwMap.get(DcMotor.class, "armExtensionMotor1")),
+//                 0.02
+//         );
+//         this.armExtensionMotor2 = new TerrorMotor(
+//                 ((PhotonDcMotor) hwMap.get(DcMotor.class, "armExtensionMotor2")),
+//                 0.02
+//         );
+//         this.armExtensionEncoder = new TerrorEncoder(armExtensionMotor1); // might need to change to motor 2
+//         this.publisher.subscribe(5, armPitchMotor1, armPitchMotor2);
+//         this.publisher.subscribe(3, armExtensionMotor1, armExtensionMotor2);
 
-        // Initialize the inouttake servos and sensors
-        this.wheelPitchServo1 = new TerrorServo((PhotonServo) hwMap.get(Servo.class, "wheelPitchServo1"));
-        this.wheelPitchServo2 = new TerrorServo((PhotonServo) hwMap.get(Servo.class, "wheelPitchServo2"));
-        this.wheelRotationServoLeft = new TerrorCRServo((PhotonCRServo)
-                hwMap.get(CRServo.class, "wheelRotationServoLeft"), 0.02);
-        this.wheelRotationServoRight = new TerrorCRServo((PhotonCRServo)
-                hwMap.get(CRServo.class, "wheelRotationServoRight"), 0.02);
-        this.wheelColorSensor = new TerrorColorRangeFinder(
-            hwMap.digitalChannel.get("digital0"),
-            hwMap.digitalChannel.get("digital1")
-        ); // assume that the color sensor is already configured
-        this.publisher.subscribe(1, wheelPitchServo1, wheelPitchServo2);
-        this.publisher.subscribe(2, wheelRotationServoLeft, wheelRotationServoRight);
+//         // Initialize the inouttake servos and sensors
+//         this.wheelPitchServo1 = new TerrorServo((PhotonServo) hwMap.get(Servo.class, "wheelPitchServo1"));
+//         this.wheelPitchServo2 = new TerrorServo((PhotonServo) hwMap.get(Servo.class, "wheelPitchServo2"));
+//         this.wheelRotationServoLeft = new TerrorCRServo((PhotonCRServo)
+//                 hwMap.get(CRServo.class, "wheelRotationServoLeft"), 0.02);
+//         this.wheelRotationServoRight = new TerrorCRServo((PhotonCRServo)
+//                 hwMap.get(CRServo.class, "wheelRotationServoRight"), 0.02);
+//         this.wheelColorSensor = new TerrorColorRangeFinder(
+//             hwMap.digitalChannel.get("digital0"),
+//             hwMap.digitalChannel.get("digital1")
+//         ); // assume that the color sensor is already configured
+//         this.publisher.subscribe(1, wheelPitchServo1, wheelPitchServo2);
+//         this.publisher.subscribe(2, wheelRotationServoLeft, wheelRotationServoRight);
 
-        // Other servos
-        this.dtPto = new TerrorServo((PhotonServo) hwMap.get(Servo.class, "dt_pto"));
+//         // Other servos
+//         this.dtPto = new TerrorServo((PhotonServo) hwMap.get(Servo.class, "dt_pto"));
+//         this.publisher.subscribe(7, dtPto);
 
-        // Other things
-        this.initCamera();
+//         // Other things
+//         this.initCamera();
         this.initLynx(bulkCachingMode);
 
         // Misc Sensors
-        this.otos = this.hwMap.get(TerrorSparkFunOTOS.class, "sensor_otos");
+//        this.otos = this.hwMap.get(TerrorSparkFunOTOS.class, "sensor_otos");
         this.voltageSensor = hwMap.getAll(PhotonLynxVoltageSensor.class).iterator().next();
     }
 
