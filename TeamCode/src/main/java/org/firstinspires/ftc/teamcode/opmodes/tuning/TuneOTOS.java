@@ -41,7 +41,8 @@ public class TuneOTOS extends LinearOpMode {
 
         OTOSLocalizer localizer = new OTOSLocalizer(hardware.otos);
         localizer.initializeOtos(new OTOSLocalizer.Parameters(
-                new SparkFunOTOS.Pose2D(0, 0, 0),
+                // 3.55 inches in the front
+                new SparkFunOTOS.Pose2D(0, 3.55, 0),
                 new SparkFunOTOS.Pose2D(0, 0, 0),
                 1.0,
                 1.0
@@ -49,7 +50,6 @@ public class TuneOTOS extends LinearOpMode {
 
 
         // Tuning step 1
-        // 0.95811 inches to the left, 3.55 inches in the front
         telemetry.addData("Please measure the distance of the OTOS from the center and set it as the offset", "");
         telemetry.addData("Once you have done this, press (a) to continue.", "");
         telemetry.update();
