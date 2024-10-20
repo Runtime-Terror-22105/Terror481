@@ -33,8 +33,8 @@ public class PidfController {
      * NOTE: You must run this function each loop iteration. It will do the PID stuff to calculate
      * the power to be used.
      */
-    public double calculatePower(double encoderPosition, double feedforwardReference) {
-        this.error = this.targetPosition - encoderPosition;
+    public double calculatePower(double currentPosition, double feedforwardReference) {
+        this.error = calculateError(currentPosition);
 
         double timestamp = (double) System.nanoTime() / 1E9;
         if (lastTimeStamp == 0) lastTimeStamp = timestamp;
@@ -93,6 +93,14 @@ public class PidfController {
         this.lastError = 0;
         this.error = 0;
         this.lastTimeStamp = 0;
+    }
+
+    public double calculateError(double encoderPosition) {
+        return this.targetPosition - encoderPosition;
+    }
+
+    public boolean atTargetPosition(double currentPosition) {
+        return calculateError(currentPosition) <= this.tolerance;
     }
 
     public static class PidfCoefficients {

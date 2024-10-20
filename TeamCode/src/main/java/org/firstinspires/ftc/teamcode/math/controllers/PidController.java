@@ -28,12 +28,16 @@ public class PidController {
         this.tolerance = tolerance;
     }
 
+    public double calculateError(double encoderPosition) {
+        return this.targetPosition - encoderPosition;
+    }
+
     /**
      * NOTE: You must run this function each loop iteration. It will do the PID stuff to calculate
      * the power to be used.
      */
-    public double calculatePower(double encoderPosition) {
-        this.error = this.targetPosition - encoderPosition;
+    public double calculatePower(double currentPosition) {
+        this.error = calculateError(currentPosition);
 
         double timestamp = (double) System.nanoTime() / 1E9;
         if (lastTimeStamp == 0) lastTimeStamp = timestamp;
@@ -77,6 +81,11 @@ public class PidController {
     public void setTargetPosition(double targetPosition) {
         this.targetPosition = targetPosition;
     }
+
+    public boolean atTargetPosition(double currentPosition) {
+        return calculateError(currentPosition) <= this.tolerance;
+    }
+
     // endregion
     /**
      * Gets the current target position of the PID.

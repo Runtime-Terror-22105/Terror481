@@ -15,24 +15,18 @@ public class Ellipse implements Shape {
     public double minor; // minor axis
     public double rotation;
 
-    public final double ratio = 0.5;
-
-    public Ellipse(double major, Coordinate center) {
+    public Ellipse(Coordinate center, double major, double minor, double rotation) {
         this.major = major;
-        this.minor = this.major*ratio;
+        this.minor = minor;
         this.center = center;
-        this.rotation = 0;
+        this.rotation = rotation;
     }
 
-    public Ellipse(double major) {
+    public Ellipse(double major, double minor) {
         this.major = major;
-        this.minor = this.major * ratio;
+        this.minor = minor;
         this.center = ORIGIN;
         this.rotation = 0;
-    }
-
-    public void setRotation(double rotation) {
-        this.rotation = rotation;
     }
 
     /**

@@ -1,91 +1,119 @@
 package org.firstinspires.ftc.teamcode.robot.auto.followers;
 
-import org.firstinspires.ftc.teamcode.math.geometry.Circle;
-import static org.firstinspires.ftc.teamcode.math.Coordinate.distToPoint;
-
 import androidx.annotation.NonNull;
-import org.firstinspires.ftc.teamcode.robot.drive.Drivetrain;
+import androidx.annotation.Nullable;
+
+import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
+
 import org.firstinspires.ftc.teamcode.math.Angle;
+import org.firstinspires.ftc.teamcode.math.Coordinate;
+import org.firstinspires.ftc.teamcode.math.geometry.Circle;
 import org.firstinspires.ftc.teamcode.math.geometry.Ellipse;
 import org.firstinspires.ftc.teamcode.math.geometry.LineSegment;
-import org.firstinspires.ftc.teamcode.math.Pose2d;
-import org.firstinspires.ftc.teamcode.math.Coordinate;
 import org.firstinspires.ftc.teamcode.robot.auto.pathgen.QSplines;
+import org.firstinspires.ftc.teamcode.robot.drive.Drivetrain;
 
+import java.util.ArrayList;
 import java.util.function.Supplier;
 
 /**
  * A class which is used to follow paths using the Pure Pursuit algorithm.
  */
-public class PurePursuitController extends PathFollower {
-    public double goalThreshold;
-    public double lookAheadDist;
-    public Coordinate[] pathArr;
+public class PurePursuitController {
+    private final double goalThreshold;
+    private Coordinate[] pathArr;
+    private ArrayList<Obstacle> obstacles = new ArrayList<>();
+    private QSplines path;
+    private Drivetrain drivetrain;
 
-    public Obstacle[] field = new Obstacle[1000];
-    public int obstacle_count=0;
-
-    /**
-     * Instantiates a pure pursuit controller.
-     * @param lookAheadDist The look ahead distance.
-     * @param goalThreshold The threshold before reaching.
-     */
-    public PurePursuitController(double lookAheadDist, double goalThreshold) {
-        this.lookAheadDist = lookAheadDist;
+    public PurePursuitController(Drivetrain drivetrain, double goalThreshold) {
+        this.drivetrain = drivetrain;
         this.goalThreshold = goalThreshold;
     }
 
-    public void add_Field(Obstacle obstacle){
-        field[obstacle_count]=obstacle;
-        obstacle_count+=1;
-    }
-
-
-    @Override
-    public void setPath(@NonNull QSplines path, int points) {
-        super.setPath(path, points);
-        this.pathArr = this.path.generateArr(points);
+    /**
+     * Adds an obstacle
+     * @param obstacle The obstacle to add
+     */
+    public void addObstacle(Obstacle obstacle) {
+        obstacles.add(obstacle);
     }
 
     /**
-     * Follow a path that was set by {@link #setPath(Coordinate[])} earlier and drive using the
-     * drivetrain set by {@link #setDrivetrain(Drivetrain)}.
+     * Sets the path to follow
+     * @param path The path to follow.
+     * @param points How many points to generate along the path.
+     */
+    public void setPath(@NonNull QSplines path, int points) {
+        this.pathArr = path.generateArr(points);
+    }
+
+    /**
+     * Follow a path that was set by [.setPath] earlier and drive using the
+     * drivetrain set by [.setDrivetrain].
+     *
      * @param getCurrentPos A method which retrieves the current position using odometry.
      */
-    public void follow(@NonNull Supplier<Pose2d> getCurrentPos) {
-        Coordinate lastGoalPoint = this.pathArr[0];
+    public void follow(@NonNull Supplier<SparkFunOTOS.Pose2D> getCurrentPos) {
+        Intersection lastGoalPoint = new Intersection(pathArr[0].toPose(), 0);
         int lastPathIndex = 0;
+        SparkFunOTOS.Pose2D currentPos = getCurrentPos.get();
 
-        Pose2d currentPos = getCurrentPos.get();
+        while (Math.abs(Coordinate.distToPoint(Coordinate.fromPose(currentPos), pathArr[pathArr.length - 1])) > goalThreshold) {
+            Intersection goalPoint = findAdaptiveEllipseIntersection(lastPathIndex, 0.5, 5.0, currentPos);
+            if (goalPoint == null) { // If no new point is found, default to the last goal point
+                goalPoint = lastGoalPoint;
+            }
 
-        while (Math.abs(distToPoint(currentPos.getVector(), this.pathArr[this.pathArr.length - 1])) > this.goalThreshold) {
+            lastGoalPoint = goalPoint;
+            lastPathIndex = goalPoint.pathSegmentIndex;
+
+            driveToPoint(currentPos, goalPoint.point);
+            currentPos = getCurrentPos.get();
+        }
+        driveToPoint(currentPos, pathArr[pathArr.length - 1].toPose());
+    }
+
+    /**
+     * This closed-loop follower uses the standard pure pursuit controller with a fixed circular
+     * lookahead. <br>
+     * Do not use this, it is merely for demonstration.
+     *
+     * @param getCurrentPos A method which retrieves the current position of the robot.
+     * @param lookAheadDistance The lookahead distance (radius of the circle).
+     */
+    public void normalFollow(@NonNull Supplier<SparkFunOTOS.Pose2D> getCurrentPos, double lookAheadDistance) {
+        Coordinate lastGoalPoint = pathArr[0];
+        int lastPathIndex = 0;
+        SparkFunOTOS.Pose2D currentPos = getCurrentPos.get();
+
+        while (Math.abs(Coordinate.distToPoint(Coordinate.fromPose(currentPos), pathArr[pathArr.length - 1])) > goalThreshold) {
             Coordinate goalPoint = null;
 
-            for (int i = lastPathIndex; i < this.pathArr.length - 1; i++) {
-                LineSegment pathSegment = new LineSegment(this.pathArr[i], this.pathArr[i+1]);
-//                goalPoint = findCircleGoalPoint(pathSegment, currentPos.getVector(), this.lookAheadDist);
-                goalPoint = findAdaptiveEllipseIntersection(0.5, 20, currentPos, pathSegment);
-
+            for (int i = lastPathIndex; i < pathArr.length - 1; i++) {
+                LineSegment pathSegment = new LineSegment(pathArr[i], pathArr[i + 1]);
+                goalPoint = findCircleGoalPoint(pathSegment, Coordinate.fromPose(currentPos), lookAheadDistance);
                 if (goalPoint != null) {
                     lastPathIndex = i;
                     break;
                 }
             }
 
-            // If no new goal point is found, default to the last goal point
-            goalPoint = (goalPoint != null) ? goalPoint : lastGoalPoint;
+            if (goalPoint == null) { // If no new goal point is found, default to the last goal point
+                goalPoint = lastGoalPoint;
+            }
             lastGoalPoint = goalPoint;
 
-//            double linearErr = distToPoint(goalPoint, currentPos.getVector());
-            this.driveToPoint(currentPos, goalPoint);
+            driveToPoint(currentPos, goalPoint.toPose());
             currentPos = getCurrentPos.get();
         }
 
-        this.driveToPoint(currentPos, this.pathArr[this.pathArr.length-1]);
+        driveToPoint(currentPos, pathArr[pathArr.length - 1].toPose());
     }
 
     /**
      * Find the goal point using non-adaptive circles.
+     *
      * @param path A line segment representing the path.
      * @param robotPosition The robot position (center of the circle).
      * @param lookaheadDistance The lookahead distance (radius of the circle).
@@ -96,58 +124,112 @@ public class PurePursuitController extends PathFollower {
         return circle.findNearestIntersection(path);
     }
 
-
-    private void driveToPoint(@NonNull Pose2d currentPos, @NonNull Coordinate goalPoint) {
-        double goalAngle = Math.atan2(goalPoint.y, goalPoint.x);
-        if (goalAngle < 0) { goalAngle += 2*Math.PI; }
-        double angularErr = Angle.angleWrap(goalAngle - currentPos.heading);
-        drivetrain.move(
-                new Coordinate(
-                        goalPoint.x - currentPos.x,
-                        goalPoint.y - currentPos.y
-                ),
-                angularErr
-        );
+    /**
+     * Drives in the direction of a point
+     *
+     * @param currentPos The current position of the robot
+     * @param goalPoint The point to drive towards
+     */
+    private void driveToPoint(SparkFunOTOS.Pose2D currentPos, @NonNull SparkFunOTOS.Pose2D goalPoint) {
+        if (goalPoint.h < 0) {
+            goalPoint.h += 2 * Math.PI;
+        }
+        double angularErr = Angle.angleWrap(goalPoint.h - currentPos.h);
+        if (drivetrain != null) {
+            drivetrain.move(
+                    new Coordinate(goalPoint.x - currentPos.x, goalPoint.y - currentPos.y),
+                    angularErr
+            );
+        }
     }
 
-    private boolean CrashDetect(Pose2d currentPos, Coordinate goalPoint ){
+    /**
+     * Check if the robot when driving to a point will crash into any obstacles
+     *
+     * @param currentPos The current position of the robot
+     * @param goalPoint The point the robot is driving towards
+     * @return A boolean indicating whether or not the robot would crash into any obstacles
+     */
+    private boolean crashDetect(SparkFunOTOS.Pose2D currentPos, Coordinate goalPoint) {
         // first check if out of bounds
-        for(int i = 0; i < obstacle_count; i++){ // cycling for crash with all of the obstacles
-            if (field[i].crash_detect(currentPos.x,currentPos.y,goalPoint.x,goalPoint.y, currentPos.heading)) {
+        for (Obstacle obstacle : this.obstacles) {
+            // cycling for crash with all of the obstacles
+            if (obstacle.crash_detect(currentPos.x, currentPos.y, goalPoint.x, goalPoint.y, currentPos.h)) {
                 return true;
             }
         }
         return false;
 
         // add obstacle object and use the line intersection test on all four sides of the rectangle objects bounds
-
     }
 
-    public Coordinate findAdaptiveEllipseIntersection(
-            double minLookAheadDist,
-            double maxLookAheadDist,
-            Pose2d currentPos,
-            LineSegment path
-    ){
+    /**
+     * Using adaptive ellipses, find the point to drive towards.
+     *
+     * @param minIndex The minimum index of a segment on the path to start looking from
+     * @param minLookAhead The minimum lookahead
+     * @param maxLookAhead The maximum lookahead
+     * @param currentPos The current position of the robot
+     * @return The point to drive towards and the index of the line segment on the path that it's
+     *         from, returns null if no point was found.
+     */
+    @Nullable
+    private Intersection findAdaptiveEllipseIntersection(int minIndex, double minLookAhead, double maxLookAhead, SparkFunOTOS.Pose2D currentPos) {
         // binary search for the lookahead distance and if the lookahead doesnt work(use crash_detect) please decrease the lookahead
-        double step_size = 100;
-        double interval = (maxLookAheadDist-minLookAheadDist)/step_size;
-        double mid = 0;
-        Coordinate goalPoint = new Coordinate(0,0);
-        while (minLookAheadDist <= maxLookAheadDist) {
-            mid = (minLookAheadDist+maxLookAheadDist)/2;
+        double stepSize = 100.0;
+        double midLookAhead;
+        Coordinate goalPoint = null;
+        int foundPathIndex = -1;
 
-            Ellipse robotEllipse = new Ellipse(mid, currentPos.getVector());
-            robotEllipse.setRotation(currentPos.heading);
-            goalPoint = robotEllipse.findNearestIntersection(path);
-            if (CrashDetect(currentPos, goalPoint)) {
-                maxLookAheadDist = mid-interval;
+        while (minLookAhead <= maxLookAhead) {
+            midLookAhead = (minLookAhead + maxLookAhead) / 2;
+            Ellipse robotEllipse = new Ellipse(
+                    Coordinate.fromPose(currentPos),
+                    midLookAhead,
+                    midLookAhead * 0.5, // TODO: determine minor axis
+                    currentPos.h
+            );
+
+            Coordinate intersection = null;
+            for (int i = minIndex; i < pathArr.length - 1; i++) {
+                LineSegment pathSegment = new LineSegment(pathArr[i], pathArr[i + 1]);
+                intersection = robotEllipse.findNearestIntersection(pathSegment);
+
+                if (intersection != null) {
+                    foundPathIndex = i;
+                    break;
+                }
             }
-            else {
-                minLookAheadDist = mid+interval;
+
+            // if the ellipse is too tiny to intersect (intersection==null) or there wasn't a crash
+            // increase the lookahead
+            if (intersection == null || !crashDetect(currentPos, intersection)) {
+                minLookAhead = midLookAhead + stepSize;
+
+                if (intersection != null) { // if there was an intersection and it didn't crash
+                    goalPoint = intersection;
+                }
+            } else { // if there was an intersection but it crashes
+                maxLookAhead = midLookAhead - stepSize;
             }
         }
-        return goalPoint;
+
+        if (goalPoint == null) {
+            return null;
+        }
+        return new Intersection(goalPoint.toPose(), foundPathIndex);
     }
 
+    /**
+     * A single intersection of an ellipse and the path
+     */
+    private static class Intersection {
+        SparkFunOTOS.Pose2D point;
+        int pathSegmentIndex;
+
+        Intersection(SparkFunOTOS.Pose2D point, int pathSegmentIndex) {
+            this.point = point;
+            this.pathSegmentIndex = pathSegmentIndex;
+        }
+    }
 }
