@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.robot.auto.followers;
 
-import org.firstinspires.ftc.teamcode.math.Pose2d;
+import com.qualcomm.hardware.sparkfun.SparkFunOTOS.Pose2D;
 
 public class Obstacle {
     public double[]xbounds;
@@ -19,7 +19,7 @@ public class Obstacle {
     }
 
 
-    public boolean intersects(Pose2d init, Pose2d goal){ //coordinates of start and end of the line segment
+    public boolean intersects(Pose2D init, Pose2D goal){ //coordinates of start and end of the line segment
         double x1=init.x;
         double x2=goal.x;
         double y1=init.y;
@@ -47,20 +47,20 @@ public class Obstacle {
         // otherwise there is no y-left or right intersection thing if m=0 since the equation would not even work cuz u cant divide by 0
 
     }
-    public Pose2d[] convertPosetoVertices(double x, double y, double heading){
+    public Pose2D[] convertPosetoVertices(double x, double y, double heading){
         double v1_heading=(Math.PI/4)+heading;
-        Pose2d v1= new Pose2d(x+radius*Math.cos(v1_heading),y+radius*Math.sin(v1_heading),v1_heading);
+        Pose2D v1= new Pose2D(x+radius*Math.cos(v1_heading),y+radius*Math.sin(v1_heading),v1_heading);
 
         double v2_heading=3*(Math.PI/4)+heading;
-        Pose2d v2= new Pose2d(x+radius*Math.cos(v1_heading),y+radius*Math.sin(v1_heading),v1_heading);
+        Pose2D v2= new Pose2D(x+radius*Math.cos(v1_heading),y+radius*Math.sin(v1_heading),v1_heading);
 
         double v3_heading=5*(Math.PI/4)+heading;
-        Pose2d v3= new Pose2d(x+radius*Math.cos(v1_heading),y+radius*Math.sin(v1_heading),v1_heading);
+        Pose2D v3= new Pose2D(x+radius*Math.cos(v1_heading),y+radius*Math.sin(v1_heading),v1_heading);
 
         double v4_heading=7*(Math.PI/4)+heading;
-        Pose2d v4= new Pose2d(x+radius*Math.cos(v1_heading),y+radius*Math.sin(v1_heading),v1_heading);
+        Pose2D v4= new Pose2D(x+radius*Math.cos(v1_heading),y+radius*Math.sin(v1_heading),v1_heading);
 
-        Pose2d[]vertices= new Pose2d[4];
+        Pose2D[]vertices= new Pose2D[4];
         vertices[0]=v1;
         vertices[1]=v2;
         vertices[2]=v3;
@@ -70,13 +70,13 @@ public class Obstacle {
     }
 
     public boolean crash_detect(double x_init, double y_init, double x_final, double y_final, double heading){
-        Pose2d v_init[]=convertPosetoVertices(x_init,y_init,heading);
-        Pose2d v_final[]=convertPosetoVertices(x_final,y_final,heading);
+        Pose2D v_init[]=convertPosetoVertices(x_init,y_init,heading);
+        Pose2D v_final[]=convertPosetoVertices(x_final,y_final,heading);
 
 
         for(int i=0;i<4;i++){
-            Pose2d initial=v_init[i];
-            Pose2d goal=v_final[i];
+            Pose2D initial=v_init[i];
+            Pose2D goal=v_final[i];
             if(intersects(initial,goal)){
                 return true;
             }
