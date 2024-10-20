@@ -33,7 +33,7 @@ public class SampleAutonomous extends LinearOpMode {
 
         QSplines spline = new QSplines(0,0,0, 0,5, 0, 0, 0);
 
-        PurePursuitController controller = new PurePursuitController(5);
+        PurePursuitController controller = new PurePursuitController(robot.drivetrain, 2);
 //        controller.normalFollow(() -> robot.localizer.getPosition(), 5);
         controller.follow(() -> robot.localizer.getPosition());
     }
