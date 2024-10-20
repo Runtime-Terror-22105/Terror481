@@ -11,7 +11,6 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.math.Coordinate;
-import org.firstinspires.ftc.teamcode.robot.hardware.sensors.SampleColor;
 import org.firstinspires.ftc.teamcode.robot.init.Robot;
 import org.firstinspires.ftc.teamcode.robot.init.RobotHardware;
 
@@ -51,6 +50,8 @@ public class RobotCentricTeleOp extends LinearOpMode {
             }
 
             Coordinate direction = new Coordinate(slr(-gamepad1.left_stick_x), slr(gamepad1.left_stick_y));
+            robot.telemetry.addData("x", direction.x);
+            robot.telemetry.addData("y", direction.y);
             double rotation = slr(-gamepad1.right_stick_x);
             robot.drivetrain.move(
                     direction,

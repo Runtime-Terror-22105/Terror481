@@ -15,6 +15,7 @@ public interface Drivetrain {
     default void move(@NonNull Coordinate velocity, double rotation, double speed) {
         velocity.mult(speed);
         rotation *= speed;
+        this.move(velocity, rotation);
     };
 
     /**

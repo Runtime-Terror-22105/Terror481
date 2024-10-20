@@ -45,6 +45,7 @@ public class TerrorMotor implements TerrorWritingDevice {
      * @param powerThreshold The threshold used to prevent unnecessary motor power updates.
      */
     public TerrorMotor(@NonNull PhotonDcMotor motor, double powerThreshold) {
+        this.resetCommands();
         this.powerThreshold = powerThreshold;
         this.motor = motor;
         setMotorEnable();
@@ -52,7 +53,7 @@ public class TerrorMotor implements TerrorWritingDevice {
         this.motorPower = 0;
         this.motorVel = motor.getVelocity();
         this.motorEnabled = true;
-        this.resetCommands();
+        this.mode = this.motor.getMode();
     }
 
     /**
@@ -197,7 +198,8 @@ public class TerrorMotor implements TerrorWritingDevice {
 
             switch (command) {
                 case SET_POWER:
-                    if (Math.abs(this.motorPower - this.lastPower) > this.powerThreshold) {
+                    // if motor power is 0 (to enforce zero power behav) or change > threshold
+                    if (this.motorPower == 0 || Math.abs(this.motorPower - this.lastPower) > this.powerThreshold) {
                         this.lastPower = this.motorPower;
                         this.motor.setPower(motorPower);
                     }

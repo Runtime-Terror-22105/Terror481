@@ -10,12 +10,18 @@ import com.outoftheboxrobotics.photoncore.hardware.PhotonLynxVoltageSensor;
 import com.outoftheboxrobotics.photoncore.hardware.motor.PhotonDcMotor;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.configuration.LynxConstants;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.robot.hardware.TerrorPublisher;
+import org.firstinspires.ftc.teamcode.robot.hardware.motors.TerrorCRServo;
 import org.firstinspires.ftc.teamcode.robot.hardware.motors.TerrorMotor;
+import org.firstinspires.ftc.teamcode.robot.hardware.motors.TerrorServo;
+import org.firstinspires.ftc.teamcode.robot.hardware.sensors.TerrorAnalogEncoder;
+import org.firstinspires.ftc.teamcode.robot.hardware.sensors.TerrorColorRangeFinder;
+import org.firstinspires.ftc.teamcode.robot.hardware.sensors.TerrorEncoder;
 import org.firstinspires.ftc.teamcode.robot.hardware.sensors.TerrorSparkFunOTOS;
 import org.firstinspires.ftc.teamcode.robot.hardware.sensors.camera.TerrorCamera;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -36,19 +42,19 @@ public class RobotHardware {
     public TerrorMotor motorRearLeft = null;
 
     // Pink arm stuff
-//    public TerrorMotor armPitchMotor1 = null;
-//    public TerrorMotor armPitchMotor2 = null;
-//    public TerrorAnalogEncoder armPitchEncoder = null;
-//    public TerrorMotor armExtensionMotor1 = null;
-//    public TerrorMotor armExtensionMotor2 = null;
-//    public TerrorEncoder armExtensionEncoder = null;
+    public TerrorMotor armPitchMotor1 = null;
+    public TerrorMotor armPitchMotor2 = null;
+    public TerrorAnalogEncoder armPitchEncoder = null;
+    public TerrorMotor armExtensionMotor1 = null;
+    public TerrorMotor armExtensionMotor2 = null;
+    public TerrorEncoder armExtensionEncoder = null;
 
     // In/Out take stuff
-//    public TerrorServo wheelPitchServo1 = null;
-//    public TerrorServo wheelPitchServo2 = null;
-//    public TerrorCRServo wheelRotationServoLeft = null;
-//    public TerrorCRServo wheelRotationServoRight = null;
-//    public TerrorColorRangeFinder wheelColorSensor = null;
+    public TerrorServo wheelPitchServo1 = null;
+    public TerrorServo wheelPitchServo2 = null;
+    public TerrorCRServo wheelRotationServoLeft = null;
+    public TerrorCRServo wheelRotationServoRight = null;
+    public TerrorColorRangeFinder wheelColorSensor = null;
 
     // Camera
     private TerrorCamera camera;
@@ -89,6 +95,8 @@ public class RobotHardware {
         this.motorFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.motorRearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.motorRearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        this.motorRearRight.setDirection(DcMotorSimple.Direction.REVERSE);
         this.publisher.subscribe(4, motorFrontLeft, motorFrontRight, motorRearLeft, motorRearRight);
 
 
