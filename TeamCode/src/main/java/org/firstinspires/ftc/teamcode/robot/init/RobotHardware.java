@@ -154,7 +154,7 @@ public class RobotHardware {
         this.initLynx(bulkCachingMode);
 
         // Misc Sensors
-//        this.otos = this.hwMap.get(TerrorSparkFunOTOS.class, "sensor_otos");
+        this.otos = this.hwMap.get(TerrorSparkFunOTOS.class, "sensor_otos");
         this.voltageSensor = hwMap.getAll(PhotonLynxVoltageSensor.class).iterator().next();
     }
 

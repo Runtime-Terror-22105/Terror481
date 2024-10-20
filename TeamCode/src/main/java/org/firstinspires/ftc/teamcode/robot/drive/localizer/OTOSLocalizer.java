@@ -64,6 +64,14 @@ public class OTOSLocalizer {
         otos.resetTracking();
     }
 
+    public boolean setLinearScalar(double scalar) {
+        return otos.setLinearScalar(scalar);
+    }
+
+    public boolean setAngularScalar(double scalar) {
+        return otos.setAngularScalar(scalar);
+    }
+
     public SparkFunOTOS.Pose2D getAcceleration() {
         return otos.getAcceleration();
     }
