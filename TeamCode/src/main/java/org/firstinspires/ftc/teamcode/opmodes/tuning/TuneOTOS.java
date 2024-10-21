@@ -11,6 +11,7 @@ import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.math.Angle;
 import org.firstinspires.ftc.teamcode.robot.drive.Drivetrain;
 import org.firstinspires.ftc.teamcode.robot.drive.localizer.OTOSLocalizer;
 import org.firstinspires.ftc.teamcode.robot.drive.mecanum.MecanumDrivetrain;
@@ -65,21 +66,31 @@ public class TuneOTOS extends LinearOpMode {
             telemetry.addData("Spin the robot by 10 rotations, use right joystick", "");
             telemetry.addData("Press (b) once you are complete", "");
             telemetry.update();
+            double lastHeading = 0;
+            double curHeading = 0;
             while (!gamepad1.b) {
+                double skibidi = Angle.normalize(localizer.getPosition().h); // 0 to 2pi
+                if (lastHeading > curHeading) { // if we reached 360 and then wrapped
+                    curHeading += skibidi;
+                } else {
+                    curHeading += skibidi - lastHeading;
+                }
+                lastHeading = skibidi;
                 drivetrain.move(ORIGIN, -gamepad1.right_stick_x);
                 hardware.write();
+                telemetry.addData("Heading", lastHeading);
+                telemetry.update();
             }
 
-            SparkFunOTOS.Pose2D pos = localizer.getPosition();
-            double hErr = (10 * 2*Math.PI)/pos.h;
+            double hErr = (10 * 2*Math.PI)/curHeading;
             angularScalar *= 1/hErr;
             localizer.setAngularScalar(angularScalar);
 
-            telemetry.addData("heading in degrees:", Math.toDegrees(pos.h));
+            telemetry.addData("heading in degrees:", curHeading);
             telemetry.addData("new angular scalar:", angularScalar);
             telemetry.addData("Hold (a) if you want to continue", "");
             telemetry.update();
-            sleep(10000);
+            sleep(20000);
             if (gamepad1.a) { break; }
         }
 
