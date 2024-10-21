@@ -25,7 +25,7 @@ public class TuneOTOS extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        hardware.init(hardwareMap, LynxModule.BulkCachingMode.MANUAL);
+        hardware.init(hardwareMap, LynxModule.BulkCachingMode.AUTO);
 
         dashboard = FtcDashboard.getInstance();
         telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
@@ -55,70 +55,57 @@ public class TuneOTOS extends LinearOpMode {
         telemetry.update();
         while (!gamepad1.a) {}
 
+        sleep(1000);
+
 
         // Tuning step 2
         double angularScalar = 1;
-        while (!gamepad1.a) {
-            for (LynxModule hub : hardware.allHubs) {
-                hub.clearBulkCache();
-            }
-
+        while (true) {
             localizer.resetTracking();
             telemetry.addData("Spin the robot by 10 rotations, use right joystick", "");
             telemetry.addData("Press (b) once you are complete", "");
             telemetry.update();
             while (!gamepad1.b) {
-                for (LynxModule hub : hardware.allHubs) {
-                    hub.clearBulkCache();
-                }
-                drivetrain.move(ORIGIN, -gamepad1.right_stick_y);
+                drivetrain.move(ORIGIN, -gamepad1.right_stick_x);
                 hardware.write();
-            }
-            for (LynxModule hub : hardware.allHubs) {
-                hub.clearBulkCache();
             }
 
             SparkFunOTOS.Pose2D pos = localizer.getPosition();
-            double hErr = (10 * 2*Math.PI) - pos.h;
+            double hErr = (10 * 2*Math.PI)/pos.h;
             angularScalar *= 1/hErr;
             localizer.setAngularScalar(angularScalar);
 
-            telemetry.addData("heading error:", hErr);
+            telemetry.addData("heading in degrees:", Math.toDegrees(pos.h));
             telemetry.addData("new angular scalar:", angularScalar);
-            telemetry.addData("Press (a) if the error was very little", "");
+            telemetry.addData("Hold (a) if you want to continue", "");
             telemetry.update();
+            sleep(10000);
+            if (gamepad1.a) { break; }
         }
 
 
         // Tuning step 3
-        int[] distances = {50, 100, 20};
+        int[] distances = {24, 96, 48};
         double[] linearScalar = {0, 0, 0};
         for (int i = 0; i < 3; i++) {
             int distance = distances[i];
-            for (LynxModule hub : hardware.allHubs) {
-                hub.clearBulkCache();
-            }
 
             localizer.resetTracking();
             telemetry.addData("Move the robot " + distance + " inches by hand", "");
             telemetry.addData("Press (b) once you are complete", "");
             telemetry.update();
             while (!gamepad1.b) {}
-            for (LynxModule hub : hardware.allHubs) {
-                hub.clearBulkCache();
-            }
 
             SparkFunOTOS.Pose2D pos = localizer.getPosition();
             double xErr = distance/pos.x;
             double yErr = distance/pos.y;
-            double linearErr = Math.sqrt(xErr*xErr + yErr*yErr);
-            linearScalar[i] = 1/linearErr;
+            double linearDist = Math.sqrt(pos.x*pos.x + pos.y*pos.y);
+            linearScalar[i] = distance/linearDist;
 
             telemetry.addData("y error:", xErr);
             telemetry.addData("x error:", yErr);
-            telemetry.addData("linear error:", linearErr);
+            telemetry.addData("linear error:", linearDist);
             telemetry.addData("linear scalar:", linearScalar[i]);
-            telemetry.addData("Press (a) if the error was very little", "");
             telemetry.update();
         }
         telemetry.addData("Final linear scalar", avg(linearScalar));

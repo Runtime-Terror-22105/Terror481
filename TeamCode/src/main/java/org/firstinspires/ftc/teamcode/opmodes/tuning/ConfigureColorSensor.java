@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.other;
+package org.firstinspires.ftc.teamcode.opmodes.tuning;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
@@ -11,7 +11,7 @@ import java.nio.ByteOrder;
 import java.util.Arrays;
 
 
-@TeleOp(name="Configure Color Sensor", group="Tuning/Config")
+@TeleOp(name="Configure Color Sensor", group="Tuning")
 @Config
 public class ConfigureColorSensor extends LinearOpMode {
     @Override

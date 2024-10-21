@@ -146,7 +146,7 @@ public class RobotHardware {
 //
 //         // Other things
 //         this.initCamera();
-//         this.initLynx(bulkCachingMode);
+         this.initLynx(bulkCachingMode);
 
         // Misc Sensors
         this.otos = this.hwMap.get(TerrorSparkFunOTOS.class, "sensor_otos");
