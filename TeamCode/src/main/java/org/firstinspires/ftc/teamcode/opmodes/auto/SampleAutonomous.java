@@ -23,7 +23,7 @@ public class SampleAutonomous extends LinearOpMode {
     private FtcDashboard dashboard;
     @Override
     public void runOpMode() throws InterruptedException {
-        hardware.init(hardwareMap, LynxModule.BulkCachingMode.MANUAL);
+        hardware.init(hardwareMap, LynxModule.BulkCachingMode.AUTO);
         robot.init(this, hardware, telemetry);
 
         dashboard = FtcDashboard.getInstance();

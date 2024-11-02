@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.robot.drive.Drivetrain;
 
 import java.util.HashMap;
 import java.util.Stack;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class P2PFollower {
@@ -21,6 +22,15 @@ public class P2PFollower {
 
         public boolean execute() {
             return task.test(context);
+        }
+
+        public void updateContext(String key, Object value) {
+            Object oldValue = context.get(key);
+            if (oldValue == null) {
+                context.put(key, value);
+            } else {
+                context.replace(key, oldValue, value);
+            }
         }
     }
 
@@ -61,5 +71,48 @@ public class P2PFollower {
 
             return this;
         }
+
+        public Builder addPoint(Pose2d point, double tolerance) {
+            return addPoint(point, new Pose2d(tolerance, tolerance, tolerance));
+        }
+
+        public Builder executeActionOnce(Consumer<HashMap<String, Object>> action) {
+            Task task = new Task(
+                    createBasicContext(),
+                    (HashMap<String, Object> ctx) -> {
+                        action.accept(ctx);
+                        return true;
+                    }
+            );
+            tasks.add(task);
+            return this;
+        }
+
+        public Builder executeUntilTrue(Predicate<HashMap<String, Object>> condition,
+                                        Consumer<HashMap<String, Object>> action) {
+            Task task = new Task(
+                    createBasicContext(),
+                    (HashMap<String, Object> ctx) -> {
+                        action.accept(ctx);
+                        return condition.test(ctx);
+                    }
+            );
+            tasks.add(task);
+            return this;
+        }
+
+        public Builder finishActions() {
+
+        }
+
+        public P2PFollower build() {
+            return new P2PFollower(tasks);
+        }
+    }
+
+    private Stack<Task> tasks;
+    private Stack<Task> currentTasks;
+    public P2PFollower(Stack<Task> tasks) {
+        this.tasks = tasks;
     }
 }
