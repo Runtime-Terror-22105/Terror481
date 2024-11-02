@@ -24,10 +24,13 @@ public class PidToPoint {
 
     @NonNull
     private Pose2d calculatePower(@NonNull Pose2d currentPos) {
-        double xPower = xController.calculatePower(currentPos.x);
-        double yPower = yController.calculatePower(currentPos.y);
-        double hPower = hController.calculatePower(currentPos.heading);
-        return new Pose2d(xPower, yPower, hPower);
+        double xTemp = xController.calculatePower(currentPos.x);
+        double yTemp = yController.calculatePower(currentPos.y);
+        double angle = hController.calculatePower(currentPos.heading);
+
+        double x = xTemp * Math.cos(angle) - yTemp * Math.sin(angle);
+        double y = xTemp * Math.sin(angle) + yTemp * Math.cos(angle);
+        return new Pose2d(x, y, angle);
     }
 
     private boolean atTargetPosition(@NonNull Pose2d currentPos) {
