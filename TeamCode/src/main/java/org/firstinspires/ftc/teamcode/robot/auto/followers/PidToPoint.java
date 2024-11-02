@@ -15,6 +15,13 @@ public class PidToPoint {
     public PidController yController;
     public PidController hController;
 
+    public PidToPoint() {
+        this(
+                new Pose2d(0,0,0),
+                new Pose2d(0,0,0)
+        );
+    }
+
     public PidToPoint(@NonNull Pose2d goalPoint, @NonNull Pose2d tolerances) {
         xController = new PidController(xCoeff);
         yController = new PidController(yCoeff);

@@ -1,118 +1,123 @@
-//package org.firstinspires.ftc.teamcode.robot.auto.followers;
-//
-//import androidx.annotation.NonNull;
-//
-//import org.firstinspires.ftc.teamcode.math.Pose2d;
-//import org.firstinspires.ftc.teamcode.robot.drive.Drivetrain;
-//
-//import java.util.HashMap;
-//import java.util.Stack;
-//import java.util.function.Consumer;
-//import java.util.function.Predicate;
-//
-//public class P2PFollower {
-//    private static class Task {
-//        private final HashMap<String, Object> context;
-//        private final Predicate<HashMap<String, Object>> task;
-//
-//        public Task(HashMap<String, Object> context, Predicate<HashMap<String, Object>> task) {
-//            this.context = context;
-//            this.task = task;
-//        }
-//
-//        public boolean execute() {
-//            return task.test(context);
-//        }
-//
-//        public void updateContext(String key, Object value) {
-//            Object oldValue = context.get(key);
-//            if (oldValue == null) {
-//                context.put(key, value);
-//            } else {
-//                context.replace(key, oldValue, value);
-//            }
-//        }
-//    }
-//
-//    public static class Builder {
-//        private Drivetrain drivetrain;
-//        private Stack<Task> tasks = new Stack<>();
-//
-//        public Builder(Drivetrain drivetrain) {
-//            this.drivetrain = drivetrain;
-//        }
-//
-//        /**
-//         * Creates the bare minimum context passed to all functions.
-//         * @return A minimal context
-//         */
-//        @NonNull
-//        private HashMap<String, Object> createBasicContext() {
-//            HashMap<String, Object> context = new HashMap<>();
-//            context.put("drivetrain", drivetrain);
-//            context.put("currentPos", new Pose2d(0, 0, 0));
-//            return context;
-//        }
-//
-//        public Builder addPoint(Pose2d point, Pose2d tolerance) {
-//            HashMap<String, Object> context = createBasicContext();
-//            context.put("p2p", new PidToPoint(point, tolerance));
-//
-//            Task task = new Task(
-//                    context,
-//                    (HashMap<String, Object> ctx) -> {
-//                        PidToPoint p2p = (PidToPoint) ctx.get("p2p");
-//                        Drivetrain dt = (Drivetrain) ctx.get("drivetrain");
-//                        Pose2d currentPos = (Pose2d) ctx.get("currentPos");
-//                        return p2p.driveToDestination(dt, currentPos);
-//                    }
-//            );
-//            tasks.add(task);
-//
-//            return this;
-//        }
-//
-//        public Builder addPoint(Pose2d point, double tolerance) {
-//            return addPoint(point, new Pose2d(tolerance, tolerance, tolerance));
-//        }
-//
-//        public Builder executeActionOnce(Consumer<HashMap<String, Object>> action) {
-//            Task task = new Task(
-//                    createBasicContext(),
-//                    (HashMap<String, Object> ctx) -> {
-//                        action.accept(ctx);
-//                        return true;
-//                    }
-//            );
-//            tasks.add(task);
-//            return this;
-//        }
-//
-//        public Builder executeUntilTrue(Predicate<HashMap<String, Object>> condition,
-//                                        Consumer<HashMap<String, Object>> action) {
-//            Task task = new Task(
-//                    createBasicContext(),
-//                    (HashMap<String, Object> ctx) -> {
-//                        action.accept(ctx);
-//                        return condition.test(ctx);
-//                    }
-//            );
-//            tasks.add(task);
-//            return this;
-//        }
-//
-//        public Builder finishActions() {
-//
-//        }
-//
-//        public P2PFollower build() {
-//            return new P2PFollower(tasks);
-//        }
-//    }
-//
-//    private Stack<Task> tasks;
-//    private Stack<Task> currentTasks;
-//    public P2PFollower(Stack<Task> tasks) {
-//        this.tasks = tasks;
-//    }
-//}
+package org.firstinspires.ftc.teamcode.robot.auto.followers;
+
+import androidx.annotation.NonNull;
+
+import org.firstinspires.ftc.teamcode.math.Pose2d;
+import org.firstinspires.ftc.teamcode.robot.drive.Drivetrain;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Stack;
+import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+
+public class P2PFollower {
+
+    public static class Builder {
+        private final Drivetrain drivetrain;
+        private final Stack<Task> tasks = new Stack<>();
+
+        public Builder(Drivetrain drivetrain) {
+            this.drivetrain = drivetrain;
+        }
+
+        public Builder addPoint(Pose2d point, Pose2d tolerance) {
+            Task.Context context = new Task.Context(drivetrain);
+            context.setGoal(point, tolerance);
+            Task task = new Task(
+                    context,
+                    (Task.Context ctx) -> {
+                        return ctx.p2p.driveToDestination(ctx.getDrivetrain(), ctx.getCurrentPos());
+                    },
+                    Task.TaskType.DRIVING
+            );
+            tasks.add(task);
+
+            return this;
+        }
+
+        public Builder addPoint(Pose2d point, double tolerance) {
+            return addPoint(point, new Pose2d(tolerance, tolerance, tolerance));
+        }
+
+        public Builder executeActionOnce(Consumer<Task.Context> action) {
+            Task.Context context = new Task.Context(drivetrain);
+            Task task = new Task(
+                    context,
+                    (Task.Context ctx) -> {
+                        action.accept(ctx);
+                        return true;
+                    },
+                    Task.TaskType.ACTION
+            );
+            tasks.add(task);
+            return this;
+        }
+
+        public Builder executeUntilTrue(Predicate<Task.Context> condition,
+                                        Consumer<Task.Context> action) {
+            Task.Context context = new Task.Context(drivetrain);
+            Task task = new Task(
+                    context,
+                    (Task.Context ctx) -> {
+                        action.accept(ctx);
+                        return condition.test(ctx);
+                    },
+                    Task.TaskType.ACTION
+            );
+            tasks.add(task);
+            return this;
+        }
+
+        public Builder finishActions() {
+            Task.Context context = new Task.Context(drivetrain);
+            Task task = new Task(
+                    context,
+                    (Task.Context ctx) -> false,
+                    Task.TaskType.FINISH_ACTIONS
+            );
+            tasks.add(task);
+            return this;
+        }
+
+        public P2PFollower build() {
+            return new P2PFollower(tasks);
+        }
+    }
+
+    private final Stack<Task> tasks;
+    private final ArrayList<Task> currentTasks = new ArrayList<>();
+
+    private P2PFollower(Stack<Task> tasks) {
+        this.tasks = tasks;
+    }
+
+    public void follow(BooleanSupplier opModeIsActive, Supplier<Pose2d> currentPos) {
+        while (!tasks.isEmpty() && opModeIsActive.getAsBoolean()) {
+            boolean addNewTask = true;
+            for (int i = currentTasks.size()-1; i >= 0; i--) {
+                Task task = currentTasks.get(i);
+                Task.Context ctx = task.context;
+                ctx.setCurrentPos(currentPos.get());
+
+                if (task.execute(ctx)) { // run the task
+                    // if the task finished, remove it from the list
+                    tasks.remove(i);
+                } else {
+                    // we don't want to start new tasks if we're driving
+                    if (task.taskType.equals(Task.TaskType.DRIVING) ||
+                        task.taskType.equals(Task.TaskType.FINISH_ACTIONS)) {
+                        addNewTask = false;
+                    }
+                }
+            }
+
+            if (addNewTask) {
+                currentTasks.add(tasks.pop());
+            }
+        }
+    }
+}
+
