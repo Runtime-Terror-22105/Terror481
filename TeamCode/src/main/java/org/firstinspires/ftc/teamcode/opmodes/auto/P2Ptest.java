@@ -32,11 +32,9 @@ public class P2Ptest extends LinearOpMode {
 
         waitForStart();
 
-        P2PFollower follower = new P2PFollower.Builder()
+        P2PFollower follower = new P2PFollower.Builder(robot.drivetrain)
                 // point, tolerance xyh
                 .addPoint(new Pose2d(1, 43, Math.PI/2), new Pose2d(1, 43, 0.2))
-                // repeating actions happen async unless this exists
-                .waitUntilPointReached()
                 // pass in any function
                 .executeAction(() -> robot.pinkArm.setState(PinkArm.State.HIGH_BASKET))
                 // function returning boolean, function
@@ -45,6 +43,7 @@ public class P2Ptest extends LinearOpMode {
                 .addPoint(new Pose2d(32, 3, 2), 5)
                 .waitUntilPointReached()
                 // now, we finally wait for all actions to be finished
+                // basically, repeating actions are async
                 .finishActions()
                 .build();
 
