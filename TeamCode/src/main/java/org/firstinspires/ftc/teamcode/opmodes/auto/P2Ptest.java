@@ -43,6 +43,7 @@ public class P2Ptest extends LinearOpMode {
                 .executeUntilTrue(() -> robot.pinkArm.atTargetPosition(), () -> robot.pinkArm.update())
                 // NOTE: there is no finishActions() here, so we go to the next point while this action is still ongoing
                 .addPoint(new Pose2d(32, 3, 2), 5)
+                .waitUntilPointReached()
                 // now, we finally wait for all actions to be finished
                 .finishActions()
                 .build();
