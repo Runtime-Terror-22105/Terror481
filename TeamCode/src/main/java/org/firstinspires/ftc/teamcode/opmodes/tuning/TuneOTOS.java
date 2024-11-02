@@ -69,21 +69,13 @@ public class TuneOTOS extends LinearOpMode {
             double lastHeading = 0;
             double curHeading = 0;
             while (!gamepad1.b) {
-                double skibidi = Angle.normalize(localizer.getPosition().heading); // 0 to 2pi
-                if (lastHeading > curHeading) { // if we reached 360 and then wrapped
-                    curHeading += skibidi;
-                } else {
-                    curHeading += skibidi - lastHeading;
-                }
-                lastHeading = skibidi;
                 drivetrain.move(ORIGIN, -gamepad1.right_stick_x);
                 hardware.write();
                 telemetry.addData("Heading", lastHeading);
                 telemetry.update();
             }
 
-            double hErr = (10 * 2*Math.PI)/curHeading;
-            angularScalar *= 1/hErr;
+            angularScalar *= 3600/(3600+Math.toDegrees(localizer.getPosition().heading));
             localizer.setAngularScalar(angularScalar);
 
             telemetry.addData("heading in degrees:", curHeading);
