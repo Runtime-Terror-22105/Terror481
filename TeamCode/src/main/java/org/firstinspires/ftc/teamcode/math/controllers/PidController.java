@@ -10,7 +10,6 @@ public class PidController {
     //region pid temp vars
     private double integralSum;
     private double lastError;
-    private double error;
     private double lastTimeStamp;
     //endregion
 
@@ -37,7 +36,7 @@ public class PidController {
      * the power to be used.
      */
     public double calculatePower(double currentPosition) {
-        this.error = calculateError(currentPosition);
+        double error = calculateError(currentPosition);
 
         double timestamp = (double) System.nanoTime() / 1E9;
         if (lastTimeStamp == 0) lastTimeStamp = timestamp;
@@ -62,7 +61,9 @@ public class PidController {
         return power;
     }
 
-    // region moving
+    public double getLastError() {
+        return lastError;
+    }
 
     /**
      * Increase/decrease the target position of the PID by some amount of counts. This is a
@@ -86,7 +87,6 @@ public class PidController {
         return calculateError(currentPosition) <= this.tolerance;
     }
 
-    // endregion
     /**
      * Gets the current target position of the PID.
      * @return targetPosition - The target position.
@@ -98,7 +98,6 @@ public class PidController {
     private void _resetTempVars() {
         this.integralSum = 0;
         this.lastError = 0;
-        this.error = 0;
         this.lastTimeStamp = 0;
     }
 
