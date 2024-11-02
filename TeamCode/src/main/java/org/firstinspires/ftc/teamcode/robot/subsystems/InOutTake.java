@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.robot.init.RobotHardware;
 /**
  * The in/out take mechanism
  */
-public class InOutTake {
+public class InOutTake implements Subsystem {
     // hardware
     private final TerrorServo pitchServo1;
     private final TerrorServo pitchServo2;
