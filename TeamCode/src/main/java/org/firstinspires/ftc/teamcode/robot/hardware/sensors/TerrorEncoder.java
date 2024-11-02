@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.robot.hardware.sensors;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.robot.hardware.motors.TerrorMotor;
 
@@ -13,19 +12,6 @@ import org.firstinspires.ftc.teamcode.robot.hardware.motors.TerrorMotor;
  * the reset() method.
  */
 public class TerrorEncoder {
-    private final static int CPS_STEP = 0x10000;
-
-    private static double inverseOverflow(double input, double estimate) {
-        // convert to uint16
-        int real = (int) input & 0xffff;
-        // initial, modulo-based correction: it can recover the remainder of 5 of the upper 16 bits
-        // because the velocity is always a multiple of 20 cps due to Expansion Hub's 50ms measurement window
-        real += ((real % 20) / 4) * CPS_STEP;
-        // estimate-based correction: it finds the nearest multiple of 5 to correct the upper bits by
-        real += (int) (Math.round((estimate - real) / (5 * CPS_STEP)) * 5 * CPS_STEP);
-        return real;
-    }
-
     public enum Direction {
         FORWARD(1),
         REVERSE(-1);
@@ -42,24 +28,12 @@ public class TerrorEncoder {
     }
 
     private TerrorMotor motor;
-    private ElapsedTime clock;
 
     private Direction direction;
 
-    private int lastPosition;
-    private int velocityEstimateIdx;
-    private double[] velocityEstimates;
-    private double lastUpdateTime;
-
     public TerrorEncoder(TerrorMotor motor) {
         this.motor = motor;
-        this.clock = new ElapsedTime();
-
         this.direction = Direction.FORWARD;
-
-        this.lastPosition = 0;
-        this.velocityEstimates = new double[3];
-        this.lastUpdateTime = clock.seconds();
     }
 
     public Direction getDirection() {
@@ -86,16 +60,7 @@ public class TerrorEncoder {
      */
     public int getCurrentPosition() {
         int multiplier = getMultiplier();
-        int currentPosition = motor.getCurrentPosition() * multiplier;
-        if (currentPosition != lastPosition) {
-            double currentTime = clock.seconds();
-            double dt = currentTime - lastUpdateTime;
-            velocityEstimates[velocityEstimateIdx] = (currentPosition - lastPosition) / dt;
-            velocityEstimateIdx = (velocityEstimateIdx + 1) % 3;
-            lastPosition = currentPosition;
-            lastUpdateTime = currentTime;
-        }
-        return currentPosition;
+        return motor.getCurrentPosition() * multiplier;
     }
 
     /**
@@ -104,22 +69,9 @@ public class TerrorEncoder {
      *
      * @return raw velocity
      */
-    public double getRawVelocity() {
+    public double getVelocity() {
         int multiplier = getMultiplier();
         return motor.getVelocity() * multiplier;
-    }
-
-    /**
-     * Uses velocity estimates gathered in {@link #getCurrentPosition} to estimate the upper bits of velocity
-     * that are lost in overflow due to velocity being transmitted as 16 bits.
-     * <p>CAVEAT: must regularly call {@link #getCurrentPosition} for the compensation to work correctly.</p>
-     * @return corrected velocity
-     */
-    public double getCorrectedVelocity() {
-        double median = velocityEstimates[0] > velocityEstimates[1]
-                ? Math.max(velocityEstimates[1], Math.min(velocityEstimates[0], velocityEstimates[2]))
-                : Math.max(velocityEstimates[0], Math.min(velocityEstimates[1], velocityEstimates[2]));
-        return inverseOverflow(getRawVelocity(), median);
     }
 
     /**
