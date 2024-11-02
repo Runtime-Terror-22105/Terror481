@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.math;
 
 import androidx.annotation.NonNull;
 
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
-
 import org.jetbrains.annotations.Contract;
 
 public class Coordinate {
@@ -264,12 +262,12 @@ public class Coordinate {
 
     @NonNull
     @Contract(value = "_ -> new", pure = true)
-    public static Coordinate fromPose(@NonNull SparkFunOTOS.Pose2D pose) {
+    public static Coordinate fromPose(@NonNull Pose2d pose) {
         return new Coordinate(pose.x, pose.y);
     }
 
     @NonNull
-    public SparkFunOTOS.Pose2D toPose() {
-        return new SparkFunOTOS.Pose2D(this.x, this.y, Math.atan2(this.y, this.x));
+    public Pose2d toPose() {
+        return new Pose2d(this.x, this.y, Math.atan2(this.y, this.x));
     }
 }

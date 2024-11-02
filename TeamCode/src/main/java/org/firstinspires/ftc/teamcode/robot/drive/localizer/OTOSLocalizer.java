@@ -6,6 +6,7 @@ import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.math.Pose2d;
 
 public class OTOSLocalizer {
     public static class Parameters {
@@ -24,11 +25,11 @@ public class OTOSLocalizer {
         public double linearScalar = 1.0;
         public double angularScalar = 1.0;
 
-        public Parameters(SparkFunOTOS.Pose2D offset, SparkFunOTOS.Pose2D initialPos, double linearScalar, double angularScalar) {
-            this.offset = offset;
+        public Parameters(@NonNull Pose2d offset, @NonNull Pose2d initialPos, double linearScalar, double angularScalar) {
+            this.offset = offset.toOtosPose();
             this.linearScalar = linearScalar;
             this.angularScalar = angularScalar;
-            this.initialPos = initialPos;
+            this.initialPos = initialPos.toOtosPose();
         }
     }
 
@@ -72,27 +73,27 @@ public class OTOSLocalizer {
         return otos.setAngularScalar(scalar);
     }
 
-    public SparkFunOTOS.Pose2D getAcceleration() {
-        return otos.getAcceleration();
+    public Pose2d getAcceleration() {
+        return new Pose2d(otos.getAcceleration());
     }
 
-    public SparkFunOTOS.Pose2D getVelocity() {
-        return otos.getVelocity();
+    public Pose2d getVelocity() {
+        return new Pose2d(otos.getVelocity());
     }
 
-    public SparkFunOTOS.Pose2D getPosition() {
-        return otos.getPosition();
+    public Pose2d getPosition() {
+        return new Pose2d(otos.getPosition());
     }
 
-    public SparkFunOTOS.Pose2D getPositionStdDev() {
-        return otos.getPositionStdDev();
+    public Pose2d getPositionStdDev() {
+        return new Pose2d(otos.getPositionStdDev());
     }
 
-    public SparkFunOTOS.Pose2D getVelocityStdDev() {
-        return otos.getVelocityStdDev();
+    public Pose2d getVelocityStdDev() {
+        return new Pose2d(otos.getVelocityStdDev());
     }
 
-    public SparkFunOTOS.Pose2D getAccelerationStdDev() {
-        return otos.getAccelerationStdDev();
+    public Pose2d getAccelerationStdDev() {
+        return new Pose2d(otos.getAccelerationStdDev());
     }
 }

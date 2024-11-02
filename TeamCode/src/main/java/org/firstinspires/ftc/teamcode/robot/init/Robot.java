@@ -5,11 +5,11 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.math.Coordinate;
+import org.firstinspires.ftc.teamcode.math.Pose2d;
 import org.firstinspires.ftc.teamcode.robot.drive.Drivetrain;
 import org.firstinspires.ftc.teamcode.robot.drive.localizer.OTOSLocalizer;
 import org.firstinspires.ftc.teamcode.robot.drive.mecanum.MecanumDrivetrain;
@@ -57,8 +57,8 @@ public class Robot {
         // Initialize the localizer
         this.localizer = new OTOSLocalizer(hardware.otos);
         localizer.initializeOtos(new OTOSLocalizer.Parameters(
-                new SparkFunOTOS.Pose2D(0, 0, 0),
-                new SparkFunOTOS.Pose2D(0, 0, 0),
+                new Pose2d(0, 0, 0),
+                new Pose2d(0, 0, 0),
                 1.0,
                 1.0
         ));

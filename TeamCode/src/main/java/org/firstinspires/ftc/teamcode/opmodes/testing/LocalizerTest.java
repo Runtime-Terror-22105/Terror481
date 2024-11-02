@@ -5,12 +5,12 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.math.Coordinate;
+import org.firstinspires.ftc.teamcode.math.Pose2d;
 import org.firstinspires.ftc.teamcode.robot.init.Robot;
 import org.firstinspires.ftc.teamcode.robot.init.RobotHardware;
 
@@ -64,10 +64,10 @@ public class LocalizerTest extends LinearOpMode {
             // endregion driving
             hardware.write();
 
-            SparkFunOTOS.Pose2D curPos = robot.localizer.getPosition();
+            Pose2d curPos = robot.localizer.getPosition();
             telemetry.addData("Current x", curPos.x);
             telemetry.addData("Current y", curPos.y);
-            telemetry.addData("Current h", curPos.h);
+            telemetry.addData("Current h", curPos.heading);
             telemetry.addData("Loop time (ms)", loopTimer.milliseconds());
             telemetry.addData("Loop time (hz)", 1000/loopTimer.milliseconds());
             telemetry.update();

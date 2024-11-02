@@ -7,11 +7,11 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.math.Angle;
+import org.firstinspires.ftc.teamcode.math.Pose2d;
 import org.firstinspires.ftc.teamcode.robot.drive.Drivetrain;
 import org.firstinspires.ftc.teamcode.robot.drive.localizer.OTOSLocalizer;
 import org.firstinspires.ftc.teamcode.robot.drive.mecanum.MecanumDrivetrain;
@@ -43,8 +43,8 @@ public class TuneOTOS extends LinearOpMode {
         OTOSLocalizer localizer = new OTOSLocalizer(hardware.otos);
         localizer.initializeOtos(new OTOSLocalizer.Parameters(
                 // 3.55 inches in the front
-                new SparkFunOTOS.Pose2D(0, 3.55, 0),
-                new SparkFunOTOS.Pose2D(0, 0, 0),
+                new Pose2d(0, 3.55, 0),
+                new Pose2d(0, 0, 0),
                 1.0,
                 1.0
         ));
@@ -69,7 +69,7 @@ public class TuneOTOS extends LinearOpMode {
             double lastHeading = 0;
             double curHeading = 0;
             while (!gamepad1.b) {
-                double skibidi = Angle.normalize(localizer.getPosition().h); // 0 to 2pi
+                double skibidi = Angle.normalize(localizer.getPosition().heading); // 0 to 2pi
                 if (lastHeading > curHeading) { // if we reached 360 and then wrapped
                     curHeading += skibidi;
                 } else {
@@ -107,7 +107,7 @@ public class TuneOTOS extends LinearOpMode {
             telemetry.update();
             while (!gamepad1.b) {}
 
-            SparkFunOTOS.Pose2D pos = localizer.getPosition();
+            Pose2d pos = localizer.getPosition();
             double xErr = distance/pos.x;
             double yErr = distance/pos.y;
             double linearDist = Math.sqrt(pos.x*pos.x + pos.y*pos.y);
