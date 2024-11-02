@@ -23,6 +23,7 @@ public class P2PTuning extends LinearOpMode {
     public static Pose2d goal = new Pose2d(0, 0, 0);
     public static Pose2d tolerances = new Pose2d(0, 0, 0);
 
+
     @Override
     public void runOpMode() throws InterruptedException {
         hardware.init(hardwareMap, LynxModule.BulkCachingMode.AUTO);
