@@ -23,6 +23,10 @@ import org.firstinspires.ftc.teamcode.robot.subsystems.PinkArm;
  */
 @Config
 public class Robot {
+    // dash
+    public static Pose2d OTOS_OFFSET = new Pose2d(0, 0, 0);
+    public static Pose2d ROBOT_INITIAL_POS = new Pose2d(0, 0, 0);
+
     // Subsystems
     public Drivetrain drivetrain = null;
     public PinkArm pinkArm = null;
@@ -57,8 +61,8 @@ public class Robot {
         // Initialize the localizer
         this.localizer = new OTOSLocalizer(hardware.otos);
         localizer.initializeOtos(new OTOSLocalizer.Parameters(
-                new Pose2d(0, 0, 0),
-                new Pose2d(0, 0, 0),
+                OTOS_OFFSET,
+                ROBOT_INITIAL_POS,
                 1.0,
                 1.0
         ));
