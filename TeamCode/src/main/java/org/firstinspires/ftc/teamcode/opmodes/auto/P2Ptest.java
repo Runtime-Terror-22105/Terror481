@@ -37,12 +37,6 @@ public class P2Ptest extends LinearOpMode {
                 // point, tolerance xyh
                 .addPoint(new Pose2d(1, 43, Math.PI/2), new Pose2d(1, 43, 0.2))
                 // pass in any function
-                .executeActionOnce((Task.Context ctx) -> robot.pinkArm.setState(PinkArm.State.HIGH_BASKET))
-                // function returning boolean, function
-                .executeUntilTrue(
-                        (Task.Context ctx) -> robot.pinkArm.atTargetPosition(),
-                        (Task.Context ctx) -> robot.pinkArm.update()
-                )
                 // NOTE: there is no finishActions() here, so we go to the next point while this action is still ongoing
                 .addPoint(new Pose2d(32, 3, 2), 5)
                 // now, we finally wait for all actions to be finished

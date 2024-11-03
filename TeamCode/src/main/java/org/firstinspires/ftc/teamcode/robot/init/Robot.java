@@ -24,7 +24,7 @@ import org.firstinspires.ftc.teamcode.robot.subsystems.PinkArm;
 @Config
 public class Robot {
     // dash
-    public static Pose2d OTOS_OFFSET = new Pose2d(0, 0, 0);
+    public static Pose2d OTOS_OFFSET = new Pose2d(0, 3.55, 0);
     public static Pose2d ROBOT_INITIAL_POS = new Pose2d(0, 0, 0);
 
     // Subsystems
@@ -128,5 +128,9 @@ public class Robot {
                 this.drivetrain.move(new Coordinate(1, 1), 0);
             }
         }
+    }
+
+    public void setRobotInitialPos(Pose2d initialPos){
+        this.ROBOT_INITIAL_POS=initialPos;
     }
 }
