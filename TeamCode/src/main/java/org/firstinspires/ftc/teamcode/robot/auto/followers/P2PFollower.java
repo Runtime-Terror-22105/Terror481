@@ -104,7 +104,7 @@ public class P2PFollower {
 
                 if (task.execute(ctx)) { // run the task
                     // if the task finished, remove it from the list
-                    tasks.remove(i);
+                    currentTasks.remove(i);
                 } else {
                     // we don't want to start new tasks if we're driving
                     if (task.taskType.equals(Task.TaskType.DRIVING) ||
