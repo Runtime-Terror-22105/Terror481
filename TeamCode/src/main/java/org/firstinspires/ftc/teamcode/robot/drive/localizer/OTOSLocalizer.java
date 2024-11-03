@@ -11,8 +11,8 @@ import org.firstinspires.ftc.teamcode.math.Pose2d;
 public class OTOSLocalizer {
     public static class Parameters {
         // sets offset from center of robot
-        public SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(0, 0, 0);
-        public SparkFunOTOS.Pose2D initialPos = new SparkFunOTOS.Pose2D(0, 0, 0);
+        public SparkFunOTOS.Pose2D offset;
+        public SparkFunOTOS.Pose2D initialPos;
 
         // first tune ang scalar by spinning robot by multiple rotations (eg. 10) to get an error,
         // then set scalar to inverse of the error (angle wraps from -180 to 180) so for example,
@@ -22,8 +22,8 @@ public class OTOSLocalizer {
         // do this multiple times at multiple speeds to get an average, then set the linear scalar
         // to the inverse of the error. For example, if you move the robot 100 inches and
         // the sensor reports 103 inches, set the linear scalar to 100/103 = 0.971
-        public double linearScalar = 1.0;
-        public double angularScalar = 1.0;
+        public double linearScalar;
+        public double angularScalar;
 
         public Parameters(@NonNull Pose2d offset, @NonNull Pose2d initialPos, double linearScalar, double angularScalar) {
             this.offset = offset.toOtosPose();
