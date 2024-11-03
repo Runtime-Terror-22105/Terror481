@@ -1,12 +1,9 @@
 package org.firstinspires.ftc.teamcode.robot.auto.followers;
 
-import androidx.annotation.NonNull;
-
 import org.firstinspires.ftc.teamcode.math.Pose2d;
 import org.firstinspires.ftc.teamcode.robot.drive.Drivetrain;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Stack;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
