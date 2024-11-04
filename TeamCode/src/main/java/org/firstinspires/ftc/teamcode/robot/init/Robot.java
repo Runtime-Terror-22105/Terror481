@@ -23,6 +23,9 @@ import org.firstinspires.ftc.teamcode.robot.subsystems.PinkArm;
  */
 @Config
 public class Robot {
+    public static double OTOS_LINEAR_SCALAR = 1.1556573755886470663102965508464;
+    public static double OTOS_ANGULAR_SCALAR = 1.0066;
+
     // dash
     public static Pose2d OTOS_OFFSET = new Pose2d(0, 3.55, 0);
     public static Pose2d ROBOT_INITIAL_POS = new Pose2d(0, 0, 0);
@@ -63,8 +66,8 @@ public class Robot {
         localizer.initializeOtos(new OTOSLocalizer.Parameters(
                 OTOS_OFFSET,
                 ROBOT_INITIAL_POS,
-                1.0,
-                1.0
+                OTOS_LINEAR_SCALAR,
+                OTOS_ANGULAR_SCALAR
         ));
 
         // Initialize the drivetrain

@@ -2,14 +2,17 @@ package org.firstinspires.ftc.teamcode.robot.auto.followers;
 
 import androidx.annotation.NonNull;
 
+import com.acmerobotics.dashboard.config.Config;
+
 import org.firstinspires.ftc.teamcode.math.Pose2d;
 import org.firstinspires.ftc.teamcode.math.controllers.PidController;
 import org.firstinspires.ftc.teamcode.robot.drive.Drivetrain;
 
+@Config
 public class PidToPoint {
-    public static PidController.PidCoefficients xCoeff;
-    public static PidController.PidCoefficients yCoeff;
-    public static PidController.PidCoefficients hCoeff;
+    public static PidController.PidCoefficients xCoeff = new PidController.PidCoefficients(0, 0, 0);
+    public static PidController.PidCoefficients yCoeff = new PidController.PidCoefficients(0, 0, 0);
+    public static PidController.PidCoefficients hCoeff = new PidController.PidCoefficients(2.5, 0, 0);
 
     public PidController xController;
     public PidController yController;
@@ -30,7 +33,7 @@ public class PidToPoint {
     }
 
     @NonNull
-    private Pose2d calculatePower(@NonNull Pose2d currentPos) {
+    public Pose2d calculatePower(@NonNull Pose2d currentPos) {
         double xTemp = xController.calculatePower(currentPos.x);
         double yTemp = yController.calculatePower(currentPos.y);
         double angle = hController.calculatePower(currentPos.heading);

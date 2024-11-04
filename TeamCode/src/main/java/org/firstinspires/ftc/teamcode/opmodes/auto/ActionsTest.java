@@ -11,15 +11,13 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.math.Pose2d;
 import org.firstinspires.ftc.teamcode.robot.auto.followers.P2PFollower;
-import org.firstinspires.ftc.teamcode.robot.auto.followers.Task;
 import org.firstinspires.ftc.teamcode.robot.init.Robot;
 import org.firstinspires.ftc.teamcode.robot.init.RobotHardware;
-import org.firstinspires.ftc.teamcode.robot.subsystems.PinkArm;
 
 @Config
 @Photon
 @TeleOp
-public class P2Ptest extends LinearOpMode {
+public class ActionsTest extends LinearOpMode {
     private RobotHardware hardware = new RobotHardware();
     private final Robot robot = new Robot();
     private FtcDashboard dashboard;

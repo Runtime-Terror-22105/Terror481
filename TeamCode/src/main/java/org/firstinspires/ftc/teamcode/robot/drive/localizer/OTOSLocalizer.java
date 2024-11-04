@@ -22,34 +22,47 @@ public class OTOSLocalizer {
         // do this multiple times at multiple speeds to get an average, then set the linear scalar
         // to the inverse of the error. For example, if you move the robot 100 inches and
         // the sensor reports 103 inches, set the linear scalar to 100/103 = 0.971
+
+        // scalars must be between 0.872 and 1.127
         public double linearScalar;
         public double angularScalar;
 
-        public Parameters(@NonNull Pose2d offset, @NonNull Pose2d initialPos, double linearScalar, double angularScalar) {
+        public Parameters(@NonNull Pose2d offset, @NonNull Pose2d initialPos,
+                          double linearScalar, double angularScalar) {
             this.offset = offset.toOtosPose();
+            this.initialPos = initialPos.toOtosPose();
             this.linearScalar = linearScalar;
             this.angularScalar = angularScalar;
-            this.initialPos = initialPos.toOtosPose();
         }
     }
 
     private SparkFunOTOS otos;
+    private Parameters parameters;
 
     public OTOSLocalizer(SparkFunOTOS otos) {
         this.otos = otos;
     }
 
     public void initializeOtos(@NonNull Parameters parameters) {
+        this.parameters = parameters;
         otos.setLinearUnit(DistanceUnit.INCH);
         otos.setAngularUnit(AngleUnit.RADIANS);
 
         otos.setOffset(parameters.offset);
 
-        otos.setLinearScalar(1.0);
-        otos.setAngularScalar(1.0);
+        // scalars must be between 0.872 and 1.127
+//        if (!(otos.setLinearScalar(parameters.linearScalar))) {
+//            throw new RuntimeException("OTOS linear scalar fails");
+//        }
+//        if (!otos.setAngularScalar(parameters.angularScalar)) {
+//            throw new RuntimeException("OTOS angular scalar fails");
+//        }
 
-        // 1000 samples * 2.4 ms = 2.4 seconds blocking call
-        otos.calibrateImu(1000, true);
+        // 255 samples * 2.4 ms = 0.612 seconds blocking call
+        // Samples must be between 1 and 255
+        if (!(otos.calibrateImu(255, true))) {
+            throw new RuntimeException("OTOS calibration fails");
+        }
 
         otos.resetTracking(); // resets pos to origin
 
@@ -65,35 +78,39 @@ public class OTOSLocalizer {
         otos.resetTracking();
     }
 
-    public boolean setLinearScalar(double scalar) {
-        return otos.setLinearScalar(scalar);
-    }
-
-    public boolean setAngularScalar(double scalar) {
-        return otos.setAngularScalar(scalar);
-    }
-
-    public Pose2d getAcceleration() {
-        return new Pose2d(otos.getAcceleration());
-    }
-
-    public Pose2d getVelocity() {
-        return new Pose2d(otos.getVelocity());
-    }
+//    public boolean setLinearScalar(double scalar) {
+//        return otos.setLinearScalar(scalar);
+//    }
+//
+//    public boolean setAngularScalar(double scalar) {
+//        return otos.setAngularScalar(scalar);
+//    }
+//
+//    public Pose2d getAcceleration() {
+//        return new Pose2d(otos.getAcceleration());
+//    }
+//
+//    public Pose2d getVelocity() {
+//        return new Pose2d(otos.getVelocity());
+//    }
 
     public Pose2d getPosition() {
-        return new Pose2d(otos.getPosition());
+        Pose2d pos = new Pose2d(otos.getPosition());
+        pos.x *= parameters.linearScalar;
+        pos.y *= parameters.linearScalar;
+        pos.heading *= parameters.angularScalar;
+        return pos;
     }
 
-    public Pose2d getPositionStdDev() {
-        return new Pose2d(otos.getPositionStdDev());
-    }
-
-    public Pose2d getVelocityStdDev() {
-        return new Pose2d(otos.getVelocityStdDev());
-    }
-
-    public Pose2d getAccelerationStdDev() {
-        return new Pose2d(otos.getAccelerationStdDev());
-    }
+//    public Pose2d getPositionStdDev() {
+//        return new Pose2d(otos.getPositionStdDev());
+//    }
+//
+//    public Pose2d getVelocityStdDev() {
+//        return new Pose2d(otos.getVelocityStdDev());
+//    }
+//
+//    public Pose2d getAccelerationStdDev() {
+//        return new Pose2d(otos.getAccelerationStdDev());
+//    }
 }
