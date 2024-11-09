@@ -26,7 +26,8 @@ public class P2PFollower {
             Task task = new Task(
                     context,
                     (Task.Context ctx) -> {
-                        return ctx.p2p.driveToDestination(ctx.getDrivetrain(), ctx.getCurrentPos());
+                        Pose2d powers = ctx.p2p.calculatePower(ctx.getCurrentPos());
+                        return ctx.p2p.driveToDestination(ctx.getDrivetrain(), powers, ctx.getCurrentPos());
                     },
                     Task.TaskType.DRIVING
             );
