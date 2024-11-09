@@ -49,8 +49,8 @@ public class PidToPoint {
                 && hController.atTargetPosition(currentPos.heading);
     }
 
-    public boolean driveToDestination(@NonNull Drivetrain drivetrain, @NonNull Pose2d currentPos) {
-        drivetrain.move(calculatePower(currentPos));
+    public boolean driveToDestination(@NonNull Drivetrain drivetrain, @NonNull Pose2d powers, @NonNull Pose2d currentPos) {
+        drivetrain.move(powers);
         return this.atTargetPosition(currentPos);
     }
 
