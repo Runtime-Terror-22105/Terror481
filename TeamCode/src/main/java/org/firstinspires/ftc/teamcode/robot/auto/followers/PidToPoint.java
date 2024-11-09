@@ -34,9 +34,9 @@ public class PidToPoint {
 
     @NonNull
     public Pose2d calculatePower(@NonNull Pose2d currentPos) {
-        double xTemp = xController.calculatePower(currentPos.x);
-        double yTemp = yController.calculatePower(currentPos.y);
-        double angle = hController.calculatePower(currentPos.heading);
+        double xTemp = xController.calculatePower(currentPos.x, true);
+        double yTemp = yController.calculatePower(currentPos.y, true);
+        double angle = hController.calculatePower(currentPos.heading, true);
 
         double x = xTemp * Math.cos(angle) - yTemp * Math.sin(angle);
         double y = xTemp * Math.sin(angle) + yTemp * Math.cos(angle);

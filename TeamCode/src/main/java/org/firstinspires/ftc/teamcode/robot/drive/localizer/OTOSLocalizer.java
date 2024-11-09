@@ -48,7 +48,7 @@ public class OTOSLocalizer {
         otos.setLinearUnit(DistanceUnit.INCH);
         otos.setAngularUnit(AngleUnit.RADIANS);
 
-//        otos.setOffset(parameters.offset);
+        otos.setOffset(parameters.offset);
 
         // scalars must be between 0.872 and 1.127
 //        if (!(otos.setLinearScalar(parameters.linearScalar))) {
@@ -99,9 +99,6 @@ public class OTOSLocalizer {
         pos.x *= parameters.linearScalar;
         pos.y *= parameters.linearScalar;
         pos.heading *= parameters.angularScalar;
-        pos.x += parameters.offset.x;
-        pos.y += parameters.offset.y;
-        pos.heading += parameters.offset.h;
         return pos;
     }
 
