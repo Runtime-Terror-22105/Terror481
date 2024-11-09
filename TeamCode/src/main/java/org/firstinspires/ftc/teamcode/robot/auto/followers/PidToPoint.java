@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.robot.drive.Drivetrain;
 public class PidToPoint {
     public static PidController.PidCoefficients xCoeff = new PidController.PidCoefficients(0, 0, 0);
     public static PidController.PidCoefficients yCoeff = new PidController.PidCoefficients(0, 0, 0);
-    public static PidController.PidCoefficients hCoeff = new PidController.PidCoefficients(2.5, 0, 0);
+    public static PidController.PidCoefficients hCoeff = new PidController.PidCoefficients(2, 0, 0.11);
 
     public PidController xController;
     public PidController yController;
@@ -34,8 +34,8 @@ public class PidToPoint {
 
     @NonNull
     public Pose2d calculatePower(@NonNull Pose2d currentPos) {
-        double xTemp = xController.calculatePower(currentPos.x, true);
-        double yTemp = yController.calculatePower(currentPos.y, true);
+        double xTemp = xController.calculatePower(currentPos.x);
+        double yTemp = yController.calculatePower(currentPos.y);
         double angle = hController.calculatePower(currentPos.heading, true);
 
         double x = xTemp * Math.cos(angle) - yTemp * Math.sin(angle);
