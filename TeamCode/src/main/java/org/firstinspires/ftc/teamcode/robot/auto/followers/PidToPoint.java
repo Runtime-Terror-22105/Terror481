@@ -37,12 +37,12 @@ public class PidToPoint {
     public Pose2d calculatePower(@NonNull Pose2d currentPos) {
         double xTemp = xController.calculatePower(currentPos.x);
         double yTemp = yController.calculatePower(currentPos.y);
-        xTemp = Math.sqrt(Math.abs(xTemp)) * Algebra.sign(xTemp); // sqPID
-        yTemp = Math.sqrt(Math.abs(yTemp)) * Algebra.sign(yTemp); // sqPID
         double angle = hController.calculatePower(currentPos.heading, true);
 
         double x = xTemp * Math.cos(angle) - yTemp * Math.sin(angle);
         double y = xTemp * Math.sin(angle) + yTemp * Math.cos(angle);
+        x = Math.sqrt(Math.abs(x)) * Algebra.sign(x); // sqPID
+        y = Math.sqrt(Math.abs(y)) * Algebra.sign(y); // sqPID
         return new Pose2d(x, y, angle);
     }
 
