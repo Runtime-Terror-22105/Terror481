@@ -51,7 +51,7 @@ public class FieldCentricTeleOp extends LinearOpMode {
 //            localizer.update();
             double robotAngle = robot.localizer.getPosition().heading;
 
-            Coordinate direction = new Coordinate(slr(-gamepad1.left_stick_x), slr(gamepad1.left_stick_y));
+            Coordinate direction = new Coordinate(slr(gamepad1.left_stick_x), slr(-gamepad1.left_stick_y));
             direction.rotate(-robotAngle);
 
             double rotation;

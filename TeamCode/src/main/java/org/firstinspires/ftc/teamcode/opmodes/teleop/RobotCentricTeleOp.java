@@ -49,7 +49,7 @@ public class RobotCentricTeleOp extends LinearOpMode {
                 hub.clearBulkCache();
             }
 
-            Coordinate direction = new Coordinate(slr(-gamepad1.left_stick_x), slr(gamepad1.left_stick_y));
+            Coordinate direction = new Coordinate(slr(gamepad1.left_stick_x), slr(-gamepad1.left_stick_y));
             robot.telemetry.addData("x", direction.x);
             robot.telemetry.addData("y", direction.y);
             double rotation = slr(-gamepad1.right_stick_x);

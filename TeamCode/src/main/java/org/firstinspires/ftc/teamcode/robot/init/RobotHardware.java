@@ -99,10 +99,10 @@ public class RobotHardware {
         this.motorRearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.motorRearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        this.motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        this.motorRearLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         this.motorFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         this.motorRearRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        this.motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        this.motorRearRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         this.publisher.subscribe(4, motorFrontLeft, motorFrontRight, motorRearLeft, motorRearRight);
 

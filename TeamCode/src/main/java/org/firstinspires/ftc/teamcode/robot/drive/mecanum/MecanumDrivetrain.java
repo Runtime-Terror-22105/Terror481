@@ -41,9 +41,9 @@ public class MecanumDrivetrain implements Drivetrain {
      */
     @Override
     public void move(@NonNull Coordinate velocity, double rotation) {
-        this.motorRearLeft.setPower(velocity.y - velocity.x + rotation);
-        this.motorFrontLeft.setPower(velocity.y + velocity.x + rotation);
-        this.motorRearRight.setPower(velocity.y + velocity.x - rotation);
-        this.motorFrontRight.setPower(velocity.y - velocity.x - rotation);
+        this.motorFrontLeft.setPower(velocity.y + velocity.x - rotation);
+        this.motorRearLeft.setPower(velocity.y - velocity.x - rotation);
+        this.motorFrontRight.setPower(velocity.y - velocity.x + rotation);
+        this.motorRearRight.setPower(velocity.y + velocity.x + rotation);
     }
 }
