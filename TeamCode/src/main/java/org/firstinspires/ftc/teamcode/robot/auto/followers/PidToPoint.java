@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.robot.drive.Drivetrain;
 
 @Config
 public class PidToPoint {
-    public static PidController.PidCoefficients xCoeff = new PidController.PidCoefficients(0, 0, 0);
+    public static PidController.PidCoefficients xCoeff = new PidController.PidCoefficients(-0.35, 0, -0.026);
     public static PidController.PidCoefficients yCoeff = new PidController.PidCoefficients(0, 0, 0);
     public static PidController.PidCoefficients hCoeff = new PidController.PidCoefficients(2, 0, 0.11);
 
