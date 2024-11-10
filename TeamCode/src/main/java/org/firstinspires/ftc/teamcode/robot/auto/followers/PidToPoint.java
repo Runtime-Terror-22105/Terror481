@@ -4,14 +4,15 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.config.Config;
 
+import org.firstinspires.ftc.teamcode.math.Algebra;
 import org.firstinspires.ftc.teamcode.math.Pose2d;
 import org.firstinspires.ftc.teamcode.math.controllers.PidController;
 import org.firstinspires.ftc.teamcode.robot.drive.Drivetrain;
 
 @Config
 public class PidToPoint {
-    public static PidController.PidCoefficients xCoeff = new PidController.PidCoefficients(-0.35, 0, -0.026);
-    public static PidController.PidCoefficients yCoeff = new PidController.PidCoefficients(0, 0, 0);
+    public static PidController.PidCoefficients xCoeff = new PidController.PidCoefficients(-0.05, 0, -0.004);
+    public static PidController.PidCoefficients yCoeff = new PidController.PidCoefficients(-0.02, 0, -0.01);
     public static PidController.PidCoefficients hCoeff = new PidController.PidCoefficients(2, 0, 0.11);
 
     public PidController xController;
@@ -36,6 +37,8 @@ public class PidToPoint {
     public Pose2d calculatePower(@NonNull Pose2d currentPos) {
         double xTemp = xController.calculatePower(currentPos.x);
         double yTemp = yController.calculatePower(currentPos.y);
+        xTemp = Math.sqrt(Math.abs(xTemp)) * Algebra.sign(xTemp); // sqPID
+        yTemp = Math.sqrt(Math.abs(yTemp)) * Algebra.sign(yTemp); // sqPID
         double angle = hController.calculatePower(currentPos.heading, true);
 
         double x = xTemp * Math.cos(angle) - yTemp * Math.sin(angle);
