@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.config.Config;
 
-import org.firstinspires.ftc.teamcode.math.Algebra;
 import org.firstinspires.ftc.teamcode.math.Pose2d;
 import org.firstinspires.ftc.teamcode.math.controllers.PidController;
 import org.firstinspires.ftc.teamcode.robot.drive.Drivetrain;
@@ -12,7 +11,7 @@ import org.firstinspires.ftc.teamcode.robot.drive.Drivetrain;
 @Config
 public class PidToPoint {
     public static PidController.PidCoefficients xCoeff = new PidController.PidCoefficients(-0.05, 0, -0.004);
-    public static PidController.PidCoefficients yCoeff = new PidController.PidCoefficients(-0.02, 0, -0.01);
+    public static PidController.PidCoefficients yCoeff = new PidController.PidCoefficients(-0.25, 0, -0.03);
     public static PidController.PidCoefficients hCoeff = new PidController.PidCoefficients(2, 0, 0.11);
 
     public PidController xController;
@@ -41,8 +40,8 @@ public class PidToPoint {
 
         double x = xTemp * Math.cos(angle) - yTemp * Math.sin(angle);
         double y = xTemp * Math.sin(angle) + yTemp * Math.cos(angle);
-        x = Math.sqrt(Math.abs(x)) * Algebra.sign(x); // sqPID
-        y = Math.sqrt(Math.abs(y)) * Algebra.sign(y); // sqPID
+//        x = Math.sqrt(Math.abs(x)) * Algebra.sign(x); // sqPID
+//        y = Math.sqrt(Math.abs(y)) * Algebra.sign(y); // sqPID
         return new Pose2d(x, y, angle);
     }
 
