@@ -35,18 +35,7 @@ public class FieldCentricTeleOp extends LinearOpMode {
         dashboard = FtcDashboard.getInstance();
         telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
 
-        double initialX = 0;
-        double initialY = 0;
-        double initialHeading = 0;
-//        SwerveLocalizer localizer = new SwerveLocalizer(
-//            initialX,
-//            initialY,
-//            initialHeading,
-//            robot
-//        );
-
         waitForStart();
-//        robot.imu.setPollTime(2);
 
         ElapsedTime loopTimer = new ElapsedTime();
         ElapsedTime drivingTimer = new ElapsedTime();
@@ -60,10 +49,10 @@ public class FieldCentricTeleOp extends LinearOpMode {
 
             // region Driving
 //            localizer.update();
-//            double robotAngle = robot.imu.readLastAngle().yaw;
+            double robotAngle = robot.localizer.getPosition().heading;
 
             Coordinate direction = new Coordinate(slr(-gamepad1.left_stick_x), slr(gamepad1.left_stick_y));
-//            direction.rotate(-robotAngle);
+            direction.rotate(-robotAngle);
 
             double rotation;
 //            if (gamepad1.y) { // no heading lock
@@ -85,6 +74,10 @@ public class FieldCentricTeleOp extends LinearOpMode {
                     rotation,
                     DRIVESPEED
             );
+
+            robot.telemetry.addData("x power", direction.x);
+            robot.telemetry.addData("y power", direction.y);
+            robot.telemetry.addData("h power", rotation);
 
 
 

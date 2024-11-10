@@ -18,6 +18,9 @@ public class PidToPoint {
     public PidController yController;
     public PidController hController;
 
+    public double xTemp;
+    public double yTemp;
+
     public PidToPoint() {
         this(
                 new Pose2d(0,0,0),
@@ -34,8 +37,8 @@ public class PidToPoint {
 
     @NonNull
     public Pose2d calculatePower(@NonNull Pose2d currentPos) {
-        double xTemp = xController.calculatePower(currentPos.x);
-        double yTemp = yController.calculatePower(currentPos.y);
+        this.xTemp = xController.calculatePower(currentPos.x);
+        this.yTemp = yController.calculatePower(currentPos.y);
         double h = hController.calculatePower(currentPos.heading, true);
 
         double x = xTemp * Math.cos(currentPos.heading) - yTemp * Math.sin(currentPos.heading);

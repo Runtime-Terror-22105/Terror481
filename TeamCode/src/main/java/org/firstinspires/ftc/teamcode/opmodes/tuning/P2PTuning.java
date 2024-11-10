@@ -60,6 +60,9 @@ public class P2PTuning extends LinearOpMode {
             robot.telemetry.addData("y err", curErr.y);
             robot.telemetry.addData("h err", curErr.heading);
 
+            robot.telemetry.addData("x raw pid power", p2p.xTemp);
+            robot.telemetry.addData("y raw pid power", p2p.yTemp);
+
             robot.telemetry.update();
         }
     }

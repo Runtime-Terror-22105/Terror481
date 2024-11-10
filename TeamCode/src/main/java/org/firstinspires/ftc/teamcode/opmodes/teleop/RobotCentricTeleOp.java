@@ -81,10 +81,15 @@ public class RobotCentricTeleOp extends LinearOpMode {
             lastGamepad1.copy(gamepad1);
 
             hardware.write();
+
             telemetry.addData("Heading Angle",headingLockAngle);
             telemetry.addData("Rotation power", rotation);
             telemetry.addData("Loop time (ms)", loopTimer.milliseconds());
             telemetry.addData("Loop time (hz)", 1000/loopTimer.milliseconds());
+
+            robot.telemetry.addData("x power", direction.x);
+            robot.telemetry.addData("y power", direction.y);
+            robot.telemetry.addData("h power", rotation);
             telemetry.update();
             loopTimer.reset();
         }
