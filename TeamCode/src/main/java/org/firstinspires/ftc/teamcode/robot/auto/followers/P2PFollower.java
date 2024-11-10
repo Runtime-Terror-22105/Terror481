@@ -93,7 +93,7 @@ public class P2PFollower {
     }
 
     public void follow(BooleanSupplier opModeIsActive, Supplier<Pose2d> currentPos) {
-        while (!tasks.isEmpty() && opModeIsActive.getAsBoolean()) {
+        while (!(tasks.isEmpty() || currentTasks.isEmpty()) && opModeIsActive.getAsBoolean()) {
             boolean addNewTask = true;
             for (int i = currentTasks.size()-1; i >= 0; i--) {
                 Task task = currentTasks.get(i);
