@@ -85,24 +85,24 @@ public class P2PFollower {
         }
     }
 
-    private final Stack<Task> tasks;
-    private final ArrayList<Task> currentTasks = new ArrayList<>();
+    private final Stack<Task> pendingTasks;
+    private final ArrayList<Task> runningTasks = new ArrayList<>();
 
     private P2PFollower(Stack<Task> tasks) {
-        this.tasks = tasks;
+        this.pendingTasks = tasks;
     }
 
     public void follow(BooleanSupplier opModeIsActive, Supplier<Pose2d> currentPos) {
-        while (!(tasks.isEmpty() || currentTasks.isEmpty()) && opModeIsActive.getAsBoolean()) {
+        while (!(pendingTasks.isEmpty() || runningTasks.isEmpty()) && opModeIsActive.getAsBoolean()) {
             boolean addNewTask = true;
-            for (int i = currentTasks.size()-1; i >= 0; i--) {
-                Task task = currentTasks.get(i);
+            for (int i = runningTasks.size()-1; i >= 0; i--) {
+                Task task = runningTasks.get(i);
                 Task.Context ctx = task.context;
                 ctx.setCurrentPos(currentPos.get());
 
                 if (task.execute(ctx)) { // run the task
                     // if the task finished, remove it from the list
-                    currentTasks.remove(i);
+                    runningTasks.remove(i);
                 } else {
                     // we don't want to start new tasks if we're driving
                     if (task.taskType.equals(Task.TaskType.DRIVING) ||
@@ -115,8 +115,8 @@ public class P2PFollower {
             if (addNewTask) {
                 Task newTask;
                 do {
-                    newTask = tasks.pop();
-                    currentTasks.add(newTask);
+                    newTask = pendingTasks.pop();
+                    runningTasks.add(newTask);
                 } while (newTask.taskType.equals(Task.TaskType.DRIVING) ||
                          newTask.taskType.equals(Task.TaskType.FINISH_ACTIONS));
             }
