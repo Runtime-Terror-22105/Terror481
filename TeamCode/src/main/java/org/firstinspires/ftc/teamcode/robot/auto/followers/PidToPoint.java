@@ -10,8 +10,8 @@ import org.firstinspires.ftc.teamcode.robot.drive.Drivetrain;
 
 @Config
 public class PidToPoint {
-    public static PidController.PidCoefficients xCoeff = new PidController.PidCoefficients(0.2, 0, 0.015);
-    public static PidController.PidCoefficients yCoeff = new PidController.PidCoefficients(-0.25, 0, -0.03);
+    public static PidController.PidCoefficients xCoeff = new PidController.PidCoefficients(0.43, 0, 0.04);
+    public static PidController.PidCoefficients yCoeff = new PidController.PidCoefficients(0.19, 0, 0.018);
     public static PidController.PidCoefficients hCoeff = new PidController.PidCoefficients(2, 0, 0.11);
 
     public PidController xController;
@@ -41,10 +41,9 @@ public class PidToPoint {
         this.yTemp = yController.calculatePower(currentPos.y);
         double h = hController.calculatePower(currentPos.heading, true);
 
-        double x = xTemp * Math.cos(currentPos.heading) - yTemp * Math.sin(currentPos.heading);
-        double y = xTemp * Math.sin(currentPos.heading) + yTemp * Math.cos(currentPos.heading);
-//        x = Math.sqrt(Math.abs(x)) * Algebra.sign(x); // sqPID
-//        y = Math.sqrt(Math.abs(y)) * Algebra.sign(y); // sqPID
+        double angle = -currentPos.heading;
+        double x = xTemp * Math.cos(angle) - yTemp * Math.sin(angle);
+        double y = xTemp * Math.sin(angle) + yTemp * Math.cos(angle);
         return new Pose2d(x, y, h);
     }
 
@@ -55,8 +54,17 @@ public class PidToPoint {
     }
 
     public boolean driveToDestination(@NonNull Drivetrain drivetrain, @NonNull Pose2d powers, @NonNull Pose2d currentPos) {
+        boolean reached = this.atTargetPosition(currentPos);
+//        if (xController.atTargetPosition(currentPos.x)) {
+//            powers.x = 0;
+//        } else if (yController.atTargetPosition(currentPos.y)) {
+//            powers.y = 0;
+//        } else if (hController.atTargetPosition(currentPos.heading)) {
+//            powers.heading = 0;
+//        }
+
         drivetrain.move(powers);
-        return this.atTargetPosition(currentPos);
+        return reached;
     }
 
     public void setGoal(@NonNull Pose2d goalPoint, @NonNull Pose2d tolerances) {

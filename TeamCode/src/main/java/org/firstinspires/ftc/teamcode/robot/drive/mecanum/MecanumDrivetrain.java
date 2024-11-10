@@ -37,7 +37,7 @@ public class MecanumDrivetrain implements Drivetrain {
     /**
      * Move the robot by some amount
      * @param velocity Movement on x and y
-     * @param rotation Rotation
+     * @param rotation Counterclockwise rotation (NOTE: gm0 mecanum is clockwise, this is diff)
      */
     @Override
     public void move(@NonNull Coordinate velocity, double rotation) {

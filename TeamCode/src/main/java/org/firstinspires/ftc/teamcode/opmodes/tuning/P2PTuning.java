@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmodes.tuning;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.hardware.lynx.LynxModule;
@@ -18,10 +17,9 @@ import org.firstinspires.ftc.teamcode.robot.init.RobotHardware;
 public class P2PTuning extends LinearOpMode {
     private final RobotHardware hardware = new RobotHardware();
     private final Robot robot = new Robot();
-    private FtcDashboard dashboard;
 
     public static Pose2d goal = new Pose2d(0, 0, 0);
-    public static Pose2d tolerances = new Pose2d(0, 0, 0);
+    public static Pose2d tolerances = new Pose2d(0.1, 0.1, 0.005);
 
 
     @Override
