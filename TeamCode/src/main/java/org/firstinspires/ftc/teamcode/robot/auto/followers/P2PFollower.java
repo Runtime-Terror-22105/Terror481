@@ -113,7 +113,12 @@ public class P2PFollower {
             }
 
             if (addNewTask) {
-                currentTasks.add(tasks.pop());
+                Task newTask;
+                do {
+                    newTask = tasks.pop();
+                    currentTasks.add(newTask);
+                } while (newTask.taskType.equals(Task.TaskType.DRIVING) ||
+                         newTask.taskType.equals(Task.TaskType.FINISH_ACTIONS));
             }
         }
     }
