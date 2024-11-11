@@ -15,9 +15,11 @@ public class P2PFollower {
     public static class Builder {
         private final Drivetrain drivetrain;
         private final Stack<Task> tasks = new Stack<>();
+        private final Runnable hardwareWrite;
 
-        public Builder(Drivetrain drivetrain) {
+        public Builder(Drivetrain drivetrain, Runnable hardwareWrite) {
             this.drivetrain = drivetrain;
+            this.hardwareWrite = hardwareWrite;
         }
 
         public Builder addPoint(Pose2d point, Pose2d tolerance) {
@@ -81,15 +83,17 @@ public class P2PFollower {
         }
 
         public P2PFollower build() {
-            return new P2PFollower(tasks);
+            return new P2PFollower(tasks, hardwareWrite);
         }
     }
 
     private final Stack<Task> pendingTasks;
     private final ArrayList<Task> runningTasks = new ArrayList<>();
+    private final Runnable hardwareWrite;
 
-    private P2PFollower(Stack<Task> tasks) {
+    private P2PFollower(Stack<Task> tasks, Runnable hardwareWrite) {
         this.pendingTasks = tasks;
+        this.hardwareWrite = hardwareWrite;
     }
 
     public void follow(BooleanSupplier opModeIsActive, Supplier<Pose2d> currentPos) {
@@ -120,6 +124,8 @@ public class P2PFollower {
                 } while (newTask.taskType.equals(Task.TaskType.DRIVING) ||
                          newTask.taskType.equals(Task.TaskType.FINISH_ACTIONS));
             }
+
+            hardwareWrite.run();
         }
     }
 }

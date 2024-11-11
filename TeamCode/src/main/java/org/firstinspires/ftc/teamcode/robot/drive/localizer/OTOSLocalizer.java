@@ -54,9 +54,9 @@ public class OTOSLocalizer {
 //        if (!(otos.setLinearScalar(parameters.linearScalar))) {
 //            throw new RuntimeException("OTOS linear scalar fails");
 //        }
-//        if (!otos.setAngularScalar(parameters.angularScalar)) {
-//            throw new RuntimeException("OTOS angular scalar fails");
-//        }
+        if (!otos.setAngularScalar(parameters.angularScalar)) {
+            throw new RuntimeException("OTOS angular scalar fails");
+        }
 
         // 255 samples * 2.4 ms = 0.612 seconds blocking call
         // Samples must be between 1 and 255
@@ -98,9 +98,12 @@ public class OTOSLocalizer {
         Pose2d pos = new Pose2d(otos.getPosition());
         pos.x *= parameters.linearScalar;
         pos.y *= parameters.linearScalar;
-        pos.heading *= parameters.angularScalar;
         return pos;
     }
+//
+//    public Pose2d getPosition() {
+//        return new Pose2d(otos.getPosition());
+//    }
 
 //    public Pose2d getPositionStdDev() {
 //        return new Pose2d(otos.getPositionStdDev());

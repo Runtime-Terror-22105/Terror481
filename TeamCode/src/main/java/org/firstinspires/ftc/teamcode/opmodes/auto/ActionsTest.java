@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.math.Pose2d;
 import org.firstinspires.ftc.teamcode.robot.auto.followers.P2PFollower;
+import org.firstinspires.ftc.teamcode.robot.auto.followers.Task;
 import org.firstinspires.ftc.teamcode.robot.init.Robot;
 import org.firstinspires.ftc.teamcode.robot.init.RobotHardware;
 
@@ -31,12 +32,20 @@ public class ActionsTest extends LinearOpMode {
 
         waitForStart();
 
-        P2PFollower follower = new P2PFollower.Builder(robot.drivetrain)
+        P2PFollower follower = new P2PFollower.Builder(robot.drivetrain, hardware::write)
+                .executeActionOnce((Task.Context ctx) -> {
+                    robot.telemetry.addData("typeskib", "omg");
+                    robot.telemetry.update();
+                })
                 // point, tolerance xyh
-                .addPoint(new Pose2d(1, 43, Math.PI/2), new Pose2d(1, 43, 0.2))
+                .addPoint(new Pose2d(10, 10, Math.PI/2), new Pose2d(1, 1, Math.toRadians(2)))
                 // pass in any function
+                .executeUntilTrue((Task.Context ctx) -> ctx.getCurrentPos().x <= 2, (Task.Context ctx) -> {
+                    robot.telemetry.addData("Current time", System.currentTimeMillis());
+                    robot.telemetry.update();
+                })
                 // NOTE: there is no finishActions() here, so we go to the next point while this action is still ongoing
-                .addPoint(new Pose2d(32, 3, 2), 5)
+                .addPoint(new Pose2d(0, 0, 0), new Pose2d(1, 1, 0.1))
                 // now, we finally wait for all actions to be finished
                 // basically, all actions are async
                 .finishActions()

@@ -23,7 +23,7 @@ import org.firstinspires.ftc.teamcode.robot.subsystems.PinkArm;
  */
 @Config
 public class Robot {
-    public static double OTOS_LINEAR_SCALAR = 1.1556573755886470663102965508464;
+    public static double OTOS_LINEAR_SCALAR = 1.1371628089414737246168002475814;
     public static double OTOS_ANGULAR_SCALAR = 1.0066;
 
     // dash
