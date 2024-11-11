@@ -32,7 +32,7 @@ public class ActionsTest extends LinearOpMode {
 
         waitForStart();
 
-        P2PFollower follower = new P2PFollower.Builder(robot.drivetrain, hardware::write)
+        P2PFollower follower = new P2PFollower.Builder(robot.drivetrain, hardware)
                 .executeActionOnce((Task.Context ctx) -> {
                     robot.telemetry.addData("typeskib", "omg");
                     robot.telemetry.update();

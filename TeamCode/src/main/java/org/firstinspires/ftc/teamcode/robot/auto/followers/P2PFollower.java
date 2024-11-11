@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.robot.auto.followers;
 
+import com.qualcomm.hardware.lynx.LynxModule;
+
 import org.firstinspires.ftc.teamcode.math.Pose2d;
 import org.firstinspires.ftc.teamcode.robot.drive.Drivetrain;
+import org.firstinspires.ftc.teamcode.robot.init.RobotHardware;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -15,11 +18,11 @@ public class P2PFollower {
     public static class Builder {
         private final Drivetrain drivetrain;
         private final Stack<Task> tasks = new Stack<>();
-        private final Runnable hardwareWrite;
+        private final RobotHardware hardware;
 
-        public Builder(Drivetrain drivetrain, Runnable hardwareWrite) {
+        public Builder(Drivetrain drivetrain, RobotHardware hardware) {
             this.drivetrain = drivetrain;
-            this.hardwareWrite = hardwareWrite;
+            this.hardware = hardware;
         }
 
         public Builder addPoint(Pose2d point, Pose2d tolerance, double reachedTime) {
@@ -83,21 +86,26 @@ public class P2PFollower {
         }
 
         public P2PFollower build() {
-            return new P2PFollower(tasks, hardwareWrite);
+            return new P2PFollower(tasks, hardware);
         }
     }
 
     private final Stack<Task> pendingTasks;
     private final ArrayList<Task> runningTasks = new ArrayList<>();
-    private final Runnable hardwareWrite;
+    private final RobotHardware hardware;
 
-    private P2PFollower(Stack<Task> tasks, Runnable hardwareWrite) {
+    private P2PFollower(Stack<Task> tasks, RobotHardware hardware) {
         this.pendingTasks = tasks;
-        this.hardwareWrite = hardwareWrite;
+        this.hardware = hardware;
     }
 
     public void follow(BooleanSupplier opModeIsActive, Supplier<Pose2d> currentPos) {
         while (!(pendingTasks.isEmpty() || runningTasks.isEmpty()) && opModeIsActive.getAsBoolean()) {
+            // clear bulk cache (assume manual is being used)
+            for (LynxModule hub : hardware.allHubs) {
+                hub.clearBulkCache();
+            }
+
             boolean addNewTask = true;
             for (int i = runningTasks.size()-1; i >= 0; i--) {
                 Task task = runningTasks.get(i);
@@ -125,7 +133,7 @@ public class P2PFollower {
                          newTask.taskType.equals(Task.TaskType.FINISH_ACTIONS));
             }
 
-            hardwareWrite.run();
+            hardware.write();
         }
     }
 }
