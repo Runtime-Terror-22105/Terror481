@@ -22,9 +22,9 @@ public class P2PFollower {
             this.hardwareWrite = hardwareWrite;
         }
 
-        public Builder addPoint(Pose2d point, Pose2d tolerance) {
+        public Builder addPoint(Pose2d point, Pose2d tolerance, double reachedTime) {
             Task.Context context = new Task.Context(drivetrain);
-            context.setGoal(point, tolerance);
+            context.setGoal(point, tolerance, reachedTime);
             Task task = new Task(
                     context,
                     (Task.Context ctx) -> {
@@ -38,8 +38,8 @@ public class P2PFollower {
             return this;
         }
 
-        public Builder addPoint(Pose2d point, double tolerance) {
-            return addPoint(point, new Pose2d(tolerance, tolerance, tolerance));
+        public Builder addPoint(Pose2d point, double tolerance, double reachedTime) {
+            return addPoint(point, new Pose2d(tolerance, tolerance, tolerance), reachedTime);
         }
 
         public Builder executeActionOnce(Consumer<Task.Context> action) {

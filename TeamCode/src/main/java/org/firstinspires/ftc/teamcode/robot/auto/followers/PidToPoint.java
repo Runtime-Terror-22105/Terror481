@@ -21,18 +21,27 @@ public class PidToPoint {
     public double xTemp;
     public double yTemp;
 
+    /**
+     * The amount of milliseconds that the robot needs to be at its destination for it to count
+     * as "reaching" its destination.
+     */
+    private double reachedTime;
+
+    private double lastReachedTime = 0;
+
     public PidToPoint() {
         this(
                 new Pose2d(0,0,0),
-                new Pose2d(0,0,0)
+                new Pose2d(0,0,0),
+                100
         );
     }
 
-    public PidToPoint(@NonNull Pose2d goalPoint, @NonNull Pose2d tolerances) {
+    public PidToPoint(@NonNull Pose2d goalPoint, @NonNull Pose2d tolerances, double reachedTime) {
         xController = new PidController(xCoeff);
         yController = new PidController(yCoeff);
         hController = new PidController(hCoeff);
-        this.setGoal(goalPoint, tolerances);
+        this.setGoal(goalPoint, tolerances, reachedTime);
     }
 
     @NonNull
@@ -54,7 +63,6 @@ public class PidToPoint {
     }
 
     public boolean driveToDestination(@NonNull Drivetrain drivetrain, @NonNull Pose2d powers, @NonNull Pose2d currentPos) {
-        boolean reached = this.atTargetPosition(currentPos);
 //        if (xController.atTargetPosition(currentPos.x)) {
 //            powers.x = 0;
 //        } else if (yController.atTargetPosition(currentPos.y)) {
@@ -64,10 +72,23 @@ public class PidToPoint {
 //        }
 
         drivetrain.move(powers);
-        return reached;
+        if (this.atTargetPosition(currentPos)) {
+            if (this.lastReachedTime == 0) {
+                // we just reached our target
+                this.lastReachedTime = System.currentTimeMillis();
+            } else if (System.currentTimeMillis() - this.lastReachedTime >= this.reachedTime) {
+                // we've spent the required amount of time at the destination
+                return true;
+            }
+        } else {
+            // we haven't reached the destination yet
+            this.lastReachedTime = 0;
+        }
+
+        return false;
     }
 
-    public void setGoal(@NonNull Pose2d goalPoint, @NonNull Pose2d tolerances) {
+    public void setGoal(@NonNull Pose2d goalPoint, @NonNull Pose2d tolerances, double reachedTime) {
         xController.setTargetPosition(goalPoint.x);
         yController.setTargetPosition(goalPoint.y);
         hController.setTargetPosition(goalPoint.heading);
@@ -75,6 +96,8 @@ public class PidToPoint {
         xController.setTolerance(tolerances.x);
         yController.setTolerance(tolerances.y);
         hController.setTolerance(tolerances.heading);
+
+        this.reachedTime = reachedTime;
     }
 
     public Pose2d getError() {

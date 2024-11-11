@@ -35,8 +35,8 @@ public class Task {
             this.currentPos = currentPos;
         }
 
-        public void setGoal(Pose2d goalPoint, Pose2d tolerances) {
-            p2p.setGoal(goalPoint, tolerances);
+        public void setGoal(Pose2d goalPoint, Pose2d tolerances, double reachedTime) {
+            p2p.setGoal(goalPoint, tolerances, reachedTime);
         }
     }
 

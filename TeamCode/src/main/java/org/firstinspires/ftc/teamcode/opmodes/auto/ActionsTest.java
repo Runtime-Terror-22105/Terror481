@@ -38,14 +38,14 @@ public class ActionsTest extends LinearOpMode {
                     robot.telemetry.update();
                 })
                 // point, tolerance xyh
-                .addPoint(new Pose2d(10, 10, Math.PI/2), new Pose2d(1, 1, Math.toRadians(2)))
+                .addPoint(new Pose2d(10, 10, Math.PI/2), new Pose2d(1, 1, Math.toRadians(2)), 0.2)
                 // pass in any function
                 .executeUntilTrue((Task.Context ctx) -> ctx.getCurrentPos().x <= 2, (Task.Context ctx) -> {
                     robot.telemetry.addData("Current time", System.currentTimeMillis());
                     robot.telemetry.update();
                 })
                 // NOTE: there is no finishActions() here, so we go to the next point while this action is still ongoing
-                .addPoint(new Pose2d(0, 0, 0), new Pose2d(1, 1, 0.1))
+                .addPoint(new Pose2d(0, 0, 0), new Pose2d(1, 1, 0.1), 0.2)
                 // now, we finally wait for all actions to be finished
                 // basically, all actions are async
                 .finishActions()

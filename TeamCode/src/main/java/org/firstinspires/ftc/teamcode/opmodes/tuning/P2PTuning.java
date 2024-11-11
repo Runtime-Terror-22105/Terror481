@@ -20,6 +20,7 @@ public class P2PTuning extends LinearOpMode {
 
     public static Pose2d goal = new Pose2d(0, 0, 0);
     public static Pose2d tolerances = new Pose2d(0.1, 0.1, 0.005);
+    public static double reachedTime = 2000;
 
 
     @Override
@@ -27,7 +28,7 @@ public class P2PTuning extends LinearOpMode {
         hardware.init(hardwareMap, LynxModule.BulkCachingMode.AUTO);
         robot.init(this, hardware, telemetry);
 
-        PidToPoint p2p = new PidToPoint(goal, tolerances);
+        PidToPoint p2p = new PidToPoint(goal, tolerances, reachedTime);
 
         waitForStart();
 
@@ -35,12 +36,14 @@ public class P2PTuning extends LinearOpMode {
 
         while (opModeIsActive()) {
             Pose2d curPos = robot.localizer.getPosition();
-            p2p.setGoal(goal, tolerances);
+            p2p.setGoal(goal, tolerances, reachedTime);
             Pose2d powers = p2p.calculatePower(curPos);
-            p2p.driveToDestination(robot.drivetrain, powers, curPos);
+            boolean reached = p2p.driveToDestination(robot.drivetrain, powers, curPos);
             Pose2d curErr = p2p.getError();
 
             hardware.write();
+
+            robot.telemetry.addData("Has the robot reached the destination?", reached);
 
             robot.telemetry.addData("x pos", curPos.x);
             robot.telemetry.addData("y pos", curPos.y);
