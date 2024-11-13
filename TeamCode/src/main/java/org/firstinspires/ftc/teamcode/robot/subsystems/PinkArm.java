@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.robot.init.RobotHardware;
 
 /**
  * A class representing a telescoping arm.
+ *
  */
 public class PinkArm implements Subsystem {
     // The hardware
@@ -21,14 +22,27 @@ public class PinkArm implements Subsystem {
     private final TerrorMotor armExtensionMotor2;
     private final TerrorEncoder armExtensionEncoder;
 
-    // PIDs
-    public static PidfController.PidfCoefficients pitchPidCoefficients =
-            new PidfController.PidfCoefficients(0, 0, 0, 0, 0);
-    private final PidfController pitchPid = new PidfController(pitchPidCoefficients);
-    public static PidController.PidCoefficients extensionPidCoefficients =
-            new PidController.PidCoefficients(0, 0, 0);
-    private final PidController extensionPid = new PidController(extensionPidCoefficients);
+    public static final double maxExtension = 50; // max extension at any point, not just horizontal, used to calculate feedforward
 
+    public static final double maxPitch = 1.62316; // max pitch in radians
+
+    public static double value1 = 0; // Value 1 from "PitchFFTuner.java"
+
+    public static double value2 = 0; // Value 2 from "PitchFFTuner.java"
+
+    // PIDs
+    // TODO: VERY URGENT: DO *NOT* CHANGE KV OR KSTATIC!!!! (And probably not Ki)
+    // TODO: VERY URGENT: DO *NOT* CHANGE KV OR KSTATIC!!!! (And probably not Ki)
+    // TODO: VERY URGENT: DO *NOT* CHANGE KV OR KSTATIC!!!! (And probably not Ki)
+
+    public static double extensionFF = 0; // Tune this value from "ExtensionPIDTuner.java"
+
+    public static PidfController.PidfCoefficients pitchPidCoefficients =
+            new PidfController.PidfCoefficients(0, 0, 0, 1, 0);
+    private final PidfController pitchPid = new PidfController(pitchPidCoefficients);
+    public static PidfController.PidfCoefficients extensionPidCoefficients =
+            new PidfController.PidfCoefficients(0, 0, 0, 1, 0);
+    private final PidfController extensionPid = new PidfController(extensionPidCoefficients);
     // States
     private State state = State.MANUAL;
     private Position armPosition = state.getPosition();
@@ -69,43 +83,88 @@ public class PinkArm implements Subsystem {
         this.armExtensionMotor2 = hardware.armExtensionMotor2;
         this.armExtensionEncoder = hardware.armExtensionEncoder;
     }
-
+    /**
+     * Sets the desired state of the pink arm
+     */
     public void setState(State state) {
         this.state = state;
     }
 
+    /**
+     * Sets powers to pitch
+     * NOTE: Used purely for PID tuning!
+     */
     public void setPitchPower(double power) {
         this.armPitchMotor1.setPower(power);
         this.armPitchMotor2.setPower(power);
     }
+    /**
+     * Sets powers to extension
+     * NOTE: Used purely for PID tuning!
+     */
+    public void setExtensionPower(double power) {
+        this.armExtensionMotor1.setPower(power);
+        this.armExtensionMotor2.setPower(power);
+    }
 
+    /**
+     * Checks if oen state equals the current state
+     */
     public boolean stateIs(State other) {
         return this.state.equals(other);
     }
 
+
     /**
-     * Sets the desired pitch and extension of the pink arm
-     * @param position The position of the arm
+     * Sets pitch target
+     * NOTE: Does NOT update PID! Use .setPitch to update it in the PID object
      */
-    private void setPidTargets() {
-        this.pitchPid.setTargetPosition(this.armPosition.pitch);
-        this.extensionPid.setTargetPosition(this.armPosition.extension);
+    public void setPitchTarget(double target){
+        this.armPosition.setPitch(target);
     }
 
     /**
-     * Moves the motors for the pitch
+     * Sets extension target
+     * NOTE: Does NOT update PID! Use .setExtension to update it in the PID object
      */
-    private void updatePitch() {
-        double pitchPower = pitchPid.calculatePower(armPitchEncoder.getCurrentPosition(), 0);
+    public void setExtensionTarget(double target){
+        this.armPosition.setExtension(target);
+    }
+
+    /**
+     * Calculates powers for pitch and moves motors
+     * Includes adaptive feedforward calculation based on angle & pitch
+     */
+    public void updatePitch() {
+        this.pitchPid.setTargetPosition(this.armPosition.getPitch()); // tells the PID the target position
+        double slope = (value2 - value1)/maxExtension;
+        double yIntercept = value1;
+        // Linear adjustment based on extension
+        double calculatedFF = slope * armExtensionEncoder.getCurrentPosition() + yIntercept;
+        // Angle Adjusting
+        calculatedFF *= Math.cos(armPitchEncoder.getCurrentPosition());
+        if(this.armPosition.getPitch() == 0 && this.pitchPid.reached){
+            calculatedFF = 0;
+            // If the arm desired position is flat AND it has reached, there is no need to apply a feedforward
+            // This is because there is a hardstop, so it doesn't require any power to keep it up
+        }
+        double pitchPower = pitchPid.calculatePower(armPitchEncoder.getCurrentPosition(), calculatedFF);
         this.armPitchMotor1.setPower(pitchPower);
         this.armPitchMotor2.setPower(pitchPower);
     }
 
     /**
-     * Update the motors for the extension
+     * Calculates powers for extension and moves motors
+     * Includes adaptive feedforward calculation based on pitch
      */
-    private void updateExtension() {
-        double extensionPower = extensionPid.calculatePower(armExtensionEncoder.getCurrentPosition());
+    public void updateExtension() {
+        this.extensionPid.setTargetPosition(this.armPosition.getExtension()); // tells the PID the target position
+        double calculatedFF = Math.cos(armPitchEncoder.getCurrentPosition()) * extensionFF;
+        if(this.armPosition.getExtension() == 0 && this.extensionPid.reached){
+            calculatedFF = 0;
+            // If the arm is all the way retracted desired feedforward is just 0 :)
+        }
+        double extensionPower = extensionPid.calculatePower(armExtensionEncoder.getCurrentPosition(), calculatedFF);
         this.armExtensionMotor1.setPower(extensionPower);
         this.armExtensionMotor2.setPower(extensionPower);
     }
@@ -115,7 +174,7 @@ public class PinkArm implements Subsystem {
      * @param angle The angle to increase by, in radians
      */
     public void adjustPitch(double angle) {
-        this.armPosition.pitch += angle;
+        this.armPosition.adjustPitch(angle);
         this.state = State.MANUAL;
     }
 
@@ -124,7 +183,7 @@ public class PinkArm implements Subsystem {
      * @param distance The distance to increase by, in inches
      */
     public void adjustExtension(double distance) {
-        this.armPosition.extension += distance;
+        this.armPosition.adjustExtension(distance);
         this.state = State.MANUAL;
     }
 
@@ -143,30 +202,73 @@ public class PinkArm implements Subsystem {
      */
     public void update() {
         if (!state.equals(State.MANUAL)) {
-            this.armPosition = state.getPosition();
+            this.armPosition = state.getPosition(); // set targets
         }
-        this.setPidTargets();
 
-        this.moveArmToPosition();
+        this.moveArmToPosition(); // move motors. this calls both .updatePitch and .updateExtension
     }
 
-    private void moveArmToPosition() {
+    public double getPitchPosition(){
+        return armPitchEncoder.getCurrentPosition();
+    }
+
+    public double getExtensionPosition(){
+        return armExtensionEncoder.getCurrentPosition();
+    }
+
+    public void moveArmToPosition() {
         this.updatePitch();
         this.updateExtension();
     }
+}
+class Position {
+    private double pitch;
+    private double extension;
 
-    public static class Position {
-        public double pitch;
-        public double extension;
+    private final static double maxPitch = PinkArm.maxPitch;
+    private final static double maxExtension = PinkArm.maxExtension;
 
-        /**
-         * The position of the arm
-         * @param pitch The pitch of the arm, in radians
-         * @param extension The extension of the arm, in inches
-         */
-        public Position(double pitch, double extension) {
-            this.pitch = pitch;
-            this.extension = extension;
-        }
+    /**
+     * The position of the arm
+     * @param pitch The pitch of the arm, in radians
+     * @param extension The extension of the arm, in inches
+     */
+    public Position(double pitch, double extension) {
+        this.pitch = pitch;
+        this.extension = extension;
+    }
+
+    public double getPitch(){
+        return pitch;
+    }
+    public double getExtension(){
+        return extension;
+    }
+    public void setPitch(double pitch){
+        this.pitch = pitch;
+        controlPitch();
+    }
+    public void setExtension(double extension){
+        this.extension = extension;
+        controlExtension();
+    }
+    public void adjustPitch(double change){
+        this.pitch += change;
+        controlPitch();
+    }
+    public void adjustExtension(double change){
+        this.extension += change;
+        controlExtension();
+    }
+
+    private void controlExtension(){
+        if(extension < 0) extension = 0;
+        if(extension > maxExtension) extension = maxExtension;
+
+        // TODO: Add 42 in max horizontal limit
+    }
+    private void controlPitch(){
+        if(pitch < 0) pitch = 0;
+        if(pitch > maxPitch) extension = maxPitch;
     }
 }

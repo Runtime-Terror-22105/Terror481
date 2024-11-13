@@ -15,7 +15,7 @@ public class TerrorAnalogEncoder {
      * @return The absolute position.
      */
     public double getCurrentPosition() {
-        return this.encoder.getVoltage() / 3.3 * Math.PI*2 + this.offset;
+        return (this.encoder.getVoltage() / 3.3) * Math.PI*2 + this.offset;
     }
 
     /**
