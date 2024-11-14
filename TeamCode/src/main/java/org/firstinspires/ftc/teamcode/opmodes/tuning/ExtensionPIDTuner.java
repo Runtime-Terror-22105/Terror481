@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.teleop;
+package org.firstinspires.ftc.teamcode.opmodes.tuning;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -15,13 +15,12 @@ import org.firstinspires.ftc.teamcode.robot.subsystems.PinkArm;
 @Config
 @Photon
 @TeleOp
-public class PitchPIDTuner extends LinearOpMode {
+public class ExtensionPIDTuner extends LinearOpMode {
 
     private final RobotHardware hardware = new RobotHardware();
     private final Robot robot = new Robot();
     private FtcDashboard dashboard;
 
-    public static double pitchTarget = 0.0;
     public static double extensionTarget = 0.0;
 
     @Override
@@ -40,12 +39,14 @@ public class PitchPIDTuner extends LinearOpMode {
             }
 
             robot.pinkArm.setExtensionTarget(extensionTarget);
-            robot.pinkArm.setPitchTarget(pitchTarget);
+            robot.pinkArm.updateExtension();
             robot.pinkArm.moveArmToPosition();
+
 
             telemetry.addData("Current Extension: ", robot.pinkArm.getExtensionPosition());
             telemetry.addData("Current Pitch: ", robot.pinkArm.getPitchPosition());
             telemetry.update();
+
         }
 
 //        robot.shutdown();
