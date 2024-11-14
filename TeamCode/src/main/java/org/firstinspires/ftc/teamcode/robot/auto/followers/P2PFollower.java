@@ -113,6 +113,33 @@ public class P2PFollower {
             return this;
         }
 
+        /**
+         * Run some action for some amount of time.
+         * @param taskName The name of the task to run.
+         * @param action The function to run.
+         * @param timeLimit The amount of time, in milliseconds
+         * @return The builder object, to allow for chaining.
+         */
+        public Builder executeForTime(
+                String taskName,
+                Consumer<Task.Context> action,
+                double timeLimit
+        ) {
+            Task.Context context = new Task.Context(drivetrain);
+            Task task = new Task(
+                    taskName,
+                    context,
+                    (Task.Context ctx) -> {
+                        action.accept(ctx);
+                        return false;
+                    },
+                    Task.Type.ACTION,
+                    timeLimit
+            );
+            tasks.add(task);
+            return this;
+        }
+
         public P2PFollower build() {
             return new P2PFollower(tasks, hardware, telemetry);
         }
