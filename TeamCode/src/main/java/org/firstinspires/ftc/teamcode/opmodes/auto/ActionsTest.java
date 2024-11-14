@@ -32,8 +32,8 @@ public class ActionsTest extends LinearOpMode {
 
         waitForStart();
 
-        P2PFollower follower = new P2PFollower.Builder(robot.drivetrain, hardware)
-                .executeActionOnce((Task.Context ctx) -> {
+        P2PFollower follower = new P2PFollower.Builder(robot)
+                .executeActionOnce("Telemetry adding", (Task.Context ctx) -> {
                     robot.telemetry.addData("typeskib", "omg");
                     robot.telemetry.update();
                 }, 100)
@@ -45,10 +45,15 @@ public class ActionsTest extends LinearOpMode {
                         5000
                 )
                 // pass in any function
-                .executeUntilTrue((Task.Context ctx) -> ctx.getCurrentPos().x <= 2, (Task.Context ctx) -> {
-                    robot.telemetry.addData("Current time", System.currentTimeMillis());
-                    robot.telemetry.update();
-                }, 10000)
+                .executeUntilTrue(
+                        "Get current time until x <= 2",
+                        (Task.Context ctx) -> ctx.getCurrentPos().x <= 2,
+                        (Task.Context ctx) -> {
+                            robot.telemetry.addData("Current time", System.currentTimeMillis());
+                            robot.telemetry.update();
+                        },
+                        10000
+                )
                 // NOTE: there is no finishActions() here, so we go to the next point while this action is still ongoing
                 .addPoint(
                         new Pose2d(0, 0, 0),

@@ -8,7 +8,6 @@ import org.firstinspires.ftc.teamcode.robot.drive.Drivetrain;
 import java.util.function.Predicate;
 
 public class Task {
-
     public enum Type {
         DRIVING,
         ACTION,
@@ -63,6 +62,7 @@ public class Task {
     private final Predicate<Context> task;
     private final Context context;
     private final double timeLimit;
+    private final String name;
 
     /**
      *
@@ -71,10 +71,12 @@ public class Task {
      * @param taskType The type of task
      * @param timeLimit The time limit, in milliseconds
      */
-    public Task(Context context,
+    public Task(String name,
+                Context context,
                 Predicate<Context> task,
                 Type taskType,
                 double timeLimit) {
+        this.name = name;
         this.context = context;
         this.task = task;
         this.taskType = taskType;
@@ -93,6 +95,10 @@ public class Task {
         return this.context.getTime() > this.timeLimit;
     }
 
+    public String getName() {
+        return this.name;
+    }
+
 //    public void updateContext(String key, Object value) {
 //        Object oldValue = context.get(key);
 //        if (oldValue == null) {
@@ -108,9 +114,5 @@ public class Task {
 
     public Context getContext() {
         return context;
-    }
-
-    public double getTimeLimit() {
-        return timeLimit;
     }
 }

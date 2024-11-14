@@ -1,9 +1,13 @@
 package org.firstinspires.ftc.teamcode.robot.auto.followers;
 
+import androidx.annotation.NonNull;
+
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.lynx.LynxModule;
 
 import org.firstinspires.ftc.teamcode.math.Pose2d;
 import org.firstinspires.ftc.teamcode.robot.drive.Drivetrain;
+import org.firstinspires.ftc.teamcode.robot.init.Robot;
 import org.firstinspires.ftc.teamcode.robot.init.RobotHardware;
 
 import java.util.ArrayList;
@@ -14,15 +18,16 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class P2PFollower {
-
     public static class Builder {
         private final Drivetrain drivetrain;
         private final Stack<Task> tasks = new Stack<>();
         private final RobotHardware hardware;
+        private final MultipleTelemetry telemetry;
 
-        public Builder(Drivetrain drivetrain, RobotHardware hardware) {
-            this.drivetrain = drivetrain;
-            this.hardware = hardware;
+        public Builder(@NonNull Robot robot) {
+            this.drivetrain = robot.drivetrain;
+            this.hardware = robot.hardware;
+            this.telemetry = robot.telemetry;
         }
 
         /**
@@ -33,10 +38,16 @@ public class P2PFollower {
          * @param timeLimit How long the robot can take to drive (ms) before it is considered to have stalled.
          * @return The builder object, to allow for chaining.
          */
-        public Builder addPoint(Pose2d point, Pose2d tolerance, double reachedTime, double timeLimit) {
+        public Builder addPoint(
+                Pose2d point,
+                Pose2d tolerance,
+                double reachedTime,
+                double timeLimit
+        ) {
             Task.Context context = new Task.Context(drivetrain);
             context.setGoal(point, tolerance, reachedTime);
             Task task = new Task(
+                    "Drive to point (" + point.x + "," + point.y + "," + point.heading + ")",
                     context,
                     (Task.Context ctx) -> {
                         Pose2d powers = ctx.p2p.calculatePower(ctx.getCurrentPos());
@@ -52,13 +63,15 @@ public class P2PFollower {
 
         /**
          * Execute some action once.
+         * @param taskName The name of the task in logs
          * @param action The function to run.
          * @param timeLimit How long the action can take to run (ms), before it is considered to have stalled.
          * @return The builder object, to allow for chaining.
          */
-        public Builder executeActionOnce(Consumer<Task.Context> action, double timeLimit) {
+        public Builder executeActionOnce(String taskName, Consumer<Task.Context> action, double timeLimit) {
             Task.Context context = new Task.Context(drivetrain);
             Task task = new Task(
+                    taskName,
                     context,
                     (Task.Context ctx) -> {
                         action.accept(ctx);
@@ -73,16 +86,21 @@ public class P2PFollower {
 
         /**
          * Execute some action repeatedly (async) until some condition is true.
+         * @param taskName The name of the task to run.
          * @param condition The condition.
          * @param action The function to run.
          * @param timeLimit How long the action can take to run (ms), before it is considered to have stalled.
          * @return The builder object, to allow for chaining.
          */
-        public Builder executeUntilTrue(Predicate<Task.Context> condition,
-                                        Consumer<Task.Context> action,
-                                        double timeLimit) {
+        public Builder executeUntilTrue(
+                String taskName,
+                Predicate<Task.Context> condition,
+                Consumer<Task.Context> action,
+                double timeLimit
+        ) {
             Task.Context context = new Task.Context(drivetrain);
             Task task = new Task(
+                    taskName,
                     context,
                     (Task.Context ctx) -> {
                         action.accept(ctx);
@@ -96,17 +114,19 @@ public class P2PFollower {
         }
 
         public P2PFollower build() {
-            return new P2PFollower(tasks, hardware);
+            return new P2PFollower(tasks, hardware, telemetry);
         }
     }
 
     private final Stack<Task> pendingTasks;
     private final ArrayList<Task> runningTasks = new ArrayList<>();
     private final RobotHardware hardware;
+    private final MultipleTelemetry telemetry;
 
-    private P2PFollower(Stack<Task> tasks, RobotHardware hardware) {
+    private P2PFollower(Stack<Task> tasks, RobotHardware hardware, MultipleTelemetry telemetry) {
         this.pendingTasks = tasks;
         this.hardware = hardware;
+        this.telemetry = telemetry;
     }
 
     public void follow(BooleanSupplier opModeIsActive, Supplier<Pose2d> currentPos) {
@@ -127,6 +147,8 @@ public class P2PFollower {
                     // if the task finished, remove it from the list
                     runningTasks.remove(i);
                 }
+
+                telemetry.addData("Task "+i, task.getName());
             }
 
             if (runningTasks.isEmpty()) {
@@ -144,6 +166,7 @@ public class P2PFollower {
                 }
             }
 
+            telemetry.update();
             hardware.write();
         }
     }
