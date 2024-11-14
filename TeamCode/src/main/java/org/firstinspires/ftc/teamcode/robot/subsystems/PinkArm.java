@@ -162,7 +162,7 @@ public class PinkArm implements Subsystem {
 
         // Angle Adjusting
         double currentPitch = armPitchEncoder.getCurrentPosition();
-        calculatedFF *= Math.cos(armPitchEncoder.getCurrentPosition());
+        calculatedFF *= Math.cos(currentPitch);
         if (desiredPitch == 0 && pitchPid.atTargetPosition(currentPitch)) {
             calculatedFF = 0;
             // If the arm desired position is flat AND it has reached, there is no need to apply a feedforward
