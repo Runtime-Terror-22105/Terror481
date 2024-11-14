@@ -25,7 +25,15 @@ public class P2PFollower {
             this.hardware = hardware;
         }
 
-        public Builder addPoint(Pose2d point, Pose2d tolerance, double reachedTime) {
+        /**
+         * Adds an instruction to drive to a point.
+         * @param point The point to drive to.
+         * @param tolerance The tolerance for how much error there can be on the x,y,h.
+         * @param reachedTime How long the robot needs to stay at its destination.
+         * @param timeLimit How long the robot can take to drive (ms) before it is considered to have stalled.
+         * @return The builder object, to allow for chaining.
+         */
+        public Builder addPoint(Pose2d point, Pose2d tolerance, double reachedTime, double timeLimit) {
             Task.Context context = new Task.Context(drivetrain);
             context.setGoal(point, tolerance, reachedTime);
             Task task = new Task(
@@ -34,18 +42,21 @@ public class P2PFollower {
                         Pose2d powers = ctx.p2p.calculatePower(ctx.getCurrentPos());
                         return ctx.p2p.driveToDestination(ctx.getDrivetrain(), powers, ctx.getCurrentPos());
                     },
-                    Task.TaskType.DRIVING
+                    Task.Type.DRIVING,
+                    timeLimit
             );
             tasks.add(task);
 
             return this;
         }
 
-        public Builder addPoint(Pose2d point, double tolerance, double reachedTime) {
-            return addPoint(point, new Pose2d(tolerance, tolerance, tolerance), reachedTime);
-        }
-
-        public Builder executeActionOnce(Consumer<Task.Context> action) {
+        /**
+         * Execute some action once.
+         * @param action The function to run.
+         * @param timeLimit How long the action can take to run (ms), before it is considered to have stalled.
+         * @return The builder object, to allow for chaining.
+         */
+        public Builder executeActionOnce(Consumer<Task.Context> action, double timeLimit) {
             Task.Context context = new Task.Context(drivetrain);
             Task task = new Task(
                     context,
@@ -53,14 +64,23 @@ public class P2PFollower {
                         action.accept(ctx);
                         return true;
                     },
-                    Task.TaskType.ACTION
+                    Task.Type.ACTION,
+                    timeLimit
             );
             tasks.add(task);
             return this;
         }
 
+        /**
+         * Execute some action repeatedly (async) until some condition is true.
+         * @param condition The condition.
+         * @param action The function to run.
+         * @param timeLimit How long the action can take to run (ms), before it is considered to have stalled.
+         * @return The builder object, to allow for chaining.
+         */
         public Builder executeUntilTrue(Predicate<Task.Context> condition,
-                                        Consumer<Task.Context> action) {
+                                        Consumer<Task.Context> action,
+                                        double timeLimit) {
             Task.Context context = new Task.Context(drivetrain);
             Task task = new Task(
                     context,
@@ -68,7 +88,8 @@ public class P2PFollower {
                         action.accept(ctx);
                         return condition.test(ctx);
                     },
-                    Task.TaskType.ACTION
+                    Task.Type.ACTION,
+                    timeLimit
             );
             tasks.add(task);
             return this;
@@ -79,7 +100,8 @@ public class P2PFollower {
             Task task = new Task(
                     context,
                     (Task.Context ctx) -> false,
-                    Task.TaskType.FINISH_ACTIONS
+                    Task.Type.FINISH_ACTIONS,
+                    0
             );
             tasks.add(task);
             return this;
@@ -109,7 +131,7 @@ public class P2PFollower {
             boolean addNewTask = true;
             for (int i = runningTasks.size()-1; i >= 0; i--) {
                 Task task = runningTasks.get(i);
-                Task.Context ctx = task.context;
+                Task.Context ctx = task.getContext();
                 ctx.setCurrentPos(currentPos.get());
 
                 if (task.execute(ctx)) { // run the task
@@ -117,8 +139,9 @@ public class P2PFollower {
                     runningTasks.remove(i);
                 } else {
                     // we don't want to start new tasks if we're driving
-                    if (task.taskType.equals(Task.TaskType.DRIVING) ||
-                        task.taskType.equals(Task.TaskType.FINISH_ACTIONS)) {
+                    Task.Type taskType = task.getTaskType();
+                    if (taskType.equals(Task.Type.DRIVING) ||
+                        taskType.equals(Task.Type.FINISH_ACTIONS)) {
                         addNewTask = false;
                     }
                 }
@@ -128,9 +151,10 @@ public class P2PFollower {
                 Task newTask;
                 do {
                     newTask = pendingTasks.pop();
+                    newTask.getContext().startTimer();
                     runningTasks.add(newTask);
-                } while (newTask.taskType.equals(Task.TaskType.DRIVING) ||
-                         newTask.taskType.equals(Task.TaskType.FINISH_ACTIONS));
+                } while (newTask.getTaskType().equals(Task.Type.DRIVING) ||
+                         newTask.getTaskType().equals(Task.Type.FINISH_ACTIONS));
             }
 
             hardware.write();
