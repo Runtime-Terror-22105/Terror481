@@ -95,18 +95,6 @@ public class P2PFollower {
             return this;
         }
 
-        public Builder finishActions() {
-            Task.Context context = new Task.Context(drivetrain);
-            Task task = new Task(
-                    context,
-                    (Task.Context ctx) -> false,
-                    Task.Type.FINISH_ACTIONS,
-                    0
-            );
-            tasks.add(task);
-            return this;
-        }
-
         public P2PFollower build() {
             return new P2PFollower(tasks, hardware);
         }
@@ -122,13 +110,14 @@ public class P2PFollower {
     }
 
     public void follow(BooleanSupplier opModeIsActive, Supplier<Pose2d> currentPos) {
+        boolean canContinue = true;
+
         while (!(pendingTasks.isEmpty() || runningTasks.isEmpty()) && opModeIsActive.getAsBoolean()) {
             // clear bulk cache (assume manual is being used)
             for (LynxModule hub : hardware.allHubs) {
                 hub.clearBulkCache();
             }
 
-            boolean addNewTask = true;
             for (int i = runningTasks.size()-1; i >= 0; i--) {
                 Task task = runningTasks.get(i);
                 Task.Context ctx = task.getContext();
@@ -137,24 +126,22 @@ public class P2PFollower {
                 if (task.execute(ctx)) { // run the task
                     // if the task finished, remove it from the list
                     runningTasks.remove(i);
-                } else {
-                    // we don't want to start new tasks if we're driving
-                    Task.Type taskType = task.getTaskType();
-                    if (taskType.equals(Task.Type.DRIVING) ||
-                        taskType.equals(Task.Type.FINISH_ACTIONS)) {
-                        addNewTask = false;
-                    }
                 }
             }
 
-            if (addNewTask) {
-                Task newTask;
-                do {
-                    newTask = pendingTasks.pop();
-                    newTask.getContext().startTimer();
-                    runningTasks.add(newTask);
-                } while (newTask.getTaskType().equals(Task.Type.DRIVING) ||
-                         newTask.getTaskType().equals(Task.Type.FINISH_ACTIONS));
+            if (runningTasks.isEmpty()) {
+                canContinue = true;
+            }
+
+            Task newTask;
+            while (canContinue && !pendingTasks.isEmpty()) {
+                newTask = pendingTasks.pop();
+                newTask.getContext().startTimer();
+                runningTasks.add(newTask);
+
+                if (newTask.getTaskType().equals(Task.Type.DRIVING)) {
+                    canContinue = false;
+                }
             }
 
             hardware.write();

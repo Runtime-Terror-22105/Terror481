@@ -11,7 +11,6 @@ public class Task {
     public enum Type {
         DRIVING,
         ACTION,
-        FINISH_ACTIONS
     }
 
     public static class Context {
