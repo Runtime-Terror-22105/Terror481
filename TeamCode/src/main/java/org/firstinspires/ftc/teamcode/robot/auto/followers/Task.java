@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.robot.drive.Drivetrain;
 import java.util.function.Predicate;
 
 public class Task {
+
     public enum Type {
         DRIVING,
         ACTION,
@@ -82,6 +83,14 @@ public class Task {
 
     public boolean execute(Context context) {
         return task.test(context);
+    }
+
+    /**
+     * Whether or not the task has passed its maximum time limit and has stalled.
+     * @return A boolean, if true, the task should be killed, if not it should keep going
+     */
+    public boolean taskHasStalled() {
+        return this.context.getTime() > this.timeLimit;
     }
 
 //    public void updateContext(String key, Object value) {

@@ -123,7 +123,7 @@ public class P2PFollower {
                 Task.Context ctx = task.getContext();
                 ctx.setCurrentPos(currentPos.get());
 
-                if (task.execute(ctx)) { // run the task
+                if (task.execute(ctx) || task.taskHasStalled()) { // run the task
                     // if the task finished, remove it from the list
                     runningTasks.remove(i);
                 }
