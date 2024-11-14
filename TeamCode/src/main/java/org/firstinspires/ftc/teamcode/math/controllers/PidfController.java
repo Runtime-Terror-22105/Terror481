@@ -17,6 +17,7 @@ public class PidfController {
     private double targetPosition = 0;
     public boolean reached = false;
     private double tolerance = 10;
+    private double currentPosition;
 
     //endregion
     public PidfController(PidfCoefficients pidfCoefficients) {
@@ -33,6 +34,7 @@ public class PidfController {
      * the power to be used.
      */
     public double calculatePower(double currentPosition, double feedforwardReference) {
+        this.currentPosition = currentPosition;
         double error = calculateError(currentPosition);
 
         double timestamp = (double) System.nanoTime() / 1E9;
@@ -97,6 +99,10 @@ public class PidfController {
 
     public double calculateError(double encoderPosition) {
         return this.targetPosition - encoderPosition;
+    }
+
+    public boolean atTargetPosition() {
+        return atTargetPosition(currentPosition);
     }
 
     public boolean atTargetPosition(double currentPosition) {

@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.robot.subsystems;
 
 import androidx.annotation.NonNull;
 
-import org.firstinspires.ftc.teamcode.math.controllers.PidController;
 import org.firstinspires.ftc.teamcode.math.controllers.PidfController;
 import org.firstinspires.ftc.teamcode.robot.hardware.motors.TerrorMotor;
 import org.firstinspires.ftc.teamcode.robot.hardware.sensors.TerrorAnalogEncoder;
@@ -22,20 +21,35 @@ public class PinkArm implements Subsystem {
     private final TerrorMotor armExtensionMotor2;
     private final TerrorEncoder armExtensionEncoder;
 
-    public static final double maxExtension = 50; // max extension at any point, not just horizontal, used to calculate feedforward
+    /**
+     * Max extension at any point, not just horizontal, used to calculate feedforward
+     */
+    public static final double maxExtension = 50;
 
-    public static final double maxPitch = 1.62316; // max pitch in radians
+    /**
+     * Max pitch in radians
+     */
+    public static final double maxPitch = 1.62316;
 
-    public static double value1 = 0; // Value 1 from "PitchFFTuner.java"
+    /**
+     * Value 1 from "PitchFFTuner.java"
+     */
+    public static double value1 = 0;
 
-    public static double value2 = 0; // Value 2 from "PitchFFTuner.java"
+    /**
+     * Value 2 from "PitchFFTuner.java"
+     */
+    public static double value2 = 0;
 
     // PIDs
     // TODO: VERY URGENT: DO *NOT* CHANGE KV OR KSTATIC!!!! (And probably not Ki)
     // TODO: VERY URGENT: DO *NOT* CHANGE KV OR KSTATIC!!!! (And probably not Ki)
     // TODO: VERY URGENT: DO *NOT* CHANGE KV OR KSTATIC!!!! (And probably not Ki)
 
-    public static double extensionFF = 0; // Tune this value from "ExtensionPIDTuner.java"
+    /**
+     * Tune this value from "ExtensionPIDTuner.java"
+     */
+    public static double extensionFF = 0;
 
     public static PidfController.PidfCoefficients pitchPidCoefficients =
             new PidfController.PidfCoefficients(0, 0, 0, 1, 0);
@@ -43,6 +57,7 @@ public class PinkArm implements Subsystem {
     public static PidfController.PidfCoefficients extensionPidCoefficients =
             new PidfController.PidfCoefficients(0, 0, 0, 1, 0);
     private final PidfController extensionPid = new PidfController(extensionPidCoefficients);
+
     // States
     private State state = State.MANUAL;
     private Position armPosition = state.getPosition();
@@ -83,6 +98,7 @@ public class PinkArm implements Subsystem {
         this.armExtensionMotor2 = hardware.armExtensionMotor2;
         this.armExtensionEncoder = hardware.armExtensionEncoder;
     }
+
     /**
      * Sets the desired state of the pink arm
      */
@@ -98,6 +114,7 @@ public class PinkArm implements Subsystem {
         this.armPitchMotor1.setPower(power);
         this.armPitchMotor2.setPower(power);
     }
+
     /**
      * Sets powers to extension
      * NOTE: Used purely for PID tuning!
@@ -136,19 +153,22 @@ public class PinkArm implements Subsystem {
      * Includes adaptive feedforward calculation based on angle & pitch
      */
     public void updatePitch() {
-        this.pitchPid.setTargetPosition(this.armPosition.getPitch()); // tells the PID the target position
+        double desiredPitch = this.armPosition.getPitch();
+        this.pitchPid.setTargetPosition(desiredPitch);
         double slope = (value2 - value1)/maxExtension;
         double yIntercept = value1;
         // Linear adjustment based on extension
         double calculatedFF = slope * armExtensionEncoder.getCurrentPosition() + yIntercept;
+
         // Angle Adjusting
+        double currentPitch = armPitchEncoder.getCurrentPosition();
         calculatedFF *= Math.cos(armPitchEncoder.getCurrentPosition());
-        if(this.armPosition.getPitch() == 0 && this.pitchPid.reached){
+        if (desiredPitch == 0 && pitchPid.atTargetPosition(currentPitch)) {
             calculatedFF = 0;
             // If the arm desired position is flat AND it has reached, there is no need to apply a feedforward
             // This is because there is a hardstop, so it doesn't require any power to keep it up
         }
-        double pitchPower = pitchPid.calculatePower(armPitchEncoder.getCurrentPosition(), calculatedFF);
+        double pitchPower = pitchPid.calculatePower(currentPitch, calculatedFF);
         this.armPitchMotor1.setPower(pitchPower);
         this.armPitchMotor2.setPower(pitchPower);
     }
@@ -158,13 +178,14 @@ public class PinkArm implements Subsystem {
      * Includes adaptive feedforward calculation based on pitch
      */
     public void updateExtension() {
+        double currentExtension = armExtensionEncoder.getCurrentPosition();
         this.extensionPid.setTargetPosition(this.armPosition.getExtension()); // tells the PID the target position
         double calculatedFF = Math.cos(armPitchEncoder.getCurrentPosition()) * extensionFF;
-        if(this.armPosition.getExtension() == 0 && this.extensionPid.reached){
+        if (this.armPosition.getExtension() == 0 && this.extensionPid.atTargetPosition(currentExtension)){
             calculatedFF = 0;
             // If the arm is all the way retracted desired feedforward is just 0 :)
         }
-        double extensionPower = extensionPid.calculatePower(armExtensionEncoder.getCurrentPosition(), calculatedFF);
+        double extensionPower = extensionPid.calculatePower(currentExtension, calculatedFF);
         this.armExtensionMotor1.setPower(extensionPower);
         this.armExtensionMotor2.setPower(extensionPower);
     }
