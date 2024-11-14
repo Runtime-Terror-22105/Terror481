@@ -15,7 +15,6 @@ public class PidfController {
 
     //region public variables
     private double targetPosition = 0;
-    public boolean reached = false;
     private double tolerance = 10;
     private double currentPosition;
 

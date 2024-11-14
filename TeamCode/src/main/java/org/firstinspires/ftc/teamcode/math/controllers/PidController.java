@@ -5,7 +5,10 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.math.Angle;
 
 public class PidController {
-    private static final double MAX_INTEGRAL = 1e15; // random constant to prevent integral windup, will adjust later
+    /**
+     * Constant to prevent integral windup
+     */
+    private static final double MAX_INTEGRAL = 1e15;
 
     // pid constants
     private final PidCoefficients pidCoefficients;
