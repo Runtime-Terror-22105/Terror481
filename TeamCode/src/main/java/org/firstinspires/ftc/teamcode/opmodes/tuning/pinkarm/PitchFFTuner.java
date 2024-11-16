@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.tuning;
+package org.firstinspires.ftc.teamcode.opmodes.tuning.pinkarm;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.robot.subsystems.PinkArm;
 
 @Config
 @Photon
-@TeleOp
+@TeleOp(group="Pink Arm Tuning")
 public class PitchFFTuner extends LinearOpMode {
 
     private final RobotHardware hardware = new RobotHardware();
