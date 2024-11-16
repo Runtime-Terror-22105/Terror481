@@ -43,7 +43,7 @@ public class PitchFFTuner extends LinearOpMode {
             // While loop continues until arm can hold angle
             // Make sure extension is all the way back!
             robot.pinkArm.setExtensionTarget(0); // sets target
-            while(!gamepad1.a){
+            while(!gamepad1.a && opModeIsActive()){
                 // bulk read cause its another while loop cause its in another while loop and im too lazy to do states
                 for (LynxModule hub : hardware.allHubs) {
                     hub.clearBulkCache();
@@ -65,7 +65,7 @@ public class PitchFFTuner extends LinearOpMode {
             // Sets to max extension
             robot.pinkArm.setExtensionTarget(PinkArm.MAX_EXTENSION);
 
-            while(!gamepad1.a){
+            while(!gamepad1.a && opModeIsActive()){
                 // bulk read cause its another while loop cause its in another while loop and im too lazy to do states
                 for (LynxModule hub : hardware.allHubs) {
                     hub.clearBulkCache();
