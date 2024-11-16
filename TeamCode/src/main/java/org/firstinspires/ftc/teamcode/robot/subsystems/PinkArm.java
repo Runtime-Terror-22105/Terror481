@@ -152,7 +152,7 @@ public class PinkArm implements Subsystem {
             // If the arm desired position is flat AND it has reached, there is no need to apply a feedforward
             // This is because there is a hardstop, so it doesn't require any power to keep it up
         }
-        double pitchPower = pitchPid.calculatePower(currentPitch, calculatedFF);
+        double pitchPower = pitchPid.calculatePower(currentPitch, calculatedFF, true);
         this.armPitchMotor1.setPower(pitchPower);
         this.armPitchMotor2.setPower(pitchPower);
     }

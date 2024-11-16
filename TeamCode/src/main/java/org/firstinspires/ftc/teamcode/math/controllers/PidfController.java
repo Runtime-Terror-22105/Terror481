@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.math.controllers;
 
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.math.Angle;
+
 public class PidfController {
     private static final double MAX_INTEGRAL = 1e15; // random constant to prevent integral windup, will adjust later
 
@@ -32,13 +34,21 @@ public class PidfController {
         this.tolerance = tolerance;
     }
 
+    public double calculatePower(double currentPosition, double feedforwardReference) {
+        return this.calculatePower(currentPosition, feedforwardReference, false);
+    }
+
     /**
      * NOTE: You must run this function each loop iteration. It will do the PID stuff to calculate
      * the power to be used.
      */
-    public double calculatePower(double currentPosition, double feedforwardReference) {
+    public double calculatePower(double currentPosition, double feedforwardReference, boolean angleWrapError) {
         this.currentPosition = currentPosition;
+
         double error = calculateError(currentPosition);
+        if (angleWrapError) {
+            error = Angle.angleWrap(error);
+        }
 
         double timestamp = (double) System.nanoTime() / 1E9;
         if (lastTimeStamp == 0) lastTimeStamp = timestamp;
