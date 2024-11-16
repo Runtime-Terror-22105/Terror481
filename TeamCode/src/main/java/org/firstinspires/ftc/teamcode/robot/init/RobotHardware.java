@@ -123,8 +123,10 @@ public class RobotHardware {
                  hwMap.get(DcMotor.class, "armExtensionMotor2"),
                  0.02
          );
-         this.armExtensionEncoder = new TerrorEncoder(armExtensionMotor1); // might need to change to motor 2
-         armExtensionEncoder.setDirection(TerrorEncoder.Direction.REVERSE);
+
+//         this.armExtensionEncoder = new TerrorEncoder(hwMap.analogInput.get("armPitchEncoder")); // might need to change to motor 2
+//         armExtensionEncoder.setDirection(TerrorEncoder.Direction.REVERSE);
+
 //         this.publisher.subscribe(5, armPitchMotor1, armPitchMotor2);
          this.publisher.subscribe(3, armExtensionMotor1, armExtensionMotor2);
 
