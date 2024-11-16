@@ -63,6 +63,16 @@ public class PinkArm implements Subsystem {
     // States
     private Position armPosition = getPosition();
 
+    public enum Presets {
+
+    }
+
+    public void reset() {
+        // TODO: Use current draw to detect when reached the end
+        this.setExtension(0);
+        this.setPitch(0);
+    }
+
     /**
      * Creates a new pink arm
      * @param hardware The robot's hardware devices
@@ -157,11 +167,27 @@ public class PinkArm implements Subsystem {
     }
 
     /**
+     * Set the desired pitch.
+     * @param pitch The desired pitch of the arm.
+     */
+    public void setPitch(double pitch) {
+        this.armPosition.setPitch(pitch);
+    }
+
+    /**
      * Increases the pitch by some angle
      * @param angle The angle to increase by, in radians
      */
     public void adjustPitch(double angle) {
         this.armPosition.adjustPitch(angle);
+    }
+
+    /**
+     * Set the desired extension.
+     * @param extension The desired extension of the arm.
+     */
+    public void setExtension(double extension) {
+        this.armPosition.setExtension(extension);
     }
 
     /**

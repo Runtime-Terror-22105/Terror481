@@ -111,7 +111,8 @@ public class Robot {
     }
 
     private void goToRestingState() {
-//        pinkArm.
+        pinkArm.reset();
+        // stuff with the rollers
     }
 
     private void goToIntakeState() {
