@@ -54,7 +54,7 @@ public class PinkArm implements Subsystem {
     public static double extensionFF = 0;
 
     public static PidfController.PidfCoefficients pitchPidCoefficients =
-            new PidfController.PidfCoefficients(0, 0, 0, 1, 0);
+            new PidfController.PidfCoefficients(1.0, 0, 0.3, 1, 0);
     public static double pitchPidTolerance = 0;
     public final PidfController pitchPid = new PidfController(pitchPidCoefficients);
 
