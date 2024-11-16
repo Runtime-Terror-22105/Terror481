@@ -38,8 +38,9 @@ public class PitchPIDTuner extends LinearOpMode {
 
             hardware.write();
 
-            robot.telemetry.addData("Current Extension: ", robot.pinkArm.getExtensionPosition());
-            robot.telemetry.addData("Current Pitch: ", robot.pinkArm.getPitchPosition());
+            robot.telemetry.addData("Current Extension", robot.pinkArm.getExtensionPosition());
+            robot.telemetry.addData("Current Pitch", robot.pinkArm.getPitchPosition());
+            robot.telemetry.addData("Desired Pitch", pitchTarget);
             robot.telemetry.update();
         }
 

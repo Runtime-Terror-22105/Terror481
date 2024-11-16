@@ -69,8 +69,8 @@ public class PinkArm implements Subsystem {
 
     public void reset() {
         // TODO: Use current draw to detect when reached the end
-        this.setExtension(0);
-        this.setPitch(0);
+        this.setExtensionTarget(0);
+        this.setPitchTarget(0);
     }
 
     /**
@@ -168,27 +168,11 @@ public class PinkArm implements Subsystem {
     }
 
     /**
-     * Set the desired pitch.
-     * @param pitch The desired pitch of the arm.
-     */
-    public void setPitch(double pitch) {
-        this.armPosition.setPitch(pitch);
-    }
-
-    /**
      * Increases the pitch by some angle
      * @param angle The angle to increase by, in radians
      */
     public void adjustPitch(double angle) {
         this.armPosition.adjustPitch(angle);
-    }
-
-    /**
-     * Set the desired extension.
-     * @param extension The desired extension of the arm.
-     */
-    public void setExtension(double extension) {
-        this.armPosition.setExtension(extension);
     }
 
     /**
