@@ -11,7 +11,7 @@
 ///**
 // * The in/out take mechanism
 // */
-//public class InOutTake implements Subsystem {
+//public class InOutTakeOld implements Subsystem {
 //    // hardware
 //    private final TerrorServo pitchServo1;
 //    private final TerrorServo pitchServo2;
