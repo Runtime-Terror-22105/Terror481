@@ -16,7 +16,7 @@ public class TerrorEncoder {
         FORWARD(1),
         REVERSE(-1);
 
-        private int multiplier;
+        private final int multiplier;
 
         Direction(int multiplier) {
             this.multiplier = multiplier;
@@ -59,7 +59,8 @@ public class TerrorEncoder {
      * @return encoder position
      */
     public int getCurrentPosition() {
-        int multiplier = getMultiplier();
+//        int multiplier = getMultiplier();
+        int multiplier = 1;
         return motor.getCurrentPosition() * multiplier;
     }
 

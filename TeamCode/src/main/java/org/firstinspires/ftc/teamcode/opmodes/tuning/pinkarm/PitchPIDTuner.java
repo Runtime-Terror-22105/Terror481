@@ -23,6 +23,8 @@ public class PitchPIDTuner extends LinearOpMode {
         hardware.init(hardwareMap, LynxModule.BulkCachingMode.MANUAL);
         robot.init(this, hardware, telemetry);
 
+        waitForStart();
+
         while (opModeIsActive()) {
             // Manually clear the bulk read cache. Deleting this would be catastrophic b/c stale
             // vals would be used.
@@ -33,6 +35,8 @@ public class PitchPIDTuner extends LinearOpMode {
             robot.pinkArm.setExtensionTarget(extensionTarget);
             robot.pinkArm.setPitchTarget(pitchTarget);
             robot.pinkArm.moveArmToPosition();
+
+            hardware.write();
 
             robot.telemetry.addData("Current Extension: ", robot.pinkArm.getExtensionPosition());
             robot.telemetry.addData("Current Pitch: ", robot.pinkArm.getPitchPosition());

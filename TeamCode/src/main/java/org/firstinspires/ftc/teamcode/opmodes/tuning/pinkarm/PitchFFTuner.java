@@ -31,6 +31,8 @@ public class PitchFFTuner extends LinearOpMode {
         hardware.init(hardwareMap, LynxModule.BulkCachingMode.MANUAL);
         robot.init(this, hardware, telemetry);
 
+        waitForStart();
+
         while (opModeIsActive()) {
             // Manually clear the bulk read cache. Deleting this would be catastrophic b/c stale
             // vals would be used.
@@ -50,6 +52,8 @@ public class PitchFFTuner extends LinearOpMode {
                 // Ensure that extension is good-- we want it to stay at 0
                 robot.pinkArm.updateExtension(); // calculates and sets powers to extension motors
                 // keep extension constant at 0
+
+                hardware.write();
 
                 robot.telemetry.addData("Current Feed Forward (retracted): ", ff_1);
                 double gravityScaled = ff_1*Math.cos(robot.pinkArm.getPitchPosition());

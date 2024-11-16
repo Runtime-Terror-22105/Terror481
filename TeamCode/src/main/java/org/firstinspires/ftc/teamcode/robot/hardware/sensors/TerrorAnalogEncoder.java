@@ -11,11 +11,19 @@ public class TerrorAnalogEncoder {
     }
 
     /**
-     * Returns the CURRENT position of the axon servo from the absolute encoder.
+     * Returns the CURRENT position of the servo from the absolute encoder.
      * @return The absolute position.
      */
     public double getCurrentPosition() {
-        return (this.encoder.getVoltage() / 3.3) * Math.PI*2 + this.offset;
+        return ((this.encoder.getVoltage() / 1.0) * Math.PI*2 + this.offset) % (2*Math.PI);
+    }
+
+    /**
+     * Returns the raw voltage the port is giving. Only for debugging.
+     * @return The voltage read at the analog port.
+     */
+    public double getVoltage() {
+        return this.encoder.getVoltage();
     }
 
     /**

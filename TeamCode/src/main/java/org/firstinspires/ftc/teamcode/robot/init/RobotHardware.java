@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -105,27 +106,28 @@ public class RobotHardware {
 
 //        // Initialize the pink arm motors and sensors
 //         this.armPitchMotor1 = new TerrorMotor(
-//                 ((PhotonDcMotor)hwMap.get(DcMotor.class, "armPitchMotor1")),
+//                 hwMap.get(DcMotor.class, "armPitchMotor1"),
 //                 0.02
 //         );
 //         this.armPitchMotor2 = new TerrorMotor(
-//                 ((PhotonDcMotor)hwMap.get(DcMotor.class, "armPitchMotor2")),
+//                 hwMap.get(DcMotor.class, "armPitchMotor2"),
 //                 0.02
 //         );
-//         this.armPitchEncoder = new TerrorAnalogEncoder(hwMap.get(AnalogInput.class, "armPitchEncoder"));
-//         this.armPitchEncoder.setOffset(0);
-//         this.armExtensionMotor1 = new TerrorMotor(
-//                 ((PhotonDcMotor) hwMap.get(DcMotor.class, "armExtensionMotor1")),
-//                 0.02
-//         );
-//         this.armExtensionMotor2 = new TerrorMotor(
-//                 ((PhotonDcMotor) hwMap.get(DcMotor.class, "armExtensionMotor2")),
-//                 0.02
-//         );
-//         this.armExtensionEncoder = new TerrorEncoder(armExtensionMotor1); // might need to change to motor 2
+         this.armPitchEncoder = new TerrorAnalogEncoder(hwMap.get(AnalogInput.class, "armPitchEncoder"));
+         this.armPitchEncoder.setOffset(2*Math.PI + 0.43);
+         this.armExtensionMotor1 = new TerrorMotor(
+                 hwMap.get(DcMotor.class, "armExtensionMotor1"),
+                 0.02
+         );
+         this.armExtensionMotor2 = new TerrorMotor(
+                 hwMap.get(DcMotor.class, "armExtensionMotor2"),
+                 0.02
+         );
+         this.armExtensionEncoder = new TerrorEncoder(armExtensionMotor1); // might need to change to motor 2
+         armExtensionEncoder.setDirection(TerrorEncoder.Direction.REVERSE);
 //         this.publisher.subscribe(5, armPitchMotor1, armPitchMotor2);
-//         this.publisher.subscribe(3, armExtensionMotor1, armExtensionMotor2);
-//
+         this.publisher.subscribe(3, armExtensionMotor1, armExtensionMotor2);
+
 //         // Initialize the inouttake servos and sensors
 //         this.wheelPitchServo1 = new TerrorServo((PhotonServo) hwMap.get(Servo.class, "wheelPitchServo1"));
 //         this.wheelPitchServo2 = new TerrorServo((PhotonServo) hwMap.get(Servo.class, "wheelPitchServo2"));
