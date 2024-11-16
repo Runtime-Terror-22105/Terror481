@@ -1,5 +1,10 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
+import static org.firstinspires.ftc.teamcode.robot.init.RobotState.BUCKET;
+import static org.firstinspires.ftc.teamcode.robot.init.RobotState.INTAKE;
+import static org.firstinspires.ftc.teamcode.robot.init.RobotState.RESTING;
+import static org.firstinspires.ftc.teamcode.robot.init.RobotState.SPECIMEN;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -32,8 +37,8 @@ public class RobotCentricTeleOp extends LinearOpMode {
         waitForStart();
 
         ElapsedTime loopTimer = new ElapsedTime();
-        ElapsedTime drivingTimer = new ElapsedTime();
-        Gamepad lastGamepad1 = gamepad1;
+        Gamepad lastGamepad1 = new Gamepad();
+        Gamepad lastGamepad2 = new Gamepad();
         while (opModeIsActive()) {
             // Manually clear the bulk read cache. Deleting this would be catastrophic b/c stale
             // vals would be used.
@@ -51,26 +56,24 @@ public class RobotCentricTeleOp extends LinearOpMode {
                     DRIVESPEED
             );
 
-//            if (gamepad1.a && !lastGamepad1.a) { // rising edge
-//                robot.inOutTake.intake(new SampleColor[] {
-//                        SampleColor.YELLOW,
-//                        SampleColor.BLUE
-//                });
-//            } else if (gamepad1.x && !lastGamepad1.x) { // rising edge
-//                robot.inOutTake.outtake();
-//            }
-//
-//            if (gamepad1.y && !lastGamepad1.y) {
-//                robot.pinkArm.setExtension(10);
-//                robot.pinkArm.setPitch(Math.PI/2);
-//            } else if (gamepad1.b && !lastGamepad1.b) {
-//                robot.pinkArm.setExtension(100);
-//                robot.pinkArm.setPitch(0);
-//            }
+            if (gamepad2.dpad_down) {
+                robot.setState(RESTING);
+            } else if (gamepad2.dpad_left) {
+                robot.setState(SPECIMEN);
+            } else if (gamepad2.dpad_up) {
+                robot.setState(BUCKET);
+            } else if (gamepad2.dpad_right) {
+                robot.setState(INTAKE);
+            }
 
-//            robot.inOutTake.update();
-//            robot.pinkArm.update();
+            double extensionChange = -gamepad2.left_stick_y;
+            double pitchChange = -gamepad2.right_stick_y;
+            robot.pinkArm.adjustExtension(extensionChange);
+            robot.pinkArm.adjustPitch(pitchChange);
+
+            robot.pinkArm.update();
             lastGamepad1.copy(gamepad1);
+            lastGamepad2.copy(gamepad2);
 
             hardware.write();
 
