@@ -70,8 +70,16 @@ public class RobotCentricTeleOp extends LinearOpMode {
             double pitchChange = -gamepad2.right_stick_y;
             robot.pinkArm.adjustExtension(extensionChange);
             robot.pinkArm.adjustPitch(pitchChange);
-
             robot.pinkArm.update();
+
+            if (gamepad1.left_trigger > 0.2) {
+                robot.inOutTake.intake();
+            } else if (gamepad1.right_trigger > 0.2) {
+                robot.inOutTake.outtake();
+            } else {
+                robot.inOutTake.stop();
+            }
+
             lastGamepad1.copy(gamepad1);
             lastGamepad2.copy(gamepad2);
 

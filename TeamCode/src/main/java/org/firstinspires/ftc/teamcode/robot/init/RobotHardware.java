@@ -9,9 +9,11 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.configuration.LynxConstants;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -48,12 +50,12 @@ public class RobotHardware {
     public TerrorMotor armExtensionMotor2 = null;
     public TerrorEncoder armExtensionEncoder = null;
 
-    // In/Out take stuff
-    public TerrorServo wheelPitchServo1 = null;
-    public TerrorServo wheelPitchServo2 = null;
-    public TerrorCRServo wheelRotationServoLeft = null;
-    public TerrorCRServo wheelRotationServoRight = null;
-    public TerrorColorRangeFinder wheelColorSensor = null;
+    // InOutTake
+    public TerrorCRServo intakeWheelServo1;
+    public TerrorCRServo intakeWheelServo2;
+    public TerrorServo intakePitchServo1;
+    public TerrorServo intakePitchServo2;
+    public TerrorColorRangeFinder wheelColorSensor;
 
     // Drivetrain PTO for hang
     public TerrorServo dtPto;
@@ -134,22 +136,20 @@ public class RobotHardware {
          this.publisher.subscribe(5, armPitchMotor1, armPitchMotor2);
          this.publisher.subscribe(3, armExtensionMotor1, armExtensionMotor2);
 
-//         // Initialize the inouttake servos and sensors
-//         this.wheelPitchServo1 = new TerrorServo((PhotonServo) hwMap.get(Servo.class, "wheelPitchServo1"));
-//         this.wheelPitchServo2 = new TerrorServo((PhotonServo) hwMap.get(Servo.class, "wheelPitchServo2"));
-//         this.wheelRotationServoLeft = new TerrorCRServo((PhotonCRServo)
-//                 hwMap.get(CRServo.class, "wheelRotationServoLeft"), 0.02);
-//         this.wheelRotationServoRight = new TerrorCRServo((PhotonCRServo)
-//                 hwMap.get(CRServo.class, "wheelRotationServoRight"), 0.02);
+         // Initialize the inouttake servos and sensors
+         this.intakePitchServo1 = new TerrorServo(hwMap.get(Servo.class, "intakePitchServo1"));
+         this.intakePitchServo2 = new TerrorServo(hwMap.get(Servo.class, "intakePitchServo2"));
+         this.intakeWheelServo1 = new TerrorCRServo(hwMap.get(CRServo.class, "intakeWheelServo1"), 0.02);
+         this.intakeWheelServo2 = new TerrorCRServo(hwMap.get(CRServo.class, "intakeWheelServo2"), 0.02);
 //         this.wheelColorSensor = new TerrorColorRangeFinder(
 //             hwMap.digitalChannel.get("digital0"),
 //             hwMap.digitalChannel.get("digital1")
 //         ); // assume that the color sensor is already configured
-//         this.publisher.subscribe(1, wheelPitchServo1, wheelPitchServo2);
-//         this.publisher.subscribe(2, wheelRotationServoLeft, wheelRotationServoRight);
-//
+         this.publisher.subscribe(1, intakePitchServo1, intakePitchServo2);
+         this.publisher.subscribe(2, intakeWheelServo1, intakeWheelServo2);
+
 //         // Other servos
-//         this.dtPto = new TerrorServo((PhotonServo) hwMap.get(Servo.class, "dt_pto"));
+//         this.dtPto = new TerrorServo((PhotonServo) hwMap.get(Servo.class, "dtPto"));
 //         this.publisher.subscribe(7, dtPto);
 //
 //         // Other things
