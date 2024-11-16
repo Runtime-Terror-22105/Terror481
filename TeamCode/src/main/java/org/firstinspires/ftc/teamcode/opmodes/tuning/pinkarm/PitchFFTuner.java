@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.tuning.pinkarm;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -19,7 +17,6 @@ public class PitchFFTuner extends LinearOpMode {
 
     private final RobotHardware hardware = new RobotHardware();
     private final Robot robot = new Robot();
-    private FtcDashboard dashboard;
 
 //    private double headingLockAngle = 0; // the angle to lock the heading to, in radians
 //    public static PidfController.PidfCoefficients heading_coeff = new PidfController.PidfCoefficients(0.65, 0, 0.065, 0, 0.05);
@@ -35,11 +32,6 @@ public class PitchFFTuner extends LinearOpMode {
     public void runOpMode() {
         hardware.init(hardwareMap, LynxModule.BulkCachingMode.MANUAL);
         robot.init(this, hardware, telemetry);
-
-        dashboard = FtcDashboard.getInstance();
-        telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
-
-
 
         while (opModeIsActive()) {
             // Manually clear the bulk read cache. Deleting this would be catastrophic b/c stale
@@ -61,10 +53,10 @@ public class PitchFFTuner extends LinearOpMode {
                 robot.pinkArm.updateExtension(); // calculates and sets powers to extension motors
                 // keep extension constant at 0
 
-                telemetry.addData("Current Feed Forward (retracted): ", ff_1);
+                robot.telemetry.addData("Current Feed Forward (retracted): ", ff_1);
                 double gravityScaled = ff_1*Math.cos(robot.pinkArm.getPitchPosition());
                 robot.pinkArm.setPitchPower(gravityScaled); // assigning feedforward power
-                telemetry.update();
+                robot.telemetry.update();
             }
 
             // Data point 1 done (with arm all the way back)
