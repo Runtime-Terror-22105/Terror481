@@ -70,10 +70,14 @@ public class PinkArm implements Subsystem {
 
     }
 
-    public void reset() {
+    public void resetPitch() {
         // TODO: Use current draw to detect when reached the end
-        this.setExtensionTarget(0);
         this.setPitchTarget(0);
+    }
+
+    public void resetExtension() {
+        // TODO: Use current draw to detect when the end is reached
+        this.setExtensionTarget(0);
     }
 
     /**
