@@ -34,7 +34,7 @@ public class PitchPIDTuner extends LinearOpMode {
 
             robot.pinkArm.setExtensionTarget(extensionTarget);
             robot.pinkArm.setPitchTarget(pitchTarget);
-            robot.pinkArm.moveArmToPosition();
+            robot.pinkArm.update();
 
             hardware.write();
 

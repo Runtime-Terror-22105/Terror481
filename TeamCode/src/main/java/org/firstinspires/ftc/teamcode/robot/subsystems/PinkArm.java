@@ -61,32 +61,7 @@ public class PinkArm implements Subsystem {
     private final PidfController extensionPid = new PidfController(extensionPidCoefficients);
 
     // States
-    private State state = State.MANUAL;
-    private Position armPosition = state.getPosition();
-
-    public boolean isHanging() {
-        return this.stateIs(State.HANG_1) || this.stateIs(State.HANG_2);
-    }
-
-    public enum State {
-        HIGH_BASKET(new Position(29, 12)), // locked to position of outtaking to high basket
-        LOW_BASKET(new Position(23, 42)), // locked to position of outtaking to low basket
-        SUBMERSIBLE(new Position(75, 45)), // locked to position of intaking from submersible
-        TAPE(new Position(35, 86)), // locked to position of intaking from tape
-        HANG_1(new Position(35, 86)), // hanging part 1
-        HANG_2(new Position(35, 86)), // hanging part 2
-        MANUAL(new Position(0, 0)); // not locked to any position
-
-        private final Position position;
-
-        State(Position position) {
-            this.position = position;
-        }
-
-        public Position getPosition() {
-            return position;
-        }
-    }
+    private Position armPosition = getPosition();
 
     /**
      * Creates a new pink arm
@@ -101,11 +76,8 @@ public class PinkArm implements Subsystem {
         this.armExtensionEncoder = hardware.armExtensionEncoder;
     }
 
-    /**
-     * Sets the desired state of the pink arm
-     */
-    public void setState(State state) {
-        this.state = state;
+    public Position getPosition() {
+        return new Position(getPitchPosition(), getExtensionPosition());
     }
 
     /**
@@ -125,14 +97,6 @@ public class PinkArm implements Subsystem {
         this.armExtensionMotor1.setPower(power);
         this.armExtensionMotor2.setPower(power);
     }
-
-    /**
-     * Checks if oen state equals the current state
-     */
-    public boolean stateIs(State other) {
-        return this.state.equals(other);
-    }
-
 
     /**
      * Sets pitch target
@@ -198,7 +162,6 @@ public class PinkArm implements Subsystem {
      */
     public void adjustPitch(double angle) {
         this.armPosition.adjustPitch(angle);
-        this.state = State.MANUAL;
     }
 
     /**
@@ -207,7 +170,6 @@ public class PinkArm implements Subsystem {
      */
     public void adjustExtension(double distance) {
         this.armPosition.adjustExtension(distance);
-        this.state = State.MANUAL;
     }
 
     /**
@@ -224,26 +186,19 @@ public class PinkArm implements Subsystem {
      * Run this function every loop iteration.
      */
     public void update() {
-        if (!state.equals(State.MANUAL)) {
-            this.armPosition = state.getPosition(); // set targets
-        }
-
-        this.moveArmToPosition(); // move motors. this calls both .updatePitch and .updateExtension
-    }
-
-    public double getPitchPosition(){
-        return armPitchEncoder.getCurrentPosition();
-    }
-
-    public double getExtensionPosition(){
-        return armExtensionEncoder.getCurrentPosition();
-    }
-
-    public void moveArmToPosition() {
         this.updatePitch();
         this.updateExtension();
     }
+
+    public double getPitchPosition() {
+        return armPitchEncoder.getCurrentPosition();
+    }
+
+    public double getExtensionPosition() {
+        return armExtensionEncoder.getCurrentPosition();
+    }
 }
+
 class Position {
     private double pitch;
     private double extension;
@@ -264,34 +219,26 @@ class Position {
     public double getPitch(){
         return pitch;
     }
+
     public double getExtension(){
         return extension;
     }
-    public void setPitch(double pitch){
-        this.pitch = pitch;
-        controlPitch();
+
+    public void setExtension(double extension) {
+        this.extension = Math.min(Math.max(extension, 0), maxExtension);
     }
-    public void setExtension(double extension){
-        this.extension = extension;
-        controlExtension();
-    }
-    public void adjustPitch(double change){
-        this.pitch += change;
-        controlPitch();
-    }
+
     public void adjustExtension(double change){
         this.extension += change;
-        controlExtension();
+        extension = Math.min(Math.max(extension, 0), maxExtension);
     }
 
-    private void controlExtension(){
-        if(extension < 0) extension = 0;
-        if(extension > maxExtension) extension = maxExtension;
-
-        // TODO: Add 42 in max horizontal limit
+    public void setPitch(double pitch){
+        this.pitch = Math.min(Math.max(pitch, 0), maxPitch);
     }
-    private void controlPitch(){
-        if(pitch < 0) pitch = 0;
-        if(pitch > maxPitch) extension = maxPitch;
+
+    public void adjustPitch(double change) {
+        this.pitch += change;
+        this.pitch = Math.min(Math.max(pitch, 0), maxPitch);
     }
 }

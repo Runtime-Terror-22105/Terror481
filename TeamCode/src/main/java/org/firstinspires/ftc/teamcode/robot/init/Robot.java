@@ -111,7 +111,7 @@ public class Robot {
     }
 
     private void goToRestingState() {
-
+//        pinkArm.
     }
 
     private void goToIntakeState() {
