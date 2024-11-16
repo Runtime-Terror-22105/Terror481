@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -21,7 +19,6 @@ public class RobotCentricTeleOp extends LinearOpMode {
     public static final double DRIVESPEED = 1.0;
     private RobotHardware hardware = new RobotHardware();
     private final Robot robot = new Robot();
-    private FtcDashboard dashboard;
 
 //    public static PidfController.PidfCoefficients heading_coeff = new PidfController.PidfCoefficients(0.63, 0, 0.0624, 0, 0.04);
 //
@@ -33,9 +30,6 @@ public class RobotCentricTeleOp extends LinearOpMode {
     public void runOpMode() {
         hardware.init(hardwareMap, LynxModule.BulkCachingMode.MANUAL);
         robot.init(this, hardware, telemetry);
-
-        dashboard = FtcDashboard.getInstance();
-        telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
 
         waitForStart();
 
@@ -82,15 +76,15 @@ public class RobotCentricTeleOp extends LinearOpMode {
 
             hardware.write();
 
-            telemetry.addData("Heading Angle",headingLockAngle);
-            telemetry.addData("Rotation power", rotation);
-            telemetry.addData("Loop time (ms)", loopTimer.milliseconds());
-            telemetry.addData("Loop time (hz)", 1000/loopTimer.milliseconds());
+            robot.telemetry.addData("Heading Angle",headingLockAngle);
+            robot.telemetry.addData("Rotation power", rotation);
+            robot.telemetry.addData("Loop time (ms)", loopTimer.milliseconds());
+            robot.telemetry.addData("Loop time (hz)", 1000/loopTimer.milliseconds());
 
             robot.telemetry.addData("x power", direction.x);
             robot.telemetry.addData("y power", direction.y);
             robot.telemetry.addData("h power", rotation);
-            telemetry.update();
+            robot.telemetry.update();
             loopTimer.reset();
         }
     }
