@@ -15,13 +15,17 @@ public class PidfController {
 
     //region public variables
     private double targetPosition = 0;
-    private double tolerance = 10;
+    private double tolerance = 0;
     private double currentPosition;
 
     //endregion
     public PidfController(PidfCoefficients pidfCoefficients) {
         this.pidfCoefficients = pidfCoefficients;
         _resetTempVars();
+    }
+
+    public double getTolerance() {
+        return this.tolerance;
     }
 
     public void setTolerance(double tolerance) {
@@ -105,7 +109,7 @@ public class PidfController {
     }
 
     public boolean atTargetPosition(double currentPosition) {
-        return calculateError(currentPosition) <= this.tolerance;
+        return Math.abs(calculateError(currentPosition)) <= this.tolerance;
     }
 
     public static class PidfCoefficients {

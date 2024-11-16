@@ -103,7 +103,7 @@ public class PidController {
     }
 
     public boolean atTargetPosition(double currentPosition) {
-        return calculateError(currentPosition) <= this.tolerance;
+        return Math.abs(calculateError(currentPosition)) <= this.tolerance;
     }
 
     /**

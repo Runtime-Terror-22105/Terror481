@@ -55,9 +55,12 @@ public class PinkArm implements Subsystem {
 
     public static PidfController.PidfCoefficients pitchPidCoefficients =
             new PidfController.PidfCoefficients(0, 0, 0, 1, 0);
-    private final PidfController pitchPid = new PidfController(pitchPidCoefficients);
+    public static double pitchPidTolerance = 0;
+    public final PidfController pitchPid = new PidfController(pitchPidCoefficients);
+
     public static PidfController.PidfCoefficients extensionPidCoefficients =
             new PidfController.PidfCoefficients(0.07, 0, 0.0009, 1, 0);
+    public static double extensionPidTolerance = 0;
     private final PidfController extensionPid = new PidfController(extensionPidCoefficients);
 
     // States
@@ -85,6 +88,9 @@ public class PinkArm implements Subsystem {
         this.armExtensionMotor2 = hardware.armExtensionMotor2;
         this.armExtensionEncoder = hardware.armExtensionEncoder;
         this.armPosition = getPosition();
+
+        this.pitchPid.setTolerance(pitchPidTolerance);
+        this.extensionPid.setTolerance(extensionPidTolerance);
     }
 
     public Position getPosition() {
@@ -132,7 +138,8 @@ public class PinkArm implements Subsystem {
     public void updatePitch() {
         double desiredPitch = this.armPosition.getPitch();
         this.pitchPid.setTargetPosition(desiredPitch);
-        double slope = (value2 - value1)/ MAX_EXTENSION;
+
+        double slope = (value2 - value1) / MAX_EXTENSION;
         double yIntercept = value1;
         // Linear adjustment based on extension
         double calculatedFF = slope * armExtensionEncoder.getCurrentPosition() + yIntercept;
