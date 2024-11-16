@@ -4,10 +4,12 @@ import com.qualcomm.robotcore.hardware.AnalogInput;
 
 public class TerrorAnalogEncoder {
     private double offset = 0;
-    private AnalogInput encoder = null;
+    private final AnalogInput encoder;
+    private final boolean reversed;
 
-    public TerrorAnalogEncoder(AnalogInput encoder) {
+    public TerrorAnalogEncoder(AnalogInput encoder, boolean reversed) {
         this.encoder = encoder;
+        this.reversed = reversed;
     }
 
     /**
@@ -15,7 +17,11 @@ public class TerrorAnalogEncoder {
      * @return The absolute position.
      */
     public double getCurrentPosition() {
-        return ((this.encoder.getVoltage() / 1.0) * Math.PI*2 + this.offset) % (2*Math.PI);
+        double pos = ((this.encoder.getVoltage() / 1.0) * Math.PI*2 + this.offset) % (2*Math.PI);
+        if (reversed) {
+            pos = 2*Math.PI - pos;
+        }
+        return pos;
     }
 
     /**

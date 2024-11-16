@@ -61,7 +61,7 @@ public class PinkArm implements Subsystem {
     private final PidfController extensionPid = new PidfController(extensionPidCoefficients);
 
     // States
-    private Position armPosition = getPosition();
+    private Position armPosition;
 
     public enum Presets {
 
@@ -84,6 +84,7 @@ public class PinkArm implements Subsystem {
         this.armExtensionMotor1 = hardware.armExtensionMotor1;
         this.armExtensionMotor2 = hardware.armExtensionMotor2;
         this.armExtensionEncoder = hardware.armExtensionEncoder;
+        this.armPosition = getPosition();
     }
 
     public Position getPosition() {
