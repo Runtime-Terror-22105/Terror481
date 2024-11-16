@@ -64,6 +64,9 @@ public class PitchFFTuner extends LinearOpMode {
             // Data point 1 done (with arm all the way back)
             // Sets to max extension
             robot.pinkArm.setExtensionTarget(PinkArm.MAX_EXTENSION);
+            robot.telemetry.addData("Moving to data point 2 tuning...", "");
+            robot.telemetry.update();
+            sleep(3000);
 
             while(!gamepad1.a && opModeIsActive()){
                 // bulk read cause its another while loop cause its in another while loop and im too lazy to do states
@@ -74,11 +77,12 @@ public class PitchFFTuner extends LinearOpMode {
                 // PID to keep extension correct
                 // It should maintain max extension :)
                 robot.pinkArm.updateExtension();
+                hardware.write();
 
-                telemetry.addData("Current Feed Forward (at extension): ", ff_2);
+                robot.telemetry.addData("Current Feed Forward (at extension): ", ff_2);
                 double gravityScaled = ff_2*Math.cos(robot.pinkArm.getPitchPosition());
                 robot.pinkArm.setPitchPower(gravityScaled);
-                telemetry.update();
+                robot.telemetry.update();
             }
 
             telemetry.addData("Value 1: ", ff_1);

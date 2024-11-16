@@ -36,12 +36,12 @@ public class PinkArm implements Subsystem {
     /**
      * Value 1 from "PitchFFTuner.java"
      */
-    public static double value1 = 0;
+    public static double value1 = 0.03;
 
     /**
      * Value 2 from "PitchFFTuner.java"
      */
-    public static double value2 = 0;
+    public static double value2 = 0.08;
 
     // PIDs
     // TODO: VERY URGENT: DO *NOT* CHANGE KV OR KSTATIC!!!! (And probably not Ki)
