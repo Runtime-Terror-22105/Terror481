@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.robot.subsystems;
 
 import androidx.annotation.NonNull;
 
+import com.acmerobotics.dashboard.config.Config;
+
 import org.firstinspires.ftc.teamcode.math.controllers.PidfController;
 import org.firstinspires.ftc.teamcode.robot.hardware.motors.TerrorMotor;
 import org.firstinspires.ftc.teamcode.robot.hardware.sensors.TerrorAnalogEncoder;
@@ -10,8 +12,8 @@ import org.firstinspires.ftc.teamcode.robot.init.RobotHardware;
 
 /**
  * A class representing a telescoping arm.
- *
  */
+@Config
 public class PinkArm implements Subsystem {
     // The hardware
     private final TerrorMotor armPitchMotor1;
