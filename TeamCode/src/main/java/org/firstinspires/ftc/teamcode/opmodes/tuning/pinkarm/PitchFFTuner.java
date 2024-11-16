@@ -63,7 +63,7 @@ public class PitchFFTuner extends LinearOpMode {
 
             // Data point 1 done (with arm all the way back)
             // Sets to max extension
-            robot.pinkArm.setExtensionTarget(PinkArm.maxExtension);
+            robot.pinkArm.setExtensionTarget(PinkArm.MAX_EXTENSION);
 
             while(!gamepad1.a){
                 // bulk read cause its another while loop cause its in another while loop and im too lazy to do states

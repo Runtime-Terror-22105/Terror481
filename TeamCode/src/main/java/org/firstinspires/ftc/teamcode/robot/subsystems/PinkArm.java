@@ -26,7 +26,7 @@ public class PinkArm implements Subsystem {
     /**
      * Max extension at any point, not just horizontal, used to calculate feedforward
      */
-    public static final double maxExtension = 50;
+    public static final double MAX_EXTENSION = 450;
 
     /**
      * Max pitch in radians
@@ -132,7 +132,7 @@ public class PinkArm implements Subsystem {
     public void updatePitch() {
         double desiredPitch = this.armPosition.getPitch();
         this.pitchPid.setTargetPosition(desiredPitch);
-        double slope = (value2 - value1)/maxExtension;
+        double slope = (value2 - value1)/ MAX_EXTENSION;
         double yIntercept = value1;
         // Linear adjustment based on extension
         double calculatedFF = slope * armExtensionEncoder.getCurrentPosition() + yIntercept;
@@ -157,7 +157,7 @@ public class PinkArm implements Subsystem {
     public void updateExtension() {
         double currentExtension = armExtensionEncoder.getCurrentPosition();
         this.extensionPid.setTargetPosition(this.armPosition.getExtension()); // tells the PID the target position
-        double calculatedFF = Math.cos(armPitchEncoder.getCurrentPosition()) * extensionFF;
+        double calculatedFF = Math.sin(armPitchEncoder.getCurrentPosition()) * extensionFF;
         if (this.armPosition.getExtension() == 0 && this.extensionPid.atTargetPosition(currentExtension)){
             calculatedFF = 0;
             // If the arm is all the way retracted desired feedforward is just 0 :)
@@ -231,7 +231,7 @@ class Position {
     private double extension;
 
     private final static double maxPitch = PinkArm.maxPitch;
-    private final static double maxExtension = PinkArm.maxExtension;
+    private final static double maxExtension = PinkArm.MAX_EXTENSION;
 
     /**
      * The position of the arm
