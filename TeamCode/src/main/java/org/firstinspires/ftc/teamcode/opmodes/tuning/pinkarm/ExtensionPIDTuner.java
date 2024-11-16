@@ -41,7 +41,6 @@ public class ExtensionPIDTuner extends LinearOpMode {
             robot.telemetry.addData("Current Extension: ", robot.pinkArm.getExtensionPosition());
             robot.telemetry.addData("Current Pitch (degrees): ", Math.toDegrees(pitch));
             robot.telemetry.addData("Current Pitch (radians): ", pitch);
-            robot.telemetry.addData("Current Pitch Voltage: ", hardware.armPitchEncoder.getVoltage());
             robot.telemetry.update();
 
         }
