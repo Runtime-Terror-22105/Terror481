@@ -5,9 +5,6 @@ import android.util.Size;
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.outoftheboxrobotics.photoncore.Photon;
-import com.outoftheboxrobotics.photoncore.hardware.PhotonLynxVoltageSensor;
-import com.outoftheboxrobotics.photoncore.hardware.motor.PhotonDcMotor;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -32,7 +29,6 @@ import java.util.List;
  * A class containing all the robot's hardware.
  */
 @Config
-@Photon
 public class RobotHardware {
 
     // Drivetrain motors & servos
@@ -63,7 +59,7 @@ public class RobotHardware {
     private TerrorCamera camera;
 
     // Sensors
-    public PhotonLynxVoltageSensor voltageSensor;
+//    public PhotonLynxVoltageSensor voltageSensor;
     public TerrorSparkFunOTOS otos;
 
     // Lynx stuff
@@ -79,19 +75,19 @@ public class RobotHardware {
 
         // Initialize the drivetrain motors
         this.motorFrontLeft = new TerrorMotor(
-                ((PhotonDcMotor) hwMap.get(DcMotor.class, "motorFrontLeft")),
+                hwMap.get(DcMotor.class, "motorFrontLeft"),
                 0.05
         );
         this.motorFrontRight = new TerrorMotor(
-                ((PhotonDcMotor) hwMap.get(DcMotor.class, "motorFrontRight")),
+                hwMap.get(DcMotor.class, "motorFrontRight"),
                 0.05
         );
         this.motorRearRight = new TerrorMotor(
-                ((PhotonDcMotor) hwMap.get(DcMotor.class, "motorRearRight")),
+                hwMap.get(DcMotor.class, "motorRearRight"),
                 0.05
         );
         this.motorRearLeft = new TerrorMotor(
-                ((PhotonDcMotor) hwMap.get(DcMotor.class, "motorRearLeft")),
+                hwMap.get(DcMotor.class, "motorRearLeft"),
                 0.05
         );
         this.motorFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -154,7 +150,7 @@ public class RobotHardware {
 
         // Misc Sensors
         this.otos = this.hwMap.get(TerrorSparkFunOTOS.class, "sensor_otos");
-        this.voltageSensor = hwMap.getAll(PhotonLynxVoltageSensor.class).iterator().next();
+//        this.voltageSensor = hwMap.getAll(PhotonLynxVoltageSensor.class).iterator().next();
     }
 
     public void write() {

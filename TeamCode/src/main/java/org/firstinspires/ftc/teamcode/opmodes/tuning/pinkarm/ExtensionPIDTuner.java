@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.tuning.pinkarm;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -10,7 +9,6 @@ import org.firstinspires.ftc.teamcode.robot.init.Robot;
 import org.firstinspires.ftc.teamcode.robot.init.RobotHardware;
 
 @Config
-@Photon
 @TeleOp(group="Pink Arm Tuning")
 public class ExtensionPIDTuner extends LinearOpMode {
 

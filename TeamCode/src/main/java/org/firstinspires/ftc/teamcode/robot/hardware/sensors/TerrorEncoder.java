@@ -63,16 +63,16 @@ public class TerrorEncoder {
         return motor.getCurrentPosition() * multiplier;
     }
 
-    /**
-     * Gets the velocity directly from the underlying motor and compensates for the direction
-     * See {@link #getCorrectedVelocity} for high (>2^15) counts per second velocities (such as on REV Through Bore)
-     *
-     * @return raw velocity
-     */
-    public double getVelocity() {
-        int multiplier = getMultiplier();
-        return motor.getVelocity() * multiplier;
-    }
+//    /**
+//     * Gets the velocity directly from the underlying motor and compensates for the direction
+//     * See {@link #getCorrectedVelocity} for high (>2^15) counts per second velocities (such as on REV Through Bore)
+//     *
+//     * @return raw velocity
+//     */
+//    public double getVelocity() {
+//        int multiplier = getMultiplier();
+//        return motor.getVelocity() * multiplier;
+//    }
 
     /**
      * I wanted to use Lynx to reset the encoder without stopping the motor but it didn't work.

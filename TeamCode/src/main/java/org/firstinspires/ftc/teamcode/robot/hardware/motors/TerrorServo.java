@@ -2,18 +2,17 @@ package org.firstinspires.ftc.teamcode.robot.hardware.motors;
 
 import androidx.annotation.NonNull;
 
-import com.outoftheboxrobotics.photoncore.hardware.servo.PhotonServo;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.robot.hardware.TerrorWritingDevice;
 
 /**
- * A wrapper class for the {@link PhotonServo}, providing position caching to avoid redundant
- * {@link PhotonServo#setPosition(double)} calls. The class ensures the position is only updated
+ * A wrapper class for the {@link Servo}, providing position caching to avoid redundant
+ * {@link Servo#setPosition(double)} calls. The class ensures the position is only updated
  * when the difference from the last set position exceeds a defined tolerance.
  */
 public class TerrorServo implements TerrorWritingDevice {
-    private final PhotonServo servo;  // The underlying PhotonServo instance
+    private final Servo servo;  // The underlying PhotonServo instance
     private double servoPosition;     // Current position of the servo
     private double lastPosition;      // Last set position to prevent unnecessary updates
     private final double tolerance = 0.0001; // Small tolerance to avoid float comparison issues
@@ -30,9 +29,9 @@ public class TerrorServo implements TerrorWritingDevice {
     /**
      * Constructs a new TerrorServo instance.
      *
-     * @param servo The {@link PhotonServo} instance to wrap.
+     * @param servo The {@link Servo} instance to wrap.
      */
-    public TerrorServo(@NonNull PhotonServo servo) {
+    public TerrorServo(@NonNull Servo servo) {
         this.servo = servo;
         this.servoPosition = servo.getPosition();
         this.lastPosition = this.servoPosition;

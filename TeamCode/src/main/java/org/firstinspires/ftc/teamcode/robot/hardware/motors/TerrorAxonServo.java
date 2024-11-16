@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode.robot.hardware.motors;
 
 import androidx.annotation.NonNull;
 
-import com.outoftheboxrobotics.photoncore.hardware.servo.PhotonCRServo;
 import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.robot.hardware.sensors.TerrorAnalogEncoder;
@@ -23,11 +23,11 @@ public class TerrorAxonServo {
     private double offset = 0;
     private double lastPower;
     private AnalogInput absoluteServoEncoder = null;
-    private final PhotonCRServo crservo;
+    private final CRServo crservo;
 
     private final double powerThreshold;
 
-    public TerrorAxonServo(@NonNull PhotonCRServo crservo, double powerThreshold) {
+    public TerrorAxonServo(@NonNull CRServo crservo, double powerThreshold) {
         this.powerThreshold = powerThreshold;
         this.crservo = crservo;
         this.lastPower = crservo.getPower();

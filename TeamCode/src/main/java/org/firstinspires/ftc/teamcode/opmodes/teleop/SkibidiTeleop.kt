@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop
 
 import com.acmerobotics.dashboard.config.Config
-import com.outoftheboxrobotics.photoncore.Photon
 import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
@@ -12,7 +11,6 @@ import org.firstinspires.ftc.teamcode.robot.init.RobotHardware
 import kotlin.math.pow
 
 @Config
-@Photon
 @TeleOp
 class SkibidiTeleop : LinearOpMode() {
     private val hardware = RobotHardware()

@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.robot.hardware.motors;
 
 import androidx.annotation.NonNull;
 
-import com.outoftheboxrobotics.photoncore.hardware.servo.PhotonCRServo;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.robot.hardware.TerrorWritingDevice;
@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.robot.hardware.TerrorWritingDevice;
  * when the requested power is within a specified threshold.
  */
 public class TerrorCRServo implements TerrorWritingDevice {
-    private final PhotonCRServo crservo;
+    private final CRServo crservo;
     private final double powerThreshold;
 
     private double servoPower;
@@ -34,7 +34,7 @@ public class TerrorCRServo implements TerrorWritingDevice {
      * @param crservo         The PhotonCRServo object to wrap around.
      * @param powerThreshold  The threshold used to prevent unnecessary power updates.
      */
-    public TerrorCRServo(@NonNull PhotonCRServo crservo, double powerThreshold) {
+    public TerrorCRServo(@NonNull CRServo crservo, double powerThreshold) {
         this.powerThreshold = powerThreshold;
         this.crservo = crservo;
         this.servoPower = 0;
