@@ -24,6 +24,11 @@ public class PinkArm {
     private final TerrorEncoder armExtensionEncoder;
 
     /**
+     * The horizontal extension limit, in inches
+     */
+    public static final double HORIZONTAL_LIMIT = 450; // TODO: add this value
+
+    /**
      * Max extension at any point, not just horizontal, used to calculate feedforward
      */
     public static final double MAX_EXTENSION = 450;
@@ -31,7 +36,7 @@ public class PinkArm {
     /**
      * Max pitch in radians
      */
-    public static final double maxPitch = 1.62316;
+    public static final double MAX_PITCH = 1.62316;
 
     /**
      * Value 1 from "PitchFFTuner.java"
@@ -225,7 +230,7 @@ class Position {
     private double pitch;
     private double extension;
 
-    private final static double maxPitch = PinkArm.maxPitch;
+    private final static double maxPitch = PinkArm.MAX_PITCH;
     private final static double maxExtension = PinkArm.MAX_EXTENSION;
 
     /**
@@ -246,21 +251,36 @@ class Position {
         return extension;
     }
 
-    public void setExtension(double extension) {
-        this.extension = Math.min(Math.max(extension, 0), maxExtension);
+    public void setPitch(double pitch){
+        this.pitch = pitch;
+        controlPitch();
+    }
+
+    public void setExtension(double extension){
+        this.extension = extension;
+        controlExtension();
+    }
+
+    public void adjustPitch(double change){
+        this.pitch += change;
+        controlPitch();
     }
 
     public void adjustExtension(double change){
         this.extension += change;
-        extension = Math.min(Math.max(extension, 0), maxExtension);
+        controlExtension();
     }
 
-    public void setPitch(double pitch){
-        this.pitch = Math.min(Math.max(pitch, 0), maxPitch);
-    }
+    private void controlExtension(){
+        if(extension < 0) extension = 0;
+        if(extension > maxExtension) extension = maxExtension;
 
-    public void adjustPitch(double change) {
-        this.pitch += change;
-        this.pitch = Math.min(Math.max(pitch, 0), maxPitch);
+        if (Math.abs(pitch) < 5 && extension > PinkArm.HORIZONTAL_LIMIT) {
+            extension = PinkArm.HORIZONTAL_LIMIT;
+        }
+    }
+    private void controlPitch(){
+        if(pitch < 0) pitch = 0;
+        if(pitch > maxPitch) extension = maxPitch;
     }
 }
