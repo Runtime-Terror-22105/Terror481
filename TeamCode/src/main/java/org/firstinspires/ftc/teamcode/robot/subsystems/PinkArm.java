@@ -60,12 +60,12 @@ public class PinkArm {
 
     public static PidfController.PidfCoefficients pitchPidCoefficients =
             new PidfController.PidfCoefficients(1.0, 0, 0.3, 1, 0);
-    public static double pitchPidTolerance = 0;
+    public static double pitchPidTolerance = Math.toRadians(1);
     public final PidfController pitchPid = new PidfController(pitchPidCoefficients);
 
     public static PidfController.PidfCoefficients extensionPidCoefficients =
             new PidfController.PidfCoefficients(0.07, 0, 0.0009, 1, 0);
-    public static double extensionPidTolerance = 0;
+    public static double extensionPidTolerance = 2;
     private final PidfController extensionPid = new PidfController(extensionPidCoefficients);
 
     // States
