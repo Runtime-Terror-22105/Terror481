@@ -115,7 +115,6 @@ public class Robot {
         // move pink arm (pitch and extension 0)
         pinkArm.resetPitch();
         pinkArm.resetExtension();
-        // TODO: move pitch servos, turn off intake
         inOutTake.moveUp();
     }
 

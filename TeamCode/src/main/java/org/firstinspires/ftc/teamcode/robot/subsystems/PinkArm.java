@@ -49,9 +49,9 @@ public class PinkArm {
     public static double value2 = 0.08;
 
     // PIDs
-    // TODO: VERY URGENT: DO *NOT* CHANGE KV OR KSTATIC!!!! (And probably not Ki)
-    // TODO: VERY URGENT: DO *NOT* CHANGE KV OR KSTATIC!!!! (And probably not Ki)
-    // TODO: VERY URGENT: DO *NOT* CHANGE KV OR KSTATIC!!!! (And probably not Ki)
+    // DO *NOT* CHANGE KV OR KSTATIC!!!! (And probably not Ki)
+    // DO *NOT* CHANGE KV OR KSTATIC!!!! (And probably not Ki)
+    // DO *NOT* CHANGE KV OR KSTATIC!!!! (And probably not Ki)
 
     /**
      * Tune this value from "ExtensionPIDTuner.java"
@@ -69,11 +69,7 @@ public class PinkArm {
     private final PidfController extensionPid = new PidfController(extensionPidCoefficients);
 
     // States
-    private Position armPosition;
-
-    public enum Presets {
-
-    }
+    private final Position armPosition;
 
     public void resetPitch() {
         // TODO: Use current draw to detect when reached the end
