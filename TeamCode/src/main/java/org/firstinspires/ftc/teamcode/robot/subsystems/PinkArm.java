@@ -200,8 +200,23 @@ public class PinkArm {
      * @return Whether or not the pids have reached
      */
     public boolean atTargetPosition() {
-        return this.extensionPid.atTargetPosition(armExtensionEncoder.getCurrentPosition())
-                && this.pitchPid.atTargetPosition(armPitchEncoder.getCurrentPosition());
+        return extensionAtTargetPosition() && pitchAtTargetPosition();
+    }
+
+    /**
+     * Whether or not the robot's pitch is at the desired pitch (with some tolerance).
+     * @return Whether or not the pitch has reached its target.
+     */
+    public boolean pitchAtTargetPosition() {
+        return this.pitchPid.atTargetPosition(armPitchEncoder.getCurrentPosition());
+    }
+
+    /**
+     * Whether or not the robot's extension is at the desired extension (with some tolerance).
+     * @return Whether or not the extension has reached its target.
+     */
+    public boolean extensionAtTargetPosition() {
+        return this.extensionPid.atTargetPosition(armExtensionEncoder.getCurrentPosition());
     }
 
     /**
@@ -210,7 +225,11 @@ public class PinkArm {
      */
     public void update() {
         this.updatePitch();
-        this.updateExtension();
+
+        // only move the extension once the pitch is done
+        if (pitchAtTargetPosition()) {
+            this.updateExtension();
+        }
     }
 
     public double getPitchPosition() {
