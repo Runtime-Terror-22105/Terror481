@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.robot.init.Robot;
 import org.firstinspires.ftc.teamcode.robot.init.RobotHardware;
 
 @Config
-@TeleOp
+@TeleOp(group = "testing")
 public class ActionsTest extends LinearOpMode {
     private RobotHardware hardware = new RobotHardware();
     private final Robot robot = new Robot();

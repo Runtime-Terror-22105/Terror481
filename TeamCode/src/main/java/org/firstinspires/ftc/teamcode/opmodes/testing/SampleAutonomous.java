@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.robot.auto.pathgen.QSplines;
 import org.firstinspires.ftc.teamcode.robot.init.Robot;
 import org.firstinspires.ftc.teamcode.robot.init.RobotHardware;
 
-@TeleOp
+@TeleOp(group = "testing")
 public class SampleAutonomous extends LinearOpMode {
     private RobotHardware hardware = new RobotHardware();
     private final Robot robot = new Robot();

@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.robot.init.RobotHardware;
 
-@Autonomous
+@Autonomous(group = "testing")
 public class PitchTesting extends LinearOpMode {
     private final RobotHardware hardware = new RobotHardware();
 

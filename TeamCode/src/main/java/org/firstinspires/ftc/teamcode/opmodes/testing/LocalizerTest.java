@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.robot.init.Robot;
 import org.firstinspires.ftc.teamcode.robot.init.RobotHardware;
 
 @Config
-@TeleOp
+@TeleOp(group = "testing")
 public class LocalizerTest extends LinearOpMode {
     public static final double DRIVESPEED = 1.0;
     private final RobotHardware hardware = new RobotHardware();
