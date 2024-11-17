@@ -17,14 +17,12 @@ public class InOutTake {
 
     private final TerrorCRServo wheelServo1;
     private final TerrorCRServo wheelServo2;
-    private final TerrorServo pitchServo1;
-    private final TerrorServo pitchServo2;
+    private final TerrorServo pitchServo;
 
     public InOutTake(@NonNull RobotHardware hardware) {
         this.wheelServo1 = hardware.intakeWheelServo1;
         this.wheelServo2 = hardware.intakeWheelServo2;
-        this.pitchServo1 = hardware.intakePitchServo1;
-        this.pitchServo2 = hardware.intakePitchServo2;
+        this.pitchServo = hardware.intakePitchServo;
     }
 
     public void intake() {
@@ -43,12 +41,10 @@ public class InOutTake {
     }
 
     public void moveUp() {
-        pitchServo1.setPosition(SERVO_1_UP);
-        pitchServo2.setPosition(SERVO_2_UP);
+        pitchServo.setPosition(SERVO_1_UP);
     }
 
     public void moveDown() {
-        pitchServo1.setPosition(SERVO_1_DOWN);
-        pitchServo2.setPosition(SERVO_2_DOWN);
+        pitchServo.setPosition(SERVO_1_DOWN);
     }
 }

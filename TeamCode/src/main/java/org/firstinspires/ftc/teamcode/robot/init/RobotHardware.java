@@ -53,8 +53,7 @@ public class RobotHardware {
     // InOutTake
     public TerrorCRServo intakeWheelServo1;
     public TerrorCRServo intakeWheelServo2;
-    public TerrorServo intakePitchServo1;
-    public TerrorServo intakePitchServo2;
+    public TerrorServo intakePitchServo;
     public TerrorColorRangeFinder wheelColorSensor;
 
     // Drivetrain PTO for hang
@@ -138,15 +137,14 @@ public class RobotHardware {
          this.publisher.subscribe(3, armExtensionMotor1, armExtensionMotor2);
 
          // Initialize the inouttake servos and sensors
-         this.intakePitchServo1 = new TerrorServo(hwMap.get(Servo.class, "intakePitchServo1"));
-         this.intakePitchServo2 = new TerrorServo(hwMap.get(Servo.class, "intakePitchServo2"));
+         this.intakePitchServo = new TerrorServo(hwMap.get(Servo.class, "intakePitchServo1"));
          this.intakeWheelServo1 = new TerrorCRServo(hwMap.get(CRServo.class, "intakeWheelServo1"), 0.02);
          this.intakeWheelServo2 = new TerrorCRServo(hwMap.get(CRServo.class, "intakeWheelServo2"), 0.02);
 //         this.wheelColorSensor = new TerrorColorRangeFinder(
 //             hwMap.digitalChannel.get("digital0"),
 //             hwMap.digitalChannel.get("digital1")
 //         ); // assume that the color sensor is already configured
-         this.publisher.subscribe(1, intakePitchServo1, intakePitchServo2);
+         this.publisher.subscribe(1, intakePitchServo);
          this.publisher.subscribe(2, intakeWheelServo1, intakeWheelServo2);
 
 //         // Other servos
