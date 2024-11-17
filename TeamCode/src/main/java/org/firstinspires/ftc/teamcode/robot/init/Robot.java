@@ -115,27 +115,28 @@ public class Robot {
         // move pink arm (pitch and extension 0)
         pinkArm.resetPitch();
         pinkArm.resetExtension();
-        // stuff with the rollers
+        // TODO: move pitch servos, turn off intake
+        inOutTake.moveUp();
     }
 
     private void goToIntakeState() {
         // move pink arm (arm pitched down, slightly extended ~5-10 inches)
         pinkArm.resetPitch();
-        pinkArm.setExtensionTarget(40);
-        // stuff with the rollers
+        pinkArm.setExtensionTarget(100);
+        inOutTake.moveDown();
     }
 
     private void goToBucketState() {
         // move pink arm (arm pitched up ~90-95 deg, max extension ~40-50 in)
-        pinkArm.setPitchTarget(Math.PI/2);
-        pinkArm.setExtensionTarget(450);
-        // stuff with the rollers
+        pinkArm.setPitchTarget(Math.toRadians(85));
+        pinkArm.setExtensionTarget(PinkArm.MAX_EXTENSION-100);
+        inOutTake.moveUp();
     }
 
     private void goToSpecimenState() {
         // move pink arm (arm slightly pitched ~45 deg, partial extension ~5-10 in)
         pinkArm.setPitchTarget(Math.PI/4);
-        pinkArm.setExtensionTarget(40);
-        // stuff with the rollers
+        pinkArm.setExtensionTarget(250);
+        inOutTake.moveUp();
     }
 }

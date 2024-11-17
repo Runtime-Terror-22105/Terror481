@@ -70,19 +70,25 @@ public class RobotCentricTeleOp extends LinearOpMode {
             double pitchChange = -gamepad2.right_stick_y;
             robot.pinkArm.adjustExtension(extensionChange);
             robot.pinkArm.adjustPitch(pitchChange);
-            robot.pinkArm.update();
 
-            if (gamepad1.left_trigger > 0.2) {
+            if (gamepad1.right_trigger > 0.2) {
                 robot.inOutTake.intake();
-            } else if (gamepad1.right_trigger > 0.2) {
+            } else if (gamepad1.left_trigger > 0.2) {
                 robot.inOutTake.outtake();
             } else {
                 robot.inOutTake.stop();
             }
 
+//            if ((gamepad2.left_bumper && gamepad2.right_bumper)
+//                    && !(lastGamepad2.left_bumper && lastGamepad2.right_bumper)) {
+//                hardware.dtPtoLeft.setPosition(1.0);
+//                hardware.dtPtoRight.setPosition(1.0);
+//            }
+
             lastGamepad1.copy(gamepad1);
             lastGamepad2.copy(gamepad2);
 
+            robot.pinkArm.update();
             hardware.write();
 
             robot.telemetry.addData("Heading Angle",headingLockAngle);
@@ -93,7 +99,9 @@ public class RobotCentricTeleOp extends LinearOpMode {
             robot.telemetry.addData("x power", direction.x);
             robot.telemetry.addData("y power", direction.y);
             robot.telemetry.addData("h power", rotation);
+
             robot.telemetry.update();
+
             loopTimer.reset();
         }
     }

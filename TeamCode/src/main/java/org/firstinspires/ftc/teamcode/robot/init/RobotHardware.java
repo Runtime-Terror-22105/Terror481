@@ -58,7 +58,8 @@ public class RobotHardware {
     public TerrorColorRangeFinder wheelColorSensor;
 
     // Drivetrain PTO for hang
-    public TerrorServo dtPto;
+    public TerrorServo dtPtoLeft;
+    public TerrorServo dtPtoRight;
 
     // Camera
     private TerrorCamera camera;
@@ -149,7 +150,8 @@ public class RobotHardware {
          this.publisher.subscribe(2, intakeWheelServo1, intakeWheelServo2);
 
 //         // Other servos
-//         this.dtPto = new TerrorServo((PhotonServo) hwMap.get(Servo.class, "dtPto"));
+         this.dtPtoLeft = new TerrorServo(hwMap.get(Servo.class, "dtPtoLeft"));
+         this.dtPtoRight = new TerrorServo(hwMap.get(Servo.class, "dtPtoRight"));
 //         this.publisher.subscribe(7, dtPto);
 //
 //         // Other things

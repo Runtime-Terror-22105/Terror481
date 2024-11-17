@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.robot.init.RobotHardware;
  * A class representing a telescoping arm.
  */
 @Config
-public class PinkArm implements Subsystem {
+public class PinkArm {
     // The hardware
     private final TerrorMotor armPitchMotor1;
     private final TerrorMotor armPitchMotor2;
