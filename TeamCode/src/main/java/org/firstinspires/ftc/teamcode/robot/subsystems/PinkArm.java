@@ -26,12 +26,12 @@ public class PinkArm {
     /**
      * The horizontal extension limit, in inches
      */
-    public static final double HORIZONTAL_LIMIT = 450; // TODO: add this value
+    public static final double HORIZONTAL_LIMIT = 400; // TODO: add this value
 
     /**
      * Max extension at any point, not just horizontal, used to calculate feedforward
      */
-    public static final double MAX_EXTENSION = 450;
+    public static final double MAX_EXTENSION = 490;
 
     /**
      * Max pitch in radians
