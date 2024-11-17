@@ -9,9 +9,11 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.configuration.LynxConstants;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -49,8 +51,8 @@ public class RobotHardware {
     public TerrorEncoder armExtensionEncoder = null;
 
     // InOutTake
-    public TerrorCRServo intakeWheelServo1;
-    public TerrorCRServo intakeWheelServo2;
+    public TerrorCRServo intakeWheelServoLeft;
+    public TerrorCRServo intakeWheelServoRight;
     public TerrorServo intakePitchServo;
     public TerrorColorRangeFinder wheelColorSensor;
 
@@ -135,15 +137,15 @@ public class RobotHardware {
          this.publisher.subscribe(3, armExtensionMotor1, armExtensionMotor2);
 
          // Initialize the inouttake servos and sensors
-//         this.intakePitchServo = new TerrorServo(hwMap.get(Servo.class, "intakePitchServo1"));
-//         this.intakeWheelServo1 = new TerrorCRServo(hwMap.get(CRServo.class, "intakeWheelServo1"), 0.02);
-//         this.intakeWheelServo2 = new TerrorCRServo(hwMap.get(CRServo.class, "intakeWheelServo2"), 0.02);
+         this.intakePitchServo = new TerrorServo(hwMap.get(Servo.class, "intakePitchServo"));
+         this.intakeWheelServoLeft = new TerrorCRServo(hwMap.get(CRServo.class, "intakeWheelServoLeft"), 0.02);
+         this.intakeWheelServoRight = new TerrorCRServo(hwMap.get(CRServo.class, "intakeWheelServoRight"), 0.02);
 //         this.wheelColorSensor = new TerrorColorRangeFinder(
 //             hwMap.digitalChannel.get("digital0"),
 //             hwMap.digitalChannel.get("digital1")
 //         ); // assume that the color sensor is already configured
-//         this.publisher.subscribe(1, intakePitchServo);
-//         this.publisher.subscribe(2, intakeWheelServo1, intakeWheelServo2);
+         this.publisher.subscribe(1, intakePitchServo);
+         this.publisher.subscribe(2, intakeWheelServoLeft, intakeWheelServoRight);
 
 //         // Other servos
 //         this.dtPtoLeft = new TerrorServo(hwMap.get(Servo.class, "dtPtoLeft"));

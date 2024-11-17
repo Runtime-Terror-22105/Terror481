@@ -82,4 +82,8 @@ public class TerrorServo implements TerrorWritingDevice {
         }
         this.command = ServoCommand.NONE;
     }
+
+    synchronized public double getSetPosition() {
+        return this.servo.getPosition();
+    }
 }

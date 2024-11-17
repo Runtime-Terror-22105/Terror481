@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.robot.init.RobotHardware;
 @TeleOp
 public class RobotCentricTeleOp extends LinearOpMode {
     public static final double DRIVESPEED = 1.0;
-    public static final double EXTENSION_MULTIPLIER = 1.0;
+    public static final double EXTENSION_MULTIPLIER = 1.7;
     public static final double PITCH_MULTIPLIER = 0.005;
 
     private RobotHardware hardware = new RobotHardware();
@@ -42,11 +42,17 @@ public class RobotCentricTeleOp extends LinearOpMode {
         ElapsedTime loopTimer = new ElapsedTime();
         Gamepad lastGamepad1 = new Gamepad();
         Gamepad lastGamepad2 = new Gamepad();
+        boolean slowSpeed = true;
         while (opModeIsActive()) {
             // Manually clear the bulk read cache. Deleting this would be catastrophic b/c stale
             // vals would be used.
             for (LynxModule hub : hardware.allHubs) {
                 hub.clearBulkCache();
+            }
+
+            double multiplier = 1.0;
+            if (slowSpeed) {
+                multiplier = 0.6;
             }
 
             Coordinate direction = new Coordinate(slr(gamepad1.left_stick_x), slr(-gamepad1.left_stick_y));
@@ -56,21 +62,31 @@ public class RobotCentricTeleOp extends LinearOpMode {
             robot.drivetrain.move(
                     direction,
                     rotation,
-                    DRIVESPEED
+                    DRIVESPEED*multiplier
             );
+
+            if (gamepad1.dpad_down && !lastGamepad1.dpad_down) {
+                slowSpeed = !slowSpeed;
+            }
+
+            if (gamepad2.dpad_down && !lastGamepad2.dpad_down) {
+                robot.inOutTake.adjustPitch(0.05);
+            } else if (gamepad2.dpad_up && !lastGamepad2.dpad_up) {
+                robot.inOutTake.adjustPitch(-0.05);
+            }
 
             if (gamepad2.a) {
                 telemetry.addData("resting state", "");
-                robot.setState(RESTING);
+                robot.setState(RESTING, this::sleep);
             } else if (gamepad2.x) {
                 telemetry.addData("specimen state", "");
-                robot.setState(SPECIMEN);
+                robot.setState(SPECIMEN, this::sleep);
             } else if (gamepad2.y) {
                 telemetry.addData("bucket state", "");
-                robot.setState(BUCKET);
+                robot.setState(BUCKET, this::sleep);
             } else if (gamepad2.b) {
                 telemetry.addData("intake state", "");
-                robot.setState(INTAKE);
+                robot.setState(INTAKE, this::sleep);
             }
 
             double extensionChange = -gamepad2.left_stick_y * EXTENSION_MULTIPLIER;
@@ -78,19 +94,17 @@ public class RobotCentricTeleOp extends LinearOpMode {
             robot.pinkArm.adjustExtension(extensionChange);
             robot.pinkArm.adjustPitch(pitchChange);
 
-//            if (gamepad1.right_trigger > 0.2) {
-//                robot.inOutTake.intake();
-//            } else if (gamepad1.left_trigger > 0.2) {
-//                robot.inOutTake.outtake();
-//            } else {
-//                robot.inOutTake.stop();
-//            }
+            if (gamepad1.right_trigger > 0.2) {
+                robot.inOutTake.intake();
+            } else if (gamepad1.left_trigger > 0.2) {
+                robot.inOutTake.outtake();
+            } else {
+                robot.inOutTake.stop();
+            }
 
-//            if ((gamepad2.left_bumper && gamepad2.right_bumper)
-//                    && !(lastGamepad2.left_bumper && lastGamepad2.right_bumper)) {
-//                hardware.dtPtoLeft.setPosition(1.0);
-//                hardware.dtPtoRight.setPosition(1.0);
-//            }
+            if (gamepad2.left_bumper && gamepad2.right_bumper) {
+                requestOpModeStop();
+            }
 
             lastGamepad1.copy(gamepad1);
             lastGamepad2.copy(gamepad2);
@@ -122,6 +136,6 @@ public class RobotCentricTeleOp extends LinearOpMode {
     }
 
     public double slr(double joystick_value){
-        return Math.pow((Math.pow(joystick_value,3)+joystick_value)/2, 5);
+        return Math.pow(joystick_value, 3);
     }
 }

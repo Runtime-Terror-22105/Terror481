@@ -31,7 +31,7 @@ public class PinkArm {
     /**
      * Max extension at any point, not just horizontal, used to calculate feedforward
      */
-    public static final double MAX_EXTENSION = 490;
+    public static final double MAX_EXTENSION = 495;
 
     /**
      * Max pitch in radians
@@ -64,8 +64,8 @@ public class PinkArm {
     public final PidfController pitchPid = new PidfController(pitchPidCoefficients);
 
     public static PidfController.PidfCoefficients extensionPidCoefficients =
-            new PidfController.PidfCoefficients(0.07, 0, 0.0009, 1, 0);
-    public static double extensionPidTolerance = 2;
+            new PidfController.PidfCoefficients(0.05, 0, 0.0009, 1, 0);
+    public static double extensionPidTolerance = 12;
     private final PidfController extensionPid = new PidfController(extensionPidCoefficients);
 
     // States
@@ -233,11 +233,7 @@ public class PinkArm {
      */
     public void update() {
         this.updatePitch();
-
-        // only move the extension once the pitch is done
-        if (pitchAtTargetPosition()) {
-            this.updateExtension();
-        }
+        this.updateExtension();
     }
 
     public double getPitchPosition() {
@@ -298,7 +294,7 @@ class Position {
         if(extension < 0) extension = 0;
         if(extension > MAX_EXTENSION) extension = MAX_EXTENSION;
 
-        if (Math.abs(pitch) < 5 && extension > PinkArm.HORIZONTAL_LIMIT) {
+        if (pitch < Math.toRadians(5) && extension > PinkArm.HORIZONTAL_LIMIT) {
             extension = PinkArm.HORIZONTAL_LIMIT;
         }
     }
