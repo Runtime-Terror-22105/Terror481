@@ -13,7 +13,6 @@ import org.firstinspires.ftc.teamcode.robot.drive.Drivetrain;
 import org.firstinspires.ftc.teamcode.robot.drive.localizer.OTOSLocalizer;
 import org.firstinspires.ftc.teamcode.robot.drive.mecanum.MecanumDrivetrain;
 import org.firstinspires.ftc.teamcode.robot.hardware.sensors.camera.TerrorCamera;
-import org.firstinspires.ftc.teamcode.robot.subsystems.InOutTake;
 import org.firstinspires.ftc.teamcode.robot.subsystems.PinkArm;
 
 /**
@@ -33,7 +32,7 @@ public class Robot {
     // Subsystems
     public Drivetrain drivetrain = null;
     public PinkArm pinkArm = null;
-    public InOutTake inOutTake = null;
+//    public InOutTake inOutTake = null;
 
     // Localizer
     public OTOSLocalizer localizer;
@@ -59,7 +58,7 @@ public class Robot {
 
         // Set up subsytems
         this.pinkArm = new PinkArm(hardware);
-        this.inOutTake = new InOutTake(hardware);
+//        this.inOutTake = new InOutTake(hardware);
 
         // Initialize the localizer
         this.localizer = new OTOSLocalizer(hardware.otos);
@@ -89,20 +88,24 @@ public class Robot {
      * @return Whether or not the state was changed. If it is already in that state, returns false.
      */
     public boolean setState(RobotState desiredState) {
-        if (robotState.equals(desiredState)) {
+        if (this.robotState.equals(desiredState)) {
             return false;
         }
-        robotState = desiredState;
+        this.robotState = desiredState;
 
-        switch (robotState) {
+        switch (this.robotState) {
             case RESTING:
                 goToRestingState();
+                break;
             case INTAKE:
                 goToIntakeState();
+                break;
             case BUCKET:
                 goToBucketState();
+                break;
             case SPECIMEN:
                 goToSpecimenState();
+                break;
         }
 
         pinkArm.update();
@@ -115,27 +118,27 @@ public class Robot {
         // move pink arm (pitch and extension 0)
         pinkArm.resetPitch();
         pinkArm.resetExtension();
-        inOutTake.moveUp();
+//        inOutTake.moveUp();
     }
 
     private void goToIntakeState() {
         // move pink arm (arm pitched down, slightly extended ~5-10 inches)
         pinkArm.resetPitch();
         pinkArm.setExtensionTarget(100);
-        inOutTake.moveDown();
+//        inOutTake.moveDown();
     }
 
     private void goToBucketState() {
         // move pink arm (arm pitched up ~90-95 deg, max extension ~40-50 in)
         pinkArm.setPitchTarget(Math.toRadians(85));
         pinkArm.setExtensionTarget(PinkArm.MAX_EXTENSION-100);
-        inOutTake.moveUp();
+//        inOutTake.moveUp();
     }
 
     private void goToSpecimenState() {
         // move pink arm (arm slightly pitched ~45 deg, partial extension ~5-10 in)
         pinkArm.setPitchTarget(Math.PI/4);
         pinkArm.setExtensionTarget(250);
-        inOutTake.moveUp();
+//        inOutTake.moveUp();
     }
 }

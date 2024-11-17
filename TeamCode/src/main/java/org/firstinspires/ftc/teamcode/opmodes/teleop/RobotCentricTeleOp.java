@@ -20,6 +20,9 @@ import org.firstinspires.ftc.teamcode.robot.init.RobotHardware;
 @TeleOp
 public class RobotCentricTeleOp extends LinearOpMode {
     public static final double DRIVESPEED = 1.0;
+    public static final double EXTENSION_MULTIPLIER = 1.0;
+    public static final double PITCH_MULTIPLIER = 0.005;
+
     private RobotHardware hardware = new RobotHardware();
     private final Robot robot = new Robot();
 
@@ -56,28 +59,32 @@ public class RobotCentricTeleOp extends LinearOpMode {
                     DRIVESPEED
             );
 
-            if (gamepad2.dpad_down) {
+            if (gamepad2.a) {
+                telemetry.addData("resting state", "");
                 robot.setState(RESTING);
-            } else if (gamepad2.dpad_left) {
+            } else if (gamepad2.x) {
+                telemetry.addData("specimen state", "");
                 robot.setState(SPECIMEN);
-            } else if (gamepad2.dpad_up) {
+            } else if (gamepad2.y) {
+                telemetry.addData("bucket state", "");
                 robot.setState(BUCKET);
-            } else if (gamepad2.dpad_right) {
+            } else if (gamepad2.b) {
+                telemetry.addData("intake state", "");
                 robot.setState(INTAKE);
             }
 
-            double extensionChange = -gamepad2.left_stick_y;
-            double pitchChange = -gamepad2.right_stick_y;
+            double extensionChange = -gamepad2.left_stick_y * EXTENSION_MULTIPLIER;
+            double pitchChange = -gamepad2.right_stick_y * PITCH_MULTIPLIER;
             robot.pinkArm.adjustExtension(extensionChange);
             robot.pinkArm.adjustPitch(pitchChange);
 
-            if (gamepad1.right_trigger > 0.2) {
-                robot.inOutTake.intake();
-            } else if (gamepad1.left_trigger > 0.2) {
-                robot.inOutTake.outtake();
-            } else {
-                robot.inOutTake.stop();
-            }
+//            if (gamepad1.right_trigger > 0.2) {
+//                robot.inOutTake.intake();
+//            } else if (gamepad1.left_trigger > 0.2) {
+//                robot.inOutTake.outtake();
+//            } else {
+//                robot.inOutTake.stop();
+//            }
 
 //            if ((gamepad2.left_bumper && gamepad2.right_bumper)
 //                    && !(lastGamepad2.left_bumper && lastGamepad2.right_bumper)) {
@@ -91,14 +98,22 @@ public class RobotCentricTeleOp extends LinearOpMode {
             robot.pinkArm.update();
             hardware.write();
 
-            robot.telemetry.addData("Heading Angle",headingLockAngle);
-            robot.telemetry.addData("Rotation power", rotation);
+            robot.telemetry.addData("Current Extension", robot.pinkArm.getExtensionPosition());
+            robot.telemetry.addData("Desired Extension", robot.pinkArm.getExtensionTarget());
+
+            robot.telemetry.addData("Current Pitch (degrees)", robot.pinkArm.getPitchPosition());
+            robot.telemetry.addData("Desired Pitch (degrees)", Math.toDegrees(robot.pinkArm.getPitchTarget()));
+
+            robot.telemetry.addData("Current state", robot.robotState.name());
+
+//            robot.telemetry.addData("Heading Angle", headingLockAngle);
+//            robot.telemetry.addData("Rotation power", rotation);
             robot.telemetry.addData("Loop time (ms)", loopTimer.milliseconds());
             robot.telemetry.addData("Loop time (hz)", 1000/loopTimer.milliseconds());
-
-            robot.telemetry.addData("x power", direction.x);
-            robot.telemetry.addData("y power", direction.y);
-            robot.telemetry.addData("h power", rotation);
+//
+//            robot.telemetry.addData("x power", direction.x);
+//            robot.telemetry.addData("y power", direction.y);
+//            robot.telemetry.addData("h power", rotation);
 
             robot.telemetry.update();
 

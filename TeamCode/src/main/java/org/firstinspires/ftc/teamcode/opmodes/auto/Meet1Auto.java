@@ -50,10 +50,10 @@ public class Meet1Auto extends LinearOpMode {
             hardware.write();
         }
 
-        robot.inOutTake.outtake();
-        while (opModeIsActive() && timer.milliseconds() < 1.5 * 1000) {
-            hardware.write();
-        }
+//        robot.inOutTake.outtake();
+//        while (opModeIsActive() && timer.milliseconds() < 1.5 * 1000) {
+//            hardware.write();
+//        }
 
         robot.setState(RobotState.RESTING);
         while (opModeIsActive() && !robot.pinkArm.atTargetPosition()) {

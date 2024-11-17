@@ -59,7 +59,7 @@ public class PinkArm {
     public static double extensionFF = 0;
 
     public static PidfController.PidfCoefficients pitchPidCoefficients =
-            new PidfController.PidfCoefficients(1.0, 0, 0.3, 1, 0);
+            new PidfController.PidfCoefficients(0.75, 0, 0, 1, 0);
     public static double pitchPidTolerance = Math.toRadians(1);
     public final PidfController pitchPid = new PidfController(pitchPidCoefficients);
 
@@ -92,7 +92,7 @@ public class PinkArm {
         this.armExtensionMotor1 = hardware.armExtensionMotor1;
         this.armExtensionMotor2 = hardware.armExtensionMotor2;
         this.armExtensionEncoder = hardware.armExtensionEncoder;
-        this.armPosition = getPosition();
+        this.armPosition = new Position(0, 0);
 
         this.pitchPid.setTolerance(pitchPidTolerance);
         this.extensionPid.setTolerance(extensionPidTolerance);
@@ -118,6 +118,14 @@ public class PinkArm {
     public void setExtensionPower(double power) {
         this.armExtensionMotor1.setPower(power);
         this.armExtensionMotor2.setPower(power);
+    }
+
+    public double getExtensionTarget() {
+        return this.armPosition.getExtension();
+    }
+
+    public double getPitchTarget() {
+        return this.armPosition.getPitch();
     }
 
     /**
@@ -245,8 +253,8 @@ class Position {
     private double pitch;
     private double extension;
 
-    private final static double maxPitch = PinkArm.MAX_PITCH;
-    private final static double maxExtension = PinkArm.MAX_EXTENSION;
+    private final static double MAX_PITCH = PinkArm.MAX_PITCH;
+    private final static double MAX_EXTENSION = PinkArm.MAX_EXTENSION;
 
     /**
      * The position of the arm
@@ -286,16 +294,16 @@ class Position {
         controlExtension();
     }
 
-    private void controlExtension(){
+    private void controlExtension() {
         if(extension < 0) extension = 0;
-        if(extension > maxExtension) extension = maxExtension;
+        if(extension > MAX_EXTENSION) extension = MAX_EXTENSION;
 
         if (Math.abs(pitch) < 5 && extension > PinkArm.HORIZONTAL_LIMIT) {
             extension = PinkArm.HORIZONTAL_LIMIT;
         }
     }
-    private void controlPitch(){
+    private void controlPitch() {
         if(pitch < 0) pitch = 0;
-        if(pitch > maxPitch) extension = maxPitch;
+        if(pitch > MAX_PITCH) pitch = MAX_PITCH;
     }
 }
