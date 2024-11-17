@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.auto;
+package org.firstinspires.ftc.teamcode.opmodes.testing;
 
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -63,4 +63,3 @@ public class ActionsTest extends LinearOpMode {
 
         follower.follow(this::opModeIsActive, robot.localizer::getPosition);
     }
-}
