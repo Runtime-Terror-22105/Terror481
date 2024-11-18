@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.robot.init.RobotHardware;
 @Config
 public class InOutTake {
     public static double SERVO_UP = 0.0;
-    public static double SERVO_MIDDLE = 0.525;
+    public static double SERVO_MIDDLE = 0.35;
     public static double SERVO_DOWN = 0.8;
 
     private final TerrorCRServo wheelServoLeft;
