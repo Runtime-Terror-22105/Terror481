@@ -232,6 +232,7 @@ public class PinkArm {
      * Run this function every loop iteration.
      */
     public void update() {
+        // TODO: Make a seperate function to only update extension target when pivot is like 80% done
         this.updatePitch();
         this.updateExtension();
     }
