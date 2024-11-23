@@ -51,9 +51,9 @@ public class TerrorMotor implements TerrorWritingDevice {
         this.powerThreshold = powerThreshold;
         this.motor = motor;
 //        setMotorEnable();
-        this.lastPower = motor.getPower();
+        this.lastPower = -100; // since it is outside of -1 to 1 range, it will force ignore cache
         this.motorPower = 0;
-        this.motorVel = motor.getVelocity();
+        this.motorVel = 0;
 //        this.motorEnabled = true;
         this.mode = this.motor.getMode();
     }
