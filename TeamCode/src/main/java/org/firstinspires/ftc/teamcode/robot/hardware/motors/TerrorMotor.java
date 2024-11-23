@@ -3,8 +3,10 @@ package org.firstinspires.ftc.teamcode.robot.hardware.motors;
 import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.robot.hardware.TerrorWritingDevice;
 
 import java.util.Arrays;
@@ -16,12 +18,12 @@ import java.util.Arrays;
  */
 public class TerrorMotor implements TerrorWritingDevice {
 //    private boolean motorEnabled;
-    private final DcMotor motor;
+    private final DcMotorEx motor;
     private final double powerThreshold;
 
     private double motorPower;
     private double lastPower;
-//    private double motorVel;
+    private double motorVel;
     private DcMotor.RunMode mode;
     private DcMotor.ZeroPowerBehavior zeroPowerBehavior;
     private final MotorCommand[] commands = new MotorCommand[4];
@@ -30,9 +32,9 @@ public class TerrorMotor implements TerrorWritingDevice {
      * Enum representing various motor commands that can be queued and executed.
      */
     private enum MotorCommand {
-//        SET_VEL,
+        SET_VEL,
         SET_POWER,
-//        SET_MOTOR_ENABLE,
+        SET_MOTOR_ENABLE,
         SET_ZERO_POWER_BEHAVIOR,
         SET_MODE,
         NONE
@@ -44,14 +46,14 @@ public class TerrorMotor implements TerrorWritingDevice {
      * @param motor          The underlying PhotonDcMotor that this class wraps around.
      * @param powerThreshold The threshold used to prevent unnecessary motor power updates.
      */
-    public TerrorMotor(@NonNull DcMotor motor, double powerThreshold) {
+    public TerrorMotor(@NonNull DcMotorEx motor, double powerThreshold) {
         this.resetCommands();
         this.powerThreshold = powerThreshold;
         this.motor = motor;
 //        setMotorEnable();
         this.lastPower = motor.getPower();
         this.motorPower = 0;
-//        this.motorVel = motor.getVelocity();
+        this.motorVel = motor.getVelocity();
 //        this.motorEnabled = true;
         this.mode = this.motor.getMode();
     }
@@ -100,18 +102,19 @@ public class TerrorMotor implements TerrorWritingDevice {
         }
     }
 
-//    /**
-//     * Sets the velocity of the motor in a given angular unit.
-//     *
-//     * @param angularRate The desired velocity.
-//     * @param unit        The unit of angular measurement (e.g., DEGREES, RADIANS).
-//     */
-//    synchronized public void setVelocity(double angularRate, @NonNull AngleUnit unit) {
-//        if (unit.equals(AngleUnit.DEGREES)) {
-//            angularRate = Math.toRadians(angularRate);
-//        }
-//        this.pushCommand(MotorCommand.SET_VEL);
-//    }
+    /**
+     * Sets the velocity of the motor in a given angular unit.
+     *
+     * @param angularRate The desired velocity.
+     * @param unit        The unit of angular measurement (e.g., DEGREES, RADIANS).
+     */
+    synchronized public void setVelocity(double angularRate, @NonNull AngleUnit unit) {
+        if (unit.equals(AngleUnit.DEGREES)) {
+            angularRate = Math.toRadians(angularRate);
+        }
+        this.motorVel = angularRate;
+        this.pushCommand(MotorCommand.SET_VEL);
+    }
 
     /**
      * Sets the power of the motor.
@@ -203,9 +206,9 @@ public class TerrorMotor implements TerrorWritingDevice {
                         this.motor.setPower(motorPower);
                     }
                     break;
-//                case SET_VEL:
-//                    this.motor.setVelocity(motorVel, AngleUnit.RADIANS);
-//                    break;
+                case SET_VEL:
+                    this.motor.setVelocity(motorVel, AngleUnit.RADIANS);
+                    break;
 //                case SET_MOTOR_ENABLE:
 //                    if (motorEnabled) {
 //                        this.motor.setMotorEnable();
