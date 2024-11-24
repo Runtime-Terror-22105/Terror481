@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.robot.hardware.TerrorWritingDevice;
 
 import java.util.Arrays;
@@ -162,24 +163,24 @@ public class TerrorMotor implements TerrorWritingDevice {
         return motor.getCurrentPosition();
     }
 
-//    /**
-//     * Retrieves the current draw of the motor in a given unit.
-//     *
-//     * @param unit The desired unit of current (e.g., AMPS).
-//     * @return The current draw of the motor.
-//     */
-//    public double getCurrent(CurrentUnit unit) {
-//        return motor.getCurrent(unit);
-//    }
-//
-//    /**
-//     * Retrieves the current velocity of the motor.
-//     *
-//     * @return The current velocity of the motor.
-//     */
-//    public double getVelocity() {
-//        return this.motor.getVelocity();
-//    }
+    /**
+     * Retrieves the current draw of the motor in a given unit.
+     *
+     * @param unit The desired unit of current (e.g., AMPS).
+     * @return The current draw of the motor.
+     */
+    public double getCurrent(CurrentUnit unit) {
+        return motor.getCurrent(unit);
+    }
+
+    /**
+     * Retrieves the current velocity of the motor.
+     *
+     * @return The current velocity of the motor.
+     */
+    public double getVelocity() {
+        return this.motor.getVelocity();
+    }
 
     /**
      * Retrieves the current run mode of the motor.

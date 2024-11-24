@@ -59,7 +59,7 @@ public class PinkArm {
     public static double extensionFF = 0;
 
     public static PidfController.PidfCoefficients pitchPidCoefficients =
-            new PidfController.PidfCoefficients(0.75, 0, 0, 1, 0);
+            new PidfController.PidfCoefficients(0, 0, 0, 1, 0);
     public static double pitchPidTolerance = Math.toRadians(1);
     public final PidfController pitchPid = new PidfController(pitchPidCoefficients);
 
@@ -100,6 +100,10 @@ public class PinkArm {
 
     public Position getPosition() {
         return new Position(getPitchPosition(), getExtensionPosition());
+    }
+
+    public double getPitchVelocity() {
+        return this.armPitchEncoder.getCurrentVelocity();
     }
 
     /**
@@ -166,6 +170,28 @@ public class PinkArm {
             // This is because there is a hardstop, so it doesn't require any power to keep it up
         }
         double pitchPower = pitchPid.calculatePower(currentPitch, calculatedFF, true);
+        this.armPitchMotor1.setPower(pitchPower);
+        this.armPitchMotor2.setPower(pitchPower);
+    }
+
+    /**
+     * Calculates powers for pitch and moves motors, but if you set the vel instead of pos
+     * Includes adaptive feedforward calculation based on angle & pitch
+     */
+    public void updatePitchVel(final double currentVel) {
+        double desiredPitchVel = this.armPosition.getPitch();
+        this.pitchPid.setTargetPosition(desiredPitchVel);
+
+        double slope = (value2 - value1) / MAX_EXTENSION;
+        double yIntercept = value1;
+        // Linear adjustment based on extension
+        double calculatedFF = slope * armExtensionEncoder.getCurrentPosition() + yIntercept;
+
+        // Angle Adjusting
+        double currentPitch = armPitchEncoder.getCurrentPosition();
+        calculatedFF *= Math.cos(currentPitch);
+
+        double pitchPower = pitchPid.calculatePower(currentVel, calculatedFF, true);
         this.armPitchMotor1.setPower(pitchPower);
         this.armPitchMotor2.setPower(pitchPower);
     }
