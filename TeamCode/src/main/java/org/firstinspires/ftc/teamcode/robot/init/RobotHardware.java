@@ -120,7 +120,8 @@ public class RobotHardware {
                  0.02
          );
          this.armPitchEncoder = new TerrorAnalogEncoder(hwMap.get(AnalogInput.class, "armPitchEncoder"), true);
-         this.armPitchEncoder.setOffset(2*Math.PI - Math.toRadians(36));
+//         this.armPitchEncoder.setOffset(2*Math.PI - Math.toRadians(36));
+        this.armPitchEncoder.setOffset(-5.6486);
          this.armExtensionMotor1 = new TerrorMotor(
                  (DcMotorEx) hwMap.get(DcMotor.class, "armExtensionMotor1"),
                  0.02

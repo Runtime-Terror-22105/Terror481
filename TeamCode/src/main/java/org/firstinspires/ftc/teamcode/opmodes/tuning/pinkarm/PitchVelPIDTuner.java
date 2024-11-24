@@ -54,8 +54,5 @@ public class PitchVelPIDTuner extends LinearOpMode {
             robot.telemetry.addData("Current Extension", robot.pinkArm.getExtensionPosition());
             robot.telemetry.update();
         }
-
-//        robot.shutdown();
     }
-
 }
