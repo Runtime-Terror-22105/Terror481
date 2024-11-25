@@ -39,18 +39,18 @@ public class PitchPIDTuner extends LinearOpMode {
             hardware.write();
 
             double currentPitchPos = robot.pinkArm.getPitchPosition();
-            double error = robot.pinkArm.pitchPid.calculateError(currentPitchPos);
+            double error = robot.pinkArm.pitchPid.calculateError(currentPitchPos, true);
             boolean reached = robot.pinkArm.pitchPid.atTargetPosition(currentPitchPos);
+            double power = hardware.armPitchMotor1.getSetPower();
 
             robot.telemetry.addData("Pitch error", error);
             robot.telemetry.addData("Pitch at target position", reached);
+            robot.telemetry.addData("Motor power", power);
             robot.telemetry.addData("Current Pitch", currentPitchPos);
             robot.telemetry.addData("Desired Pitch", pitchTarget);
             robot.telemetry.addData("Current Extension", robot.pinkArm.getExtensionPosition());
             robot.telemetry.update();
         }
-
-//        robot.shutdown();
     }
 
 }

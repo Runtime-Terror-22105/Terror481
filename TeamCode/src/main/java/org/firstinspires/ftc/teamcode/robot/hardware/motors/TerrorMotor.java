@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+import org.firstinspires.ftc.teamcode.math.Pose2d;
 import org.firstinspires.ftc.teamcode.robot.hardware.TerrorWritingDevice;
 
 import java.util.Arrays;
@@ -28,6 +29,10 @@ public class TerrorMotor implements TerrorWritingDevice {
     private DcMotor.RunMode mode;
     private DcMotor.ZeroPowerBehavior zeroPowerBehavior;
     private final MotorCommand[] commands = new MotorCommand[4];
+
+    public double getSetPower() {
+        return motorPower;
+    }
 
     /**
      * Enum representing various motor commands that can be queued and executed.

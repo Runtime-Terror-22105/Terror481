@@ -45,10 +45,7 @@ public class PidfController {
     public double calculatePower(double currentPosition, double feedforwardReference, boolean angleWrapError) {
         this.currentPosition = currentPosition;
 
-        double error = calculateError(currentPosition);
-        if (angleWrapError) {
-            error = Angle.angleWrap(error);
-        }
+        double error = calculateError(currentPosition, angleWrapError);
 
         double timestamp = (double) System.nanoTime() / 1E9;
         if (lastTimeStamp == 0) lastTimeStamp = timestamp;
@@ -111,7 +108,15 @@ public class PidfController {
     }
 
     public double calculateError(double encoderPosition) {
-        return this.targetPosition - encoderPosition;
+        return this.calculateError(encoderPosition, false);
+    }
+
+    public double calculateError(double encoderPosition, boolean angleWrapError) {
+        double error = this.targetPosition - encoderPosition;
+        if (angleWrapError) {
+            error = Angle.angleWrap(error);
+        }
+        return error;
     }
 
     public boolean atTargetPosition() {
