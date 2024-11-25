@@ -28,7 +28,6 @@ public class ActionsTest extends LinearOpMode {
         P2PFollower follower = new P2PFollower.Builder(robot)
                 .executeActionOnce("Telemetry adding", (Task.Context ctx) -> {
                     robot.telemetry.addData("typeskib", "omg");
-                    robot.telemetry.update();
                 }, 100)
                 // point, tolerance xyh
                 .addPoint(
@@ -41,9 +40,15 @@ public class ActionsTest extends LinearOpMode {
                 .executeUntilTrue(
                         "Get current time until x <= 2",
                         (Task.Context ctx) -> ctx.getCurrentPos().x <= 2,
+                        (Task.Context ctx) -> robot.telemetry.addData("Current time", System.currentTimeMillis()),
+                        10000
+                )
+                .executeUntilTrue(
+                        "Pitch the arm a bit",
+                        (Task.Context ctx) -> robot.pinkArm.atTargetPosition(),
                         (Task.Context ctx) -> {
-                            robot.telemetry.addData("Current time", System.currentTimeMillis());
-                            robot.telemetry.update();
+                            robot.pinkArm.setPitchTarget(Math.toRadians(80));
+                            robot.pinkArm.update();
                         },
                         10000
                 )

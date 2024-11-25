@@ -26,7 +26,7 @@ public class Robot {
     // otos dash vals
     public static double OTOS_LINEAR_SCALAR = 0.97109534594539532179523016733031;
     public static double OTOS_ANGULAR_SCALAR = 1.0066;
-    public static Pose2d OTOS_OFFSET = new Pose2d(0, 3.55, 0);
+    public static Pose2d OTOS_OFFSET = new Pose2d(0, -3.55, 0);
     public static Pose2d ROBOT_INITIAL_POS = new Pose2d(0, 0, 0);
 
     // States

@@ -37,13 +37,13 @@ public class MecanumDrivetrain implements Drivetrain {
     /**
      * Move the robot by some amount
      * @param velocity Movement on x and y
-     * @param rotation Counterclockwise rotation (NOTE: gm0 mecanum is clockwise, this is diff)
+     * @param rotation Clockwise rotation
      */
     @Override
     public void move(@NonNull Coordinate velocity, double rotation) {
-        this.motorFrontLeft.setPower(velocity.y + velocity.x - rotation);
-        this.motorRearLeft.setPower(velocity.y - velocity.x - rotation);
-        this.motorFrontRight.setPower(velocity.y - velocity.x + rotation);
-        this.motorRearRight.setPower(velocity.y + velocity.x + rotation);
+        this.motorFrontLeft.setPower(velocity.y + velocity.x + rotation);
+        this.motorRearLeft.setPower(velocity.y - velocity.x + rotation);
+        this.motorFrontRight.setPower(velocity.y - velocity.x - rotation);
+        this.motorRearRight.setPower(velocity.y + velocity.x - rotation);
     }
 }
