@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.math;
 
 import java.util.HashMap;
-
+// SWITCH CASES ARE FOR LAZY PPL AND LOSERS(jk pls dont hurt me)
 /// eat daves hot chicken guys
 public class Scurve {
     public double T;
@@ -14,7 +14,7 @@ public class Scurve {
 
     public double vh;
 
-    public double line_length=1.0;
+    public double line_length=0.0;
 
 
     // equations
@@ -47,6 +47,8 @@ public class Scurve {
 
     public void CalculateParameters(double v0, double deltaPosition){
         double max_withoutline_area=2; // remember to update this according to system changes
+
+
         if(deltaPosition-(max_withoutline_area)>0){ // has the line segment
             double T=2*this.as/this.jm;
             upcurve up=new upcurve();
@@ -57,6 +59,7 @@ public class Scurve {
         }
         else{ // no line segment
             solveAccel(deltaPosition);
+            System.out.println(deltaPosition);
             double T=2*this.as/this.jm;
             upcurve up=new upcurve();
             upcurve.concave upc = up.new concave();
@@ -64,7 +67,32 @@ public class Scurve {
             this.vs=upv.getVelocity(T);
             this.line_length=0;
         }
+    }
 
+    public double getTime(double Position){ // from position getting time
+        // all the positions at the end of each segment interval(bounds basically)
+        double a=0;
+        double b=getPosition(T/2);
+        double c=getPosition(T);
+        double d=getPosition(T+line_length);
+        double e=getPosition(1.5*T+line_length);
+        double f=getPosition(2*T+line_length);
+        if(a<=Position && Position<=b){
+            return this.upcave.getTime(Position);
+        }
+        else if(b<=Position && Position<=c){
+            return this.upvex.getTime(Position);
+        }
+        else if(c<=Position && Position<=d){ // line segment
+            return this.line.getTime(Position);
+        }
+        else if(d<=Position && Position<=e){
+            return this.downvex.getPosition(Position);
+        }
+        else if(e<=Position && Position<=f){
+            return this.downcave.getPosition(Position);
+        }
+        return 0.0;
     }
 
     public HashMap<String,Double> getParameters(){
@@ -114,13 +142,6 @@ public class Scurve {
 
         }
         else if(T*1.5+line_length<=t && t<=2*T+line_length){
-            System.out.println("here");
-            System.out.println(upcave.getPosition(T/2));
-            System.out.println((upvex.getPosition(T)- upvex.getPosition(T/2)));
-            System.out.println((line.getPosition(T+line_length)));
-            System.out.println((downvex.getPosition(T*1.5+line_length)- downvex.getPosition(T+line_length)));
-            System.out.println((downcave.getPosition(t)- downcave.getPosition(T*1.5+line_length)));
-            System.out.println("done");
             return upcave.getPosition(T/2)+(upvex.getPosition(T)- upvex.getPosition(T/2))+(line.getPosition(T+line_length))+(downvex.getPosition(T*1.5+line_length)- downvex.getPosition(T+line_length))+(downcave.getPosition(t)- downcave.getPosition(T*1.5+line_length));
         }
         return 0.0; //what weird times are you plugging in even lol
@@ -128,14 +149,13 @@ public class Scurve {
 
     public double solveAccel(double Position){
 
-        double a=(1/(Math.pow(jm,2)));
-        double b=1/(2*jm);
+        double a=+(6.5/(3*Math.pow(jm,2)))-(7/(6*jm));
+        double b=0;
         double c=2*v0/(jm);
         double d=-Position/2;
         System.out.println(a+" "+b+" "+c+" "+d);
         cubicformula cform= new cubicformula();
         this.as=cform.solveCubic(a,b,c,d);
-        System.out.println(as+" as");
         return as;
     }
 
@@ -147,9 +167,11 @@ public class Scurve {
     class upcurve
     {
         class concave{
+            public cubicformula solveTime1;
             concave(){
                 vh=getVelocity(T/2);
                 vs=(2*vh-v0);
+
             }
             public double getVelocity(double t){// v(t)=v0+jm*t^2/2
                 return v0+((jm)*Math.pow(t,2))/2;
@@ -157,6 +179,12 @@ public class Scurve {
             public double getPosition(double t){
                 return v0*t+(1.0/3.0)*(((jm)*Math.pow(t,3))/2.0);
             }
+
+            public double getTime(double position){
+                cubicformula solveTime1= new cubicformula();;
+                return solveTime1.solveCubic(jm/6,0,v0,-position);
+            }
+
         }
 
         class convex{
@@ -169,6 +197,10 @@ public class Scurve {
                 double t_shift=t-T/2;
 //                double vh=(v0+vs)/2;
                 return vh*t_shift+(1.0/2.0)*as*(Math.pow(t_shift,2))-((1.0/6.0)*(jm*Math.pow(t_shift,3)));
+            }
+            public double getTime(double position){
+                cubicformula solveTime2= new cubicformula();;
+                return solveTime2.solveCubic(-jm/6,as/2,vh,-position)+T/2;
             }
         }
     }
@@ -186,6 +218,10 @@ public class Scurve {
                 double t_shift=t-T-line_length;
                 return vs*t_shift-(as/T)*(1.0/3.0)*Math.pow(t_shift,3);
             }
+            public double getTime(double position){
+                cubicformula solveTime3= new cubicformula();;
+                return solveTime3.solveCubic(-as/(3*T),0,vs,-position)+T+line_length;
+            }
         }
         class concave{
             public double getVelocity(double t){ // v(t)=vh-as*(t-1.5*T-line_length)+(as/T)*Math.pow(t-1.5*T-line_length,2)
@@ -198,6 +234,10 @@ public class Scurve {
                 double t_shift=(t-1.5*T-line_length);
                 return vh*t_shift-0.5*as*Math.pow(t_shift,2)+(as/T)*(1.0/3.0)*Math.pow(t_shift,3);
             }
+            public double getTime(double position){
+                cubicformula solveTime4= new cubicformula();;
+                return solveTime4.solveCubic(as/(3*T),-0/5*as,vh,-position)+1.5*T+line_length;
+            }
         }
     }
 
@@ -205,6 +245,10 @@ public class Scurve {
         public double getVelocity(){return vs;}
         public double getPosition(double t){
             return vs*(t-T);
+        }
+
+        public double getTime(double position){
+            return T+position/vs;
         }
     }
 
