@@ -70,9 +70,9 @@ public class RobotCentricTeleOp extends LinearOpMode {
             }
 
             if (gamepad2.dpad_down && !lastGamepad2.dpad_down) {
-                robot.inOutTake.adjustPitch(0.05);
+                robot.inOutTake.adjustPitch(0.03);
             } else if (gamepad2.dpad_up && !lastGamepad2.dpad_up) {
-                robot.inOutTake.adjustPitch(-0.05);
+                robot.inOutTake.adjustPitch(-0.03);
             }
 
             if (gamepad2.a) {

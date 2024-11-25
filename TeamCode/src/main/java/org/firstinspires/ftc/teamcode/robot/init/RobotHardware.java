@@ -11,6 +11,7 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -80,19 +81,19 @@ public class RobotHardware {
 
         // Initialize the drivetrain motors
         this.motorFrontLeft = new TerrorMotor(
-                hwMap.get(DcMotor.class, "motorFrontLeft"),
+                (DcMotorEx) hwMap.get(DcMotor.class, "motorFrontLeft"),
                 0.05
         );
         this.motorFrontRight = new TerrorMotor(
-                hwMap.get(DcMotor.class, "motorFrontRight"),
+                (DcMotorEx) hwMap.get(DcMotor.class, "motorFrontRight"),
                 0.05
         );
         this.motorRearRight = new TerrorMotor(
-                hwMap.get(DcMotor.class, "motorRearRight"),
+                (DcMotorEx) hwMap.get(DcMotor.class, "motorRearRight"),
                 0.05
         );
         this.motorRearLeft = new TerrorMotor(
-                hwMap.get(DcMotor.class, "motorRearLeft"),
+                (DcMotorEx) hwMap.get(DcMotor.class, "motorRearLeft"),
                 0.05
         );
         this.motorFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -110,22 +111,23 @@ public class RobotHardware {
 
          // Initialize the pink arm motors and sensors
          this.armPitchMotor1 = new TerrorMotor(
-                 hwMap.get(DcMotor.class, "armPitchMotor1"),
+                 (DcMotorEx) hwMap.get(DcMotor.class, "armPitchMotor1"),
                  0.02
          );
          this.armPitchMotor1.setDirection(REVERSE);
          this.armPitchMotor2 = new TerrorMotor(
-                 hwMap.get(DcMotor.class, "armPitchMotor2"),
+                 (DcMotorEx) hwMap.get(DcMotor.class, "armPitchMotor2"),
                  0.02
          );
          this.armPitchEncoder = new TerrorAnalogEncoder(hwMap.get(AnalogInput.class, "armPitchEncoder"), true);
-         this.armPitchEncoder.setOffset(2*Math.PI - Math.toRadians(36));
+//         this.armPitchEncoder.setOffset(2*Math.PI - Math.toRadians(36));
+        this.armPitchEncoder.setOffset(-5.6486);
          this.armExtensionMotor1 = new TerrorMotor(
-                 hwMap.get(DcMotor.class, "armExtensionMotor1"),
+                 (DcMotorEx) hwMap.get(DcMotor.class, "armExtensionMotor1"),
                  0.02
          );
          this.armExtensionMotor2 = new TerrorMotor(
-                 hwMap.get(DcMotor.class, "armExtensionMotor2"),
+                 (DcMotorEx) hwMap.get(DcMotor.class, "armExtensionMotor2"),
                  0.02
          );
          armExtensionMotor2.setDirection(REVERSE);

@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.robot.init.RobotHardware;
 import org.firstinspires.ftc.teamcode.robot.init.RobotState;
 
 @Autonomous
-public class Meet1Auto extends LinearOpMode {
+public class BasketAuto extends LinearOpMode {
     private RobotHardware hardware = new RobotHardware();
     private final Robot robot = new Robot();
 
@@ -39,7 +39,7 @@ public class Meet1Auto extends LinearOpMode {
 //        }
 
         ElapsedTime timer = new ElapsedTime();
-        while (opModeIsActive() && timer.milliseconds() < 1.5 * 1000) {
+        while (opModeIsActive() && timer.milliseconds() < 0.5 * 1000) {
             robot.drivetrain.move(new Coordinate(0, -0.4), 0);
             hardware.write();
         }
@@ -49,6 +49,8 @@ public class Meet1Auto extends LinearOpMode {
             robot.pinkArm.update();
             hardware.write();
         }
+
+        timer.reset();
 
         robot.inOutTake.outtake();
         while (opModeIsActive() && timer.milliseconds() < 1.5 * 1000) {
