@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode.opmodes.testing;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.math.Pose2d;
 import org.firstinspires.ftc.teamcode.robot.auto.followers.P2PFollower;
@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.robot.init.Robot;
 import org.firstinspires.ftc.teamcode.robot.init.RobotHardware;
 
 @Config
-@TeleOp(group = "testing")
+@Autonomous(group = "testing")
 public class ActionsTest extends LinearOpMode {
     private RobotHardware hardware = new RobotHardware();
     private final Robot robot = new Robot();
@@ -22,8 +22,6 @@ public class ActionsTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         hardware.init(hardwareMap, LynxModule.BulkCachingMode.AUTO);
         robot.init(this, hardware, telemetry);
-
-        waitForStart();
 
         P2PFollower follower = new P2PFollower.Builder(robot)
                 .executeActionOnce("Telemetry adding", (Task.Context ctx) -> {
@@ -49,6 +47,7 @@ public class ActionsTest extends LinearOpMode {
                         (Task.Context ctx) -> {
                             robot.pinkArm.setPitchTarget(Math.toRadians(80));
                             robot.pinkArm.update();
+                            telemetry.addData("pitch power", hardware.armPitchMotor1.getSetPower());
                         },
                         10000
                 )
@@ -60,6 +59,11 @@ public class ActionsTest extends LinearOpMode {
                         5000
                 )
                 .build();
+
+//        follower.printTasks(robot.telemetry);
+//        sleep(10000);
+
+        waitForStart();
 
         follower.follow(this::opModeIsActive, robot.localizer::getPosition);
     }

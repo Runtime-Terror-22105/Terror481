@@ -63,13 +63,13 @@ public class PidToPoint {
     }
 
     public boolean driveToDestination(@NonNull Drivetrain drivetrain, @NonNull Pose2d powers, @NonNull Pose2d currentPos) {
-        drivetrain.move(powers);
         if (this.atTargetPosition(currentPos)) {
             if (this.lastReachedTime == 0) {
                 // we just reached our target
                 this.lastReachedTime = System.currentTimeMillis();
             } else if (System.currentTimeMillis() - this.lastReachedTime >= this.reachedTime) {
                 // we've spent the required amount of time at the destination
+                drivetrain.move(new Pose2d(0, 0, 0));
                 return true;
             }
         } else {
@@ -77,6 +77,7 @@ public class PidToPoint {
             this.lastReachedTime = 0;
         }
 
+        drivetrain.move(powers);
         return false;
     }
 

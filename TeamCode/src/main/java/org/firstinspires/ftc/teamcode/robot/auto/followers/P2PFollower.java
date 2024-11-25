@@ -11,7 +11,8 @@ import org.firstinspires.ftc.teamcode.robot.init.Robot;
 import org.firstinspires.ftc.teamcode.robot.init.RobotHardware;
 
 import java.util.ArrayList;
-import java.util.Stack;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -20,7 +21,7 @@ import java.util.function.Supplier;
 public class P2PFollower {
     public static class Builder {
         private final Drivetrain drivetrain;
-        private final Stack<Task> tasks = new Stack<>();
+        private final Queue<Task> tasks = new LinkedList<>();
         private final RobotHardware hardware;
         private final MultipleTelemetry telemetry;
 
@@ -145,25 +146,39 @@ public class P2PFollower {
         }
     }
 
-    private final Stack<Task> pendingTasks;
+    private final Queue<Task> pendingTasks;
     private final ArrayList<Task> runningTasks = new ArrayList<>();
     private final RobotHardware hardware;
     private final MultipleTelemetry telemetry;
 
-    private P2PFollower(Stack<Task> tasks, RobotHardware hardware, MultipleTelemetry telemetry) {
+    private P2PFollower(Queue<Task> tasks, RobotHardware hardware, MultipleTelemetry telemetry) {
         this.pendingTasks = tasks;
         this.hardware = hardware;
         this.telemetry = telemetry;
     }
 
+    public void printTasks(MultipleTelemetry telemetry) {
+        for (Task task : pendingTasks) {
+            telemetry.addData("task", task.getName());
+        }
+        telemetry.update();
+    }
+
     public void follow(BooleanSupplier opModeIsActive, Supplier<Pose2d> currentPos) {
         boolean canContinue = true;
 
-        while (!(pendingTasks.isEmpty() || runningTasks.isEmpty()) && opModeIsActive.getAsBoolean()) {
+        while (!(pendingTasks.isEmpty() && runningTasks.isEmpty()) && opModeIsActive.getAsBoolean()) {
             // clear bulk cache (assume manual is being used)
             for (LynxModule hub : hardware.allHubs) {
                 hub.clearBulkCache();
             }
+            telemetry.clearAll();
+
+//            telemetry.addData("Pending tasks", pendingTasks.size());
+//            telemetry.addData("Running tasks", runningTasks.size());
+//            for (Task task : runningTasks) {
+//                telemetry.addData("Running task", task.getName());
+//            }
 
             for (int i = runningTasks.size()-1; i >= 0; i--) {
                 Task task = runningTasks.get(i);
@@ -184,7 +199,7 @@ public class P2PFollower {
 
             Task newTask;
             while (canContinue && !pendingTasks.isEmpty()) {
-                newTask = pendingTasks.pop();
+                newTask = pendingTasks.remove();
                 newTask.getContext().startTimer();
                 runningTasks.add(newTask);
 
