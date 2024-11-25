@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.math.Coordinate;
 import org.firstinspires.ftc.teamcode.math.Pose2d;
 import org.firstinspires.ftc.teamcode.robot.init.Robot;
 import org.firstinspires.ftc.teamcode.robot.init.RobotHardware;
@@ -20,38 +19,31 @@ public class LocalizerTest extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        hardware.init(hardwareMap, LynxModule.BulkCachingMode.MANUAL);
+        hardware.init(hardwareMap, LynxModule.BulkCachingMode.OFF);
         robot.init(this, hardware, telemetry);
 
         waitForStart();
 
         ElapsedTime loopTimer = new ElapsedTime();
         while (opModeIsActive()) {
-            // Manually clear the bulk read cache. Deleting this would be catastrophic b/c stale
-            // vals would be used.
-            for (LynxModule hub : hardware.allHubs) {
-                hub.clearBulkCache();
-            }
-
-            // region Driving
-            Coordinate direction = new Coordinate(slr(-gamepad1.left_stick_x), slr(gamepad1.left_stick_y));
-
-            double rotation;
-            rotation = Math.pow(slr(-gamepad1.right_stick_x), 11);
-
-            robot.drivetrain.move(
-                    direction,
-                    rotation,
-                    DRIVESPEED
-            );
-
-            // endregion driving
-            hardware.write();
+//            Coordinate direction = new Coordinate(slr(-gamepad1.left_stick_x), slr(gamepad1.left_stick_y));
+//
+//            double rotation;
+//            rotation = Math.pow(slr(-gamepad1.right_stick_x), 11);
+//
+//            robot.drivetrain.move(
+//                    direction,
+//                    rotation,
+//                    DRIVESPEED
+//            );
+//            hardware.write();
 
             Pose2d curPos = robot.localizer.getPosition();
             robot.telemetry.addData("Current x", curPos.x);
             robot.telemetry.addData("Current y", curPos.y);
             robot.telemetry.addData("Current h", curPos.heading);
+            robot.telemetry.addData("Linear scalar", robot.localizer.getLinearScalar());
+            robot.telemetry.addData("Angular scalar", robot.localizer.getAngularScalar());
             robot.telemetry.addData("Loop time (ms)", loopTimer.milliseconds());
             robot.telemetry.addData("Loop time (hz)", 1000/loopTimer.milliseconds());
             robot.telemetry.update();

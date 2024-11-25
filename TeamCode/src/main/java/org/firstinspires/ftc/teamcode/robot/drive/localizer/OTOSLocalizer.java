@@ -37,23 +37,21 @@ public class OTOSLocalizer {
     }
 
     private SparkFunOTOS otos;
-    private Parameters parameters;
 
     public OTOSLocalizer(SparkFunOTOS otos) {
         this.otos = otos;
     }
 
-    public void initializeOtos(@NonNull Parameters parameters) {
-        this.parameters = parameters;
+    public void initializeOtos(@NonNull Parameters parameters) throws RuntimeException {
         otos.setLinearUnit(DistanceUnit.INCH);
         otos.setAngularUnit(AngleUnit.RADIANS);
 
         otos.setOffset(parameters.offset);
 
         // scalars must be between 0.872 and 1.127
-//        if (!(otos.setLinearScalar(parameters.linearScalar))) {
-//            throw new RuntimeException("OTOS linear scalar fails");
-//        }
+        if (!(otos.setLinearScalar(parameters.linearScalar))) {
+            throw new RuntimeException("OTOS linear scalar fails");
+        }
         if (!otos.setAngularScalar(parameters.angularScalar)) {
             throw new RuntimeException("OTOS angular scalar fails");
         }
@@ -64,10 +62,18 @@ public class OTOSLocalizer {
             throw new RuntimeException("OTOS calibration fails");
         }
 
-        otos.resetTracking(); // resets pos to origin
+//        otos.resetTracking(); // resets pos to origin
 
         // if we want the initial pos to be set to something else
         otos.setPosition(parameters.initialPos);
+    }
+
+    public double getLinearScalar() {
+        return this.otos.getLinearScalar();
+    }
+
+    public double getAngularScalar() {
+        return this.otos.getAngularScalar();
     }
 
     public boolean calibrateImu(int numSamples, boolean waitUntilDone) {
@@ -78,42 +84,38 @@ public class OTOSLocalizer {
         otos.resetTracking();
     }
 
-//    public boolean setLinearScalar(double scalar) {
-//        return otos.setLinearScalar(scalar);
-//    }
-//
-//    public boolean setAngularScalar(double scalar) {
-//        return otos.setAngularScalar(scalar);
-//    }
-//
-//    public Pose2d getAcceleration() {
-//        return new Pose2d(otos.getAcceleration());
-//    }
-//
-//    public Pose2d getVelocity() {
-//        return new Pose2d(otos.getVelocity());
-//    }
+    public boolean setLinearScalar(double scalar) {
+        return otos.setLinearScalar(scalar);
+    }
+
+    public boolean setAngularScalar(double scalar) {
+        return otos.setAngularScalar(scalar);
+    }
+
+    public Pose2d getAcceleration() {
+        return new Pose2d(otos.getAcceleration());
+    }
+
+    public Pose2d getVelocity() {
+        return new Pose2d(otos.getVelocity());
+    }
 
     public Pose2d getPosition() {
         Pose2d pos = new Pose2d(otos.getPosition());
-        pos.x *= parameters.linearScalar;
-        pos.y *= parameters.linearScalar;
+        pos.x *= -1;
+        pos.y *= -1;
         return pos;
     }
-//
-//    public Pose2d getPosition() {
-//        return new Pose2d(otos.getPosition());
-//    }
 
-//    public Pose2d getPositionStdDev() {
-//        return new Pose2d(otos.getPositionStdDev());
-//    }
-//
-//    public Pose2d getVelocityStdDev() {
-//        return new Pose2d(otos.getVelocityStdDev());
-//    }
-//
-//    public Pose2d getAccelerationStdDev() {
-//        return new Pose2d(otos.getAccelerationStdDev());
-//    }
+    public Pose2d getPositionStdDev() {
+        return new Pose2d(otos.getPositionStdDev());
+    }
+
+    public Pose2d getVelocityStdDev() {
+        return new Pose2d(otos.getVelocityStdDev());
+    }
+
+    public Pose2d getAccelerationStdDev() {
+        return new Pose2d(otos.getAccelerationStdDev());
+    }
 }

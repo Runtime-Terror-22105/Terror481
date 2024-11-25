@@ -24,7 +24,7 @@ import java.util.function.Consumer;
 @Config
 public class Robot {
     // otos dash vals
-    public static double OTOS_LINEAR_SCALAR = 1.1371628089414737246168002475814;
+    public static double OTOS_LINEAR_SCALAR = 0.97109534594539532179523016733031;
     public static double OTOS_ANGULAR_SCALAR = 1.0066;
     public static Pose2d OTOS_OFFSET = new Pose2d(0, 3.55, 0);
     public static Pose2d ROBOT_INITIAL_POS = new Pose2d(0, 0, 0);
@@ -68,7 +68,7 @@ public class Robot {
         localizer.initializeOtos(new OTOSLocalizer.Parameters(
                 OTOS_OFFSET,
                 ROBOT_INITIAL_POS,
-                OTOS_LINEAR_SCALAR,
+                1/OTOS_LINEAR_SCALAR,
                 OTOS_ANGULAR_SCALAR
         ));
 

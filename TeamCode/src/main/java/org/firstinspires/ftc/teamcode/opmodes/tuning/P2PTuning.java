@@ -33,13 +33,11 @@ public class P2PTuning extends LinearOpMode {
 //        robot.telemetry.addData("time has come", "to tune!");
 
         while (opModeIsActive()) {
-            Pose2d curPos = robot.localizer.getPosition();
             p2p.setGoal(goal, tolerances, reachedTime);
+            Pose2d curPos = robot.localizer.getPosition();
             Pose2d powers = p2p.calculatePower(curPos);
             boolean reached = p2p.driveToDestination(robot.drivetrain, powers, curPos);
             Pose2d curErr = p2p.getError();
-
-            hardware.write();
 
             robot.telemetry.addData("Has the robot reached the destination?", reached);
 
@@ -62,7 +60,12 @@ public class P2PTuning extends LinearOpMode {
             robot.telemetry.addData("x raw pid power", p2p.xTemp);
             robot.telemetry.addData("y raw pid power", p2p.yTemp);
 
+            robot.telemetry.addData("Linear Scalar", robot.localizer.getLinearScalar());
+            robot.telemetry.addData("Angular Scalar", robot.localizer.getAngularScalar());
+
             robot.telemetry.update();
+
+            hardware.write();
         }
     }
 }

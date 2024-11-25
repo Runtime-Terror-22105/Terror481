@@ -63,14 +63,6 @@ public class PidToPoint {
     }
 
     public boolean driveToDestination(@NonNull Drivetrain drivetrain, @NonNull Pose2d powers, @NonNull Pose2d currentPos) {
-//        if (xController.atTargetPosition(currentPos.x)) {
-//            powers.x = 0;
-//        } else if (yController.atTargetPosition(currentPos.y)) {
-//            powers.y = 0;
-//        } else if (hController.atTargetPosition(currentPos.heading)) {
-//            powers.heading = 0;
-//        }
-
         drivetrain.move(powers);
         if (this.atTargetPosition(currentPos)) {
             if (this.lastReachedTime == 0) {

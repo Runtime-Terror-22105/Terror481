@@ -2,10 +2,11 @@
 //
 //import static org.firstinspires.ftc.teamcode.math.Coordinate.ORIGIN;
 //
+//import androidx.annotation.NonNull;
+//
 //import com.acmerobotics.dashboard.FtcDashboard;
 //import com.acmerobotics.dashboard.config.Config;
 //import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-//import com.outoftheboxrobotics.photoncore.Photon;
 //import com.qualcomm.hardware.lynx.LynxModule;
 //import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 //import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -17,7 +18,6 @@
 //import org.firstinspires.ftc.teamcode.robot.init.RobotHardware;
 //
 //@Config
-//@Photon
 //@TeleOp(name = "OTOS tuner", group = "Tuning")
 //public class TuneOTOS extends LinearOpMode {
 //    private final RobotHardware hardware = new RobotHardware();
@@ -105,7 +105,7 @@
 //
 //    }
 //
-//    public double avg(double[] arr) {
+//    public double avg(@NonNull double[] arr) {
 //        double s = 0;
 //        for (double n : arr) {
 //            s += n;
