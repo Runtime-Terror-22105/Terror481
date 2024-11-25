@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.math;
 
 import java.util.HashMap;
-
+// SWITCH CASES ARE FOR LAZY PPL AND LOSERS(jk pls dont hurt me)
 /// eat daves hot chicken guys
 public class Scurve {
     public double T;
@@ -14,7 +14,7 @@ public class Scurve {
 
     public double vh;
 
-    public double line_length=1.0;
+    public double line_length=0.0;
 
 
     // equations
@@ -67,6 +67,32 @@ public class Scurve {
             this.vs=upv.getVelocity(T);
             this.line_length=0;
         }
+    }
+
+    public double getTime(double Position){ // from position getting time
+        // all the positions at the end of each segment interval(bounds basically)
+        double a=0;
+        double b=getPosition(T/2);
+        double c=getPosition(T);
+        double d=getPosition(T+line_length);
+        double e=getPosition(1.5*T+line_length);
+        double f=getPosition(2*T+line_length);
+        if(a<=Position && Position<=b){
+            return this.upcave.getTime(Position);
+        }
+        else if(b<=Position && Position<=c){
+            return this.upvex.getTime(Position);
+        }
+        else if(c<=Position && Position<=d){ // line segment
+            return this.line.getTime(Position);
+        }
+        else if(d<=Position && Position<=e){
+            return this.downvex.getPosition(Position);
+        }
+        else if(e<=Position && Position<=f){
+            return this.downcave.getPosition(Position);
+        }
+        return 0.0;
     }
 
     public HashMap<String,Double> getParameters(){
@@ -127,7 +153,6 @@ public class Scurve {
         double b=0;
         double c=2*v0/(jm);
         double d=-Position/2;
-
         System.out.println(a+" "+b+" "+c+" "+d);
         cubicformula cform= new cubicformula();
         this.as=cform.solveCubic(a,b,c,d);
@@ -142,9 +167,11 @@ public class Scurve {
     class upcurve
     {
         class concave{
+            public cubicformula solveTime1;
             concave(){
                 vh=getVelocity(T/2);
                 vs=(2*vh-v0);
+
             }
             public double getVelocity(double t){// v(t)=v0+jm*t^2/2
                 return v0+((jm)*Math.pow(t,2))/2;
@@ -152,6 +179,12 @@ public class Scurve {
             public double getPosition(double t){
                 return v0*t+(1.0/3.0)*(((jm)*Math.pow(t,3))/2.0);
             }
+
+            public double getTime(double position){
+                cubicformula solveTime1= new cubicformula();;
+                return solveTime1.solveCubic(jm/6,0,v0,-position);
+            }
+
         }
 
         class convex{
@@ -164,6 +197,10 @@ public class Scurve {
                 double t_shift=t-T/2;
 //                double vh=(v0+vs)/2;
                 return vh*t_shift+(1.0/2.0)*as*(Math.pow(t_shift,2))-((1.0/6.0)*(jm*Math.pow(t_shift,3)));
+            }
+            public double getTime(double position){
+                cubicformula solveTime2= new cubicformula();;
+                return solveTime2.solveCubic(-jm/6,as/2,vh,-position)+T/2;
             }
         }
     }
@@ -181,6 +218,10 @@ public class Scurve {
                 double t_shift=t-T-line_length;
                 return vs*t_shift-(as/T)*(1.0/3.0)*Math.pow(t_shift,3);
             }
+            public double getTime(double position){
+                cubicformula solveTime3= new cubicformula();;
+                return solveTime3.solveCubic(-as/(3*T),0,vs,-position)+T+line_length;
+            }
         }
         class concave{
             public double getVelocity(double t){ // v(t)=vh-as*(t-1.5*T-line_length)+(as/T)*Math.pow(t-1.5*T-line_length,2)
@@ -193,6 +234,10 @@ public class Scurve {
                 double t_shift=(t-1.5*T-line_length);
                 return vh*t_shift-0.5*as*Math.pow(t_shift,2)+(as/T)*(1.0/3.0)*Math.pow(t_shift,3);
             }
+            public double getTime(double position){
+                cubicformula solveTime4= new cubicformula();;
+                return solveTime4.solveCubic(as/(3*T),-0/5*as,vh,-position)+1.5*T+line_length;
+            }
         }
     }
 
@@ -200,6 +245,10 @@ public class Scurve {
         public double getVelocity(){return vs;}
         public double getPosition(double t){
             return vs*(t-T);
+        }
+
+        public double getTime(double position){
+            return T+position/vs;
         }
     }
 

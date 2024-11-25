@@ -19,6 +19,7 @@ public class PinkArmEncoderTest extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
+            robot.hardware.armPitchEncoder.setOffset(-5.6486);
             double pitch = robot.hardware.armPitchEncoder.getCurrentPosition();
             robot.telemetry.addData("Current Extension (ticks)", robot.pinkArm.getExtensionPosition());
             robot.telemetry.addData("Current Pitch (degrees)", Math.toDegrees(pitch));

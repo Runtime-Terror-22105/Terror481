@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.config.Config;
 
+import org.firstinspires.ftc.teamcode.math.Scurve;
 import org.firstinspires.ftc.teamcode.math.controllers.PidfController;
 import org.firstinspires.ftc.teamcode.robot.hardware.motors.TerrorMotor;
 import org.firstinspires.ftc.teamcode.robot.hardware.sensors.TerrorAnalogEncoder;
@@ -276,6 +277,15 @@ public class PinkArm {
 
     public double getExtensionPosition() {
         return armExtensionEncoder.getCurrentPosition();
+    }
+
+
+    public void move(double goal){
+        double curr=getPitchPosition();
+        double direction=Math.signum(goal-curr);
+        Scurve pinkcurve=new Scurve(0,Math.abs(goal-curr));
+        double t=0; //reverse solve for the time and get the velocity
+
     }
 }
 
