@@ -31,8 +31,24 @@ public class P2PFollower {
             this.telemetry = robot.telemetry;
         }
 
+        public Builder addPoint(
+                Pose2d point,
+                Pose2d tolerance,
+                double reachedTime,
+                double timeLimit
+        ) {
+            return this.addPoint(
+                    "Drive to point (" + point.x + "," + point.y + "," + point.heading + ")",
+                    point,
+                    tolerance,
+                    reachedTime,
+                    timeLimit
+            );
+        }
+
         /**
          * Adds an instruction to drive to a point.
+         * @param pointName The name of the point
          * @param point The point to drive to.
          * @param tolerance The tolerance for how much error there can be on the x,y,h.
          * @param reachedTime How long the robot needs to stay at its destination.
@@ -40,6 +56,7 @@ public class P2PFollower {
          * @return The builder object, to allow for chaining.
          */
         public Builder addPoint(
+                String pointName,
                 Pose2d point,
                 Pose2d tolerance,
                 double reachedTime,
@@ -48,7 +65,7 @@ public class P2PFollower {
             Task.Context context = new Task.Context(drivetrain);
             context.setGoal(point, tolerance, reachedTime);
             Task task = new Task(
-                    "Drive to point (" + point.x + "," + point.y + "," + point.heading + ")",
+                    pointName,
                     context,
                     (Task.Context ctx) -> {
                         Pose2d powers = ctx.p2p.calculatePower(ctx.getCurrentPos());
@@ -80,6 +97,27 @@ public class P2PFollower {
                     },
                     Task.Type.ACTION,
                     timeLimit
+            );
+            tasks.add(task);
+            return this;
+        }
+
+        /**
+         *
+         * @param milliseconds
+         * @return
+         */
+        public Builder sleep(Consumer<Long> sleep, Long milliseconds) {
+            Task.Context context = new Task.Context(drivetrain);
+            Task task = new Task(
+                    "Sleep for " + milliseconds + " ms",
+                    context,
+                    (Task.Context ctx) -> {
+                        sleep.accept(milliseconds);
+                        return true;
+                    },
+                    Task.Type.ACTION,
+                    milliseconds
             );
             tasks.add(task);
             return this;
